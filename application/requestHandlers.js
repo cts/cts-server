@@ -1,4 +1,4 @@
-function start(response, postData) {
+function start(response, postData, cache) {
   console.log("Request handler 'start' was called.");
   var body = '<html>'+
     '<head>'+
@@ -17,12 +17,14 @@ function start(response, postData) {
   response.end();
 }
 
-function upload(response, postData) {
+function upload(response, postData, cache) {
   console.log("Request handler 'upload' was called.");
-
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write(postData);
-  response.end();
+  cache.setUnusedKey(postData, function(newUrl) {
+    console.log("found new url " + newUrl);
+    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.write(newUrl);
+    response.end();
+  });
 }
 
 exports.start = start;
