@@ -1,0 +1,44 @@
+{
+  "name": "cts-server",
+  "description": "Web Server for CTS",
+  "author": [
+    { 
+    "name":"Ted Benson",
+    "email":"eob@csail.mit.edu>"
+    },
+    {
+    "name":"John Wang",
+    "email":"wangjohn@mit.edu>"
+    },
+    {
+    "name":"Oliver Song",
+    "email":"osong@mit.edu>"
+    },
+    {
+    "name":"Jessica Anderson",
+    "email":"jessmand@mit.edu>"
+    }
+  ],
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-http-bearer": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "web-scraper": "*",
+    "phantom": "*",
+    "aws-sdk": "*",
+    "q": "*",
+    "jade": "*",
+    "date-utils": "*",
+    "mailkit": "*",
+    "underscore": "*",
+    "connect-flash": "0.1.x",
+    "ejs": ">= 0.0.0",
+    "ejs-locals": ">= 0.0.0",
+    "connect-mongo": "*"
+  }
+}

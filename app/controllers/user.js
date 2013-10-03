@@ -159,4 +159,3 @@ UserController.prototype.ensureAuthenticated = function(req, res, next) {
 
 exports.UserController = UserController;
 
-

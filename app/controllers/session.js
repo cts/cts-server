@@ -70,10 +70,6 @@ UserController.prototype.createWithToken = function(req, res) {
   }
 };
 
-
-
-
-
 UserController.prototype.login = function(req, res, next) {
   this.passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err) }
