@@ -8,6 +8,7 @@ function start(route, handle, cache) {
 
     console.log("Request for " + pathname + " received.");
 
+    request.setEncoding('utf8');
     request.addListener('data', function(postDataChunk) {
       postData += postDataChunk;
     });

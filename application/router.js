@@ -16,7 +16,9 @@ function route(handle, pathname, response, postData, cache) {
         response.end();
       } else {
         response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write(result);
+        if (result != null) {
+          response.write(result);
+        }
         response.end();
       }
     });
