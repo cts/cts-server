@@ -44,4 +44,3 @@ var login = function(email, password, done) {
 exports.User = User;
 exports.login = login;
 
-

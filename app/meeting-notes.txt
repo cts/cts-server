@@ -1,0 +1,49 @@
+
+-
+- double blind
+- meta exhibit
+- figures
+- fixing logger: user sessions, departure time, automatic reporting of exhibit configuration
+- if we gave exhibit authors an analytis suite
+- sorting, pagination
+- which items are they looking at.
+- lense expansion
+- hash function that is consistent so same id for an item regarless of which machine loads it.
+- Exhibit 2 and three is important, too
+- exhibit 3 almost feature compatible
+-
+- release to current
+- see if we sent an email to explain the difference between current and etc
+- roll forward a new numbering
+- createFromDOM replace with new Object() and then object.initialize()
+
+- The entrypoint for every view and facet is exhibit looks up the rolw in the
+dom and then uses taht to look up the proper class and then calls
+class.createFromDOM.  CreateFromDOM parses out the settings from the dom object
+(data-ex stuff) and then along with each component there is a settings and spec
+structure which says what is the field that I want, what is its type, and
+default value, and attirbute on dom node that has that. and then there is a
+collect settings from dom which reads those to fetch teh settings for that
+thing. The createFromDOM is defined for each object unnecessarily: it calls the
+constructor, the collect settings, then the configurare thing. These should all
+be inherited. when you write a component all that you should write is a thing.
+you should never have to write code for configuring based on those settings.
+that should be inherited from the component class. COMPONENT object should be
+above VIEW and FACET. REGISTRATION of component is something ryan added and is
+also shared. DISPOSAL is another thing also added. All about what writing a new
+VIEW class should involve is writing the setting specification. What can be
+inherited is the collection of setting specification. Another problem is he
+wrote parallel methods between contributing from a DOM node and configuraing
+from a JSON object. These should be collapsed into one configuration object.
+
+- Create right infrastructure. Tell him to use the views to use it.
+
+- Create survey for larger population of exhibit users.
+
+- Get report in for software engineering class.
+
+- Frank's advisor. Niccolai understands better what the course is about. Thinks
+its cool.
+
+Avoid Monday 2:30-4:00 and let David know about learnvis.
+
