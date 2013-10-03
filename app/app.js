@@ -60,6 +60,10 @@ app.configure(function() {
 //var sessionController = new SessionController({}, passport);
 //sessionController.connectToApp(app, '/session');
 
+var TreeController = require('./controllers/tree').TreeController;
+var treeController = new TreeController();
+treeController.connectToApp(app, '/tree');
+
 /*
  * 3.. 2.. 1..
  * -----------------------------------------------------------------------------

@@ -11,7 +11,17 @@ the required NPM modules.
      npm install
      ```
 
-2. Start the server.
+2. Create a local options file
+
+     ```
+     cp app/opts-local.js.example app/opts-local.js
+     ```
+
+   This file is ignored by git and will add any custom settings your
+   environment requires. The `app/opts.js` file loads your local opts and will
+   extend and overwrite its own settings.
+
+3. Start the server.
 
      ```
      node app/app.js

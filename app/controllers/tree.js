@@ -3,7 +3,7 @@
  * Persists remote CTS-UI operations via an adapter.
  *   See: ../tree-adapters
  *
- * General idea:
+ * General brainstorming:
  *
  *  Each web request specifies:
  *   1) Who you are
@@ -16,29 +16,46 @@
  *   3) Ask the tree adapter to perform teh requested operation
  */
 
+var AdapterFactory = require('../tree-adapters/adapter-factory').AdapterFactory;
+
 /* Constructor
  * ----------------------------------------------------------------------------- 
  * This is the object exported by this file.
  */
 
-var TreeController = function(opts, passport) {
+var TreeController = function(opts) {
   this.opts = opts;
-  this.passport = passport;
 };
 
 /* Methods 
  * ----------------------------------------------------------------------------- 
  */
 
-TreeController.prototype.create = function() {
+/**
+ *
+ */
+TreeController.prototype.saveHtml = function(req, next) {
+  var adapter = AdapterFactory.adapterForRequest(req);
+  adapter.save(html);
 };
 
-/*
- * Params:
- *   the HTTP request object
- * Returns via Callback:
- *   next(error, treeAdapter)
+/**
+ *
  */
-TreeController.prototype._lookup = function(req, next) {
-  
+TreeController.prototype.getHtml= function(req, next) {
+  var adapter = AdapterFactory.adapterForRequest(req);
+  adapter.fetch(html);
 };
+
+
+/* App integration
+ * ----------------------------------------------------------------------------- 
+ */
+
+TreeController.prototype.connectToApp = function(app, prefix) {
+  var self = this;
+  app.post(prefix + '/saveHTML', self.saveHtml.bind(self));
+  app.get(prefix + '/getHTML', self.getHtml.bind(self));
+};
+
+exports.TreeController = TreeController;
