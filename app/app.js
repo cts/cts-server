@@ -74,11 +74,6 @@ var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');
 
-app.get('/', function(req, res, next) {
-  res.send("yes");
-  console.log("is authed");
-});
-
 /*
  * 3.. 2.. 1..
  * -----------------------------------------------------------------------------

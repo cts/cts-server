@@ -1,6 +1,6 @@
 exports.host = "localhost";
 exports.server = {
-  port: 7000,
+  port: 8888, 
   uid: "www-data",
   gid: "www-data"
 };

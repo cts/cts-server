@@ -27,5 +27,5 @@ the required NPM modules.
      node app/app.js
      ```
 
-This will start the server on port 7000 by default, which the development build
+This will start the server on port 8888 by default, which the development build
 of `cts-ui` is preconfigured to work with.

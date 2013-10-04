@@ -12,7 +12,7 @@ var AdapterFactory = function() {
   }
 };
 
-AdapterFactory.prototype.forRequest = function(req) {
+AdapterFactory.prototype.adapterForRequest = function(req) {
   // Hardcoded for now..
   return this.adapters['cache'];
 }

@@ -36,18 +36,21 @@ var TreeController = function(opts) {
  */
 TreeController.prototype.save = function(req, res) {
   var adapter = AdapterFactory.adapterForRequest(req);
+  var html = req.body.html;
+  console.log(html);
   adapter.save(html, function(err, key) {
     if (err) {
-      res.status(400).send("Could save data. " + err);
+      res.status(400).send("Could not save data. " + err);
     } else {
-      res.send(key);
+      var html = "<html><body>" +
+      "<a href='/tree/" + key + "'>" + key + "</a>" +
+      "</body></html>";
+      res.send(html);
     }
   });
 };
 
-TreeController.prototype.foo = function(req, res) {
-  res.send("H");
-}
+
 /**
  *
  */
@@ -74,7 +77,6 @@ TreeController.prototype.fetch = function(req, res) {
 TreeController.prototype.connectToApp = function(app, prefix) {
   var self = this;
   app.post(prefix, self.save.bind(self));
-  app.get(prefix + '/foo', self.foo.bind(self));
   app.get(prefix + '/:key', self.fetch.bind(self));
 };
 

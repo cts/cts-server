@@ -9,6 +9,9 @@
 var uuid = require('node-uuid');
 var redis = require('redis');
 
+var ERR_NULL_VALUE =
+    "[Error: send_command: set value must not be undefined or null]";
+
 /* Constructor
  * ----------------------------------------------------------------------------- 
  * This is the object exported by this file.
@@ -32,15 +35,19 @@ var CacheAdapter = function(opts) {
  */
 CacheAdapter.prototype.save = function(data, cb) {
   var key = uuid.v4();
+  var self = this;
   this.client.get(key, function (err, result) {
     if (err == null) {
-      this.client.set(key, JSON.stringify(value), function() {
-        cb(key);
+      self.client.set(key, JSON.stringify(data), function(err) {
+        cb(null, key);
       });
+    } else if (err == ERR_NULL_VALUE) {
+        // Warning: Dangerous to use error text instead of code.
+        cb(ERR_NULL_VALUE);
     } else {
       // Key already exists.
       // Warning: Endless loop possible (though not likely).
-      cache.setUnusedKey(value, cb);
+      self.save(data, cb);
     }
   });
 };
@@ -50,7 +57,7 @@ CacheAdapter.prototype.save = function(data, cb) {
  */
 CacheAdapter.prototype.fetch = function(key, cb) {
   this.client.get(key, function (err, result) {
-    cb(err, JSON.parse(result));
+    cb(err, result);
   });
 };
 
