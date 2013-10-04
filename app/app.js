@@ -6,9 +6,11 @@
 var express       = require('express');
 var passport      = require('passport');
 var fs            = require('fs');
-var flash         = require('connect-flash');
+//var flash         = require('connect-flash');
 var path          = require('path');
 var opts          = require('./opts');
+var util          = require('./util');
+
 
 /*
  * Connect to database
@@ -25,6 +27,15 @@ var opts          = require('./opts');
  */
 
 var app = express();
+var static_dir = path.normalize(path.join(__dirname, '..', 'static'));
+
+var opt_str = JSON.stringify(opts, null, 2)
+    .replace(/\n/g, '\n              ');
+
+console.log(util.Banner);
+console.log("Static dir  : " + static_dir);
+console.log("Options     : " + opt_str);
+console.log("");
 
 app.configure(function() {
   // JUST FOR DEBUG
@@ -35,11 +46,10 @@ app.configure(function() {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.session({secret: 'asldjfwiouworuoeruwioroiweru'}));
-  app.use(flash());
-  app.use(passport.initialize());
-  app.use(passport.session());
+  //app.use(passport.initialize());
+  //app.use(passport.session());
   app.use(app.router);
-  app.use(express.static(path.normalize(path.join(__dirname, '..', 'client'))));
+  app.use(express.static(static_dir));
 });
 
 /*
@@ -64,12 +74,18 @@ var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');
 
+app.get('/', function(req, res, next) {
+  res.send("yes");
+  console.log("is authed");
+});
+
 /*
  * 3.. 2.. 1..
  * -----------------------------------------------------------------------------
  */
 
 app.listen(opts.server.port, function() {
+  console.log("Listening on port " + opts.server.port + "...");
   if (process.env.CTSSERVERPROD) {
     // In case we were launched by a daemon in prod, set proper UID and GID
     process.setgid(opts.server.gid);

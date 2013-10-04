@@ -34,17 +34,36 @@ var TreeController = function(opts) {
 /**
  *
  */
-TreeController.prototype.saveHtml = function(req, next) {
+TreeController.prototype.save = function(req, res) {
   var adapter = AdapterFactory.adapterForRequest(req);
-  adapter.save(html);
+  adapter.save(html, function(err, key) {
+    if (err) {
+      res.status(400).send("Could save data. " + err);
+    } else {
+      res.send(key);
+    }
+  });
 };
 
+TreeController.prototype.foo = function(req, res) {
+  res.send("H");
+}
 /**
  *
  */
-TreeController.prototype.getHtml= function(req, next) {
+TreeController.prototype.fetch = function(req, res) {
+  var key = req.params.key;
   var adapter = AdapterFactory.adapterForRequest(req);
-  adapter.fetch(html);
+  adapter.fetch(key, function(err, result) {
+    if (err) {
+      res.status(400).send("Could not lookup key <" + key + ">: " + err);
+    }
+    else if (result == null) {
+      res.status(404).send("No data for key <" + key + ">: " + err);
+    } else {
+      res.send(result);
+    }
+  });
 };
 
 
@@ -54,8 +73,9 @@ TreeController.prototype.getHtml= function(req, next) {
 
 TreeController.prototype.connectToApp = function(app, prefix) {
   var self = this;
-  app.post(prefix + '/saveHTML', self.saveHtml.bind(self));
-  app.get(prefix + '/getHTML', self.getHtml.bind(self));
+  app.post(prefix, self.save.bind(self));
+  app.get(prefix + '/foo', self.foo.bind(self));
+  app.get(prefix + '/:key', self.fetch.bind(self));
 };
 
 exports.TreeController = TreeController;

@@ -3,16 +3,16 @@
  */
 
 var opts = require('../opts')
-var CacheAdapter = require('./cache')
+var CacheAdapter = require('./cache').CacheAdapter;
 
-var AdapterFactory = function(opts) {
+var AdapterFactory = function() {
   // Hardcoded for now...
   this.adapters = {
-    'cache': new CacheAdapter(opts);
+    'cache': new CacheAdapter(opts)
   }
 };
 
-AdapterFactory.prototype.forRequest(req) {
+AdapterFactory.prototype.forRequest = function(req) {
   // Hardcoded for now..
   return this.adapters['cache'];
 }

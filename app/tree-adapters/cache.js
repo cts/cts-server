@@ -59,3 +59,4 @@ CacheAdapter.prototype.remove = function(key, cb) {
   this.client.del(key, cb);
 };
 
+exports.CacheAdapter = CacheAdapter;

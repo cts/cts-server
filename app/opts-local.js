@@ -1,4 +1,4 @@
 exports.redis = {
-  port: 4000,
-  host: localhost
+  port: 6379,
+  host: 'localhost'
 };
