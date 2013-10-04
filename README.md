@@ -1,6 +1,14 @@
 CTS Server
 ==========
 
+Dependencies
+------------
+
+You'll need to install the following:
+
+* NodeJS
+* Redis
+
 Running
 --------
 
