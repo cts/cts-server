@@ -1,5 +1,7 @@
 /*
  * Operation Model
+ * ===============
+ * 
  * Describes one step in an edit script.
  *
  * Of the form:
@@ -11,29 +13,45 @@
  *   operand:  Array[String] -- Arlist for <operator>
  * }
  *
- * Valid treeTypes
- * ===============
+ *
+ * Valid Tree Types
+ * ================
  *
  * wild
  * ----
  * An HTML tree in the wild; no previous integration in system.
  *
- * Todo:
- *  - jekyll-github
- *  - filesystem
+ * jekyll-github
+ * -------------
+ * A Github hosted Jekyll instance
  *
- * Valid operators
+ * filesystem
+ * ----------
+ * Just plain HTML files
+ *
+ *
+ * Valid Operators
  * ===============
  *
  * edit 
  * ----
  * User modified a primitive value.
- * Operand: [ <new_value : String> ]
+ * Operand 1: new_value : String
  *
- * Todo:
- *  - push (pushes a new element on a list)
- *  - delete (removes an element on a list)
- *  - reorder (moves element i to j)
+ * list-add
+ * --------
+ * User duplicates n^th item of list of n
+ *
+ * list-del
+ * --------
+ * User deletes the i^th item from a list
+ * Operand 1: i : Int
+ *
+ * list-reorder
+ * ------------
+ * Moves list item i to list item j, with previous j becomming j+1
+ * Operand 1: i : Int
+ * Operand 2: j : Int
  * 
  */
 
