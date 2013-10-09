@@ -6,11 +6,11 @@
  *
  * Of the form:
  * {
- *   treeUrl:  String -- The URL of the tree being operated upon
- *   treeType: String -- The type of the tree being operated upon
- *   path:     String -- The selector into <treeUrl>
- *   operator: String -- The operation being performed
- *   operand:  Array[String] -- Arlist for <operator>
+ *   treeUrl:  String        -- The URL of the tree being operated upon
+ *   treeType: String        -- The type of the tree being operated upon
+ *   path:     String        -- The selector into <treeUrl>
+ *   operator: String        -- The operation being performed
+ *   arguments:Array[String] -- Arlist for <operator>
  * }
  *
  *
@@ -33,10 +33,15 @@
  * Valid Operators
  * ===============
  *
+ * save
+ * ----
+ * Creates a checkpoint.
+ * - Argument 1: save-method : {html, html-link, zip, zip-link, web}
+ *
  * edit 
  * ----
  * User modified a primitive value.
- * - Operand 1: new_value : String
+ * - Argument 1: new_value : String
  *
  * list-add
  * --------
@@ -45,19 +50,34 @@
  * list-del
  * --------
  * User deletes the i^th item from a list
- * - Operand 1: i : Int
+ * - Argument 1: i : Int
  *
  * list-reorder
  * ------------
  * Moves list item i to list item j, with previous j becomming j+1
- * - Operand 1: i : Int
- * - Operand 2: j : Int
+ * - Argument 1: i : Int
+ * - Argument 2: j : Int
  * 
  */
 
-var Operation = mongoose.Schema({
-  treeUrl: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, set: encodePassword, required: true }
+var OperationSchema = mongoose.Schema({
+  treeUrl: { type: String, required: true, trim: true },
+  treeType: { type: String, required: true, trim: true },
+  path: { type: String, required: true, trim: true },
+  operator: { type: String, required: true, trim: true },
+  args: [
+    {value: String}
+  ]
 });
+
+/**
+ * Returns:
+ *   Array of Operation objects
+ */
+OperationSchema.statics.createFromRequest(req) = function(request, cb) {
+  // TOOD(Oliver):
+};
+
+var Operation = mongoose.model('Operation', OperationSchema);
 
 
