@@ -4,25 +4,23 @@
  */
 
 var mongoose = require('mongoose');
-var crypto   = require('crypto');
+var bcrypt   = require('bcrypt');
 var config   = require('../opts');
 var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var salt = "How much wood could a wood chuck chuck?"
-
-// Helper method to make sure we never save a password in cleartext.
-var encodePassword = function(pass) {
-  if( typeof pass === 'string' && pass.length < 6 ) return ''
-  var h = crypto.createHash('sha512');
-  h.update(pass);
-  h.update(salt);
-  return h.digest('base64');
-};
-
 var UserSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, set: encodePassword, required: true }
+  salt: { type: String, default: '' },
+  password: {
+    type: String,
+    set: function(password){
+      return bcrypt.hash(password, 5, function(err, bcryptedPassword){
+        return bcryptedPassword
+      });
+    },
+    required: true
+  }
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -32,6 +30,16 @@ var User = mongoose.model('User', UserSchema);
 var login = function(email, password, done) {
   console.log("Attempting login", email, password);
   if (email && password) {
+    hash = User.where('email', email);
+    bcrypt.compare(password, hash, function(err, doesMatch){
+      if (doesMatch) {
+        console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
+        done(err, doesMatch);
+      }else{
+        console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
+        done(err, doesMatch);
+      }
+    }
     User.where('email', email).where('password', encodePassword(password)).findOne(function(err, user) {
       console.log("Login DB Result: ERR:", err, "USER:", user);
       done(err, user);

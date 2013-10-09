@@ -41,6 +41,7 @@
     "ejs-locals": ">= 0.0.0",
     "connect-mongo": "*",
     "redis": "*",
-    "node-uuid": "*"
+    "node-uuid": "*",
+    "bcrypt": "*"
   }
 }

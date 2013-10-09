@@ -1,7 +1,7 @@
 /*
  * Operation Model
  * ===============
- * 
+ *
  * Describes one step in an edit script.
  *
  * Of the form:
@@ -38,7 +38,7 @@
  * Creates a checkpoint.
  * - Argument 1: save-method : {html, html-link, zip, zip-link, web}
  *
- * edit 
+ * edit
  * ----
  * User modified a primitive value.
  * - Argument 1: new_value : String
@@ -57,7 +57,7 @@
  * Moves list item i to list item j, with previous j becomming j+1
  * - Argument 1: i : Int
  * - Argument 2: j : Int
- * 
+ *
  */
 
 var OperationSchema = mongoose.Schema({
@@ -71,11 +71,13 @@ var OperationSchema = mongoose.Schema({
 });
 
 /**
+ * Input:
+ *   Request data, JSON of the form {operations: [{}, {}, ...]}
  * Returns:
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest(req) = function(request, cb) {
-  // TOOD(Oliver):
+
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
