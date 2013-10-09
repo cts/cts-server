@@ -36,7 +36,7 @@
  * edit 
  * ----
  * User modified a primitive value.
- * Operand 1: new_value : String
+ * - Operand 1: new_value : String
  *
  * list-add
  * --------
@@ -45,13 +45,13 @@
  * list-del
  * --------
  * User deletes the i^th item from a list
- * Operand 1: i : Int
+ * - Operand 1: i : Int
  *
  * list-reorder
  * ------------
  * Moves list item i to list item j, with previous j becomming j+1
- * Operand 1: i : Int
- * Operand 2: j : Int
+ * - Operand 1: i : Int
+ * - Operand 2: j : Int
  * 
  */
 
