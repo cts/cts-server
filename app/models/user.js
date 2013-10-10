@@ -11,12 +11,11 @@ var ObjectId = Schema.ObjectId;
 
 var UserSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true, trim: true },
-  salt: { type: String, default: '' },
   password: {
     type: String,
     set: function(password){
       return bcrypt.hash(password, 5, function(err, bcryptedPassword){
-        return bcryptedPassword
+        return bcryptedPassword;
       });
     },
     required: true

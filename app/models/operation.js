@@ -60,6 +60,9 @@
  *
  */
 
+var mongoose = require('mongoose');
+var async = require('async');
+
 var OperationSchema = mongoose.Schema({
   treeUrl: { type: String, required: true, trim: true },
   treeType: { type: String, required: true, trim: true },
@@ -77,20 +80,29 @@ var OperationSchema = mongoose.Schema({
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest(req) = function(request, cb) {
-  i=0;
-  successful = [];
-  while(i<request.length){
+  var i=0;
+  var successful = [];
+  var errors = [];
+  async.whilst(function() {
+    return i < request.length;
+  },
+  function (next) {
     var op = new Operation({ request[i] });
     op.save(function(err){
       if(err){
-        console.log('Did not save correctly.');
+        console.log('Error, did not save correctly: '+err);
+        errors.push(err);
       }else{
         successful.push(op);
       }
-    }
+    });
     i++;
-  };
-  return successful;
+    next();
+  },
+  function (err){
+    // done
+    cb(errors, successful);
+  });
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
