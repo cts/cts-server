@@ -77,7 +77,20 @@ var OperationSchema = mongoose.Schema({
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest(req) = function(request, cb) {
-
+  i=0;
+  successful = [];
+  while(i<request.length){
+    var op = new Operation({ request[i] });
+    op.save(function(err){
+      if(err){
+        console.log('Did not save correctly.');
+      }else{
+        successful.push(op);
+      }
+    }
+    i++;
+  };
+  return successful;
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
