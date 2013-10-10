@@ -50,6 +50,16 @@ UrlStorageAdapter.prototype.save = function(post, cb) {
   });
 };
 
+UrlStorageAdapter.prototype.fetch = function(key, cb) {
+  TreePage.findOne({ treeKey: key }, function(err, treePage) {
+    if (err) {
+      console.log('Unable to fetch tree page: ' + err);
+    }
+
+    cb(err, treePage);
+  });
+}
+
 UrlStorageAdapter.prototype.updateHtml = function(operation, cb) {
   TreePage.findOne({ treeUrl: operation.treeUrl }, function(err, treePage) {
     if (err) {
