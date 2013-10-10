@@ -8,6 +8,7 @@
 var OperationProcessor = require('./operation_processor').OperationProcessor;
 var Operation = require('../models/operation').Operation;
 var TreePage = require('../models/tree_page').TreePage;
+var uuid = require('node-uuid');
 
 /*
  * Constructor
@@ -24,15 +25,30 @@ var UrlStorageAdapter = function(opts) {
  * Methods
  */
 
-UrlStorageAdapter.prototype.storePost = function(post, cb) {
+UrlStorageAdapter.prototype.save = function(post, cb) {
+  TreePage.findOne({ treeUrl: operation
+};
+
+UrlStorageAdapter.prototype.save = function(post, cb) {
   var operation = new Operation(post);
   operation.save(function(err, operation) {
     if (err) {
-      console.log("Unable to save operation: " + err);
+      TreePage.create({
+        treeKey: uuid.v4(),
+        treeUrl: post.treeUrl,
+        treeHtml: post.html
+      }, function(err, newTreePage) {
+        if (err) {
+          console.log("Unable to save post request: " + err);
+        }
+
+        cb(null, newTreePage);
+      });
+    } else {
+      this.updateHtml(operation, cb);
     }
-    this.updateHtml(operation, cb);
   });
-}
+};
 
 UrlStorageAdapter.prototype.updateHtml = function(operation, cb) {
   TreePage.findOne({ treeUrl: operation.treeUrl }, function(err, treePage) {
@@ -46,9 +62,13 @@ UrlStorageAdapter.prototype.updateHtml = function(operation, cb) {
     // operation is complete.
     var currentHtml = treePage.treeHtml;
     treePage.treeHtml = OperationProcessor.operate(operation, currentHtml);
-    treePage.save();
-    cb(treePage);
+    treePage.save(function(err, savedPage) {
+      if (err) {
+        console.log('Unable to save tree page: ' + err);
+      }
+      cb(err, savedPage);
+    });
   });
-}
+};
 
 exports.UrlStorageAdapter = UrlStorageAdapter;
