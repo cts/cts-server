@@ -60,6 +60,9 @@
  *
  */
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
+
 var OperationSchema = mongoose.Schema({
   treeUrl: { type: String, required: true, trim: true },
   treeType: { type: String, required: true, trim: true },
