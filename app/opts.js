@@ -1,15 +1,23 @@
-exports.host = "localhost";
-exports.server = {
-  port: 8888, 
-  uid: "www-data",
-  gid: "www-data"
-};
-
-/*
- * Now overwrite with any of the local settings
- */
+var path = require('path');
+var util = require('./util');
 var localOpts = require('./opts-local');
 
-for (key in localOpts) {
-  exports[key] = localOpts[key];
-}
+var defaultOpts = {
+  host: 'localhost',
+  server: {
+    port: 8888,
+    uid: 'www-data',
+    gid: 'www-data'
+  },
+  CacheAdapter: {
+  },
+  FilesystemAdapter: {
+    rootDir: path.resolve(__dirname, '..', 'filestorage')
+  }
+};
+
+util.deepExtend(exports, defaultOpts);
+
+// Overwrite default options with local options
+util.deepExtend(exports, localOpts);
+

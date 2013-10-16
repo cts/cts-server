@@ -8,7 +8,8 @@ var CacheAdapter = require('./cache').CacheAdapter;
 var AdapterFactory = function() {
   // Hardcoded for now...
   this.adapters = {
-    'cache': new CacheAdapter(opts)
+    'cache': new CacheAdapter(),
+    'fs': new FilesystemAdapter()
   }
 };
 

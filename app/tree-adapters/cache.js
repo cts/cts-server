@@ -6,6 +6,8 @@
  *
  */
 
+var globalOpts = require('../opts');
+var util = require('../util');
 var uuid = require('node-uuid');
 var redis = require('redis');
 
@@ -18,6 +20,12 @@ var ERR_NULL_VALUE =
  */
 
 var CacheAdapter = function(opts) {
+  this.opts = opts || {};
+  // globalOpts.FilesystemAdapter stores the default opts (in opts.js) already
+  // overridden by the local opts (in opts-local.js).
+  util.deepExtend(this.opts, globalOpts.CacheAdapter);
+
+
   this.opts = opts || {};
   this.client = redis.createClient(opts.redis.port, opts.redis.host, opts.redis);
 

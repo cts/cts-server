@@ -10,7 +10,7 @@ You'll need to install the following:
 * Redis
 
 Running
---------
+-------
 
 1. If this is the first time you're running the server, make sure you have all
 the required NPM modules.
@@ -37,3 +37,31 @@ the required NPM modules.
 
 This will start the server on port 8888 by default, which the development build
 of `cts-ui` is preconfigured to work with.
+
+Testing
+-------
+
+Tests are stored in the `test/` directory and written with
+(Mocha)[http://visionmedia.github.io/mocha/]. If you have never used Mocha
+before, you should first run:
+
+     ```
+     sudo npm install -g mocha
+     ```
+
+Or run the Windows equivalent.
+
+To run unit tests, run:
+
+     ```
+     mocha
+     ```
+
+You should see output like:
+
+     ```
+       ․
+
+       3 passing (4ms)
+     ```
+

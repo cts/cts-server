@@ -21,3 +21,19 @@ exports.ApiSuccess = function(res, message) {
   }
   res.end();
 }
+
+/**
+ * Like Underscore's extend but recurses.
+ */
+exports.deepExtend = function(destination, source) {
+  for (var property in source) {
+    if (source[property] && source[property].constructor &&
+     source[property].constructor === Object) {
+      destination[property] = destination[property] || {};
+      arguments.callee(destination[property], source[property]);
+    } else {
+      destination[property] = source[property];
+    }
+  }
+  return destination;
+};

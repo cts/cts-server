@@ -44,6 +44,11 @@
     "node-uuid": "*",
     "bcrypt": "*",
     "async": "*",
-    "ssh2": "*"
+    "ssh2": "*",
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "assert": "*"
   }
 }
