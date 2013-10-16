@@ -62,9 +62,15 @@
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
-var async = require('async');
+var bcrypt   = require('bcrypt');
+var config   = require('../opts');
+var Schema   = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+var _        = require('underscore');
 
 var OperationSchema = mongoose.Schema({
+
+  // To be filled in by the client, upon request.
   treeUrl: { type: String, required: true, trim: true },
   treeType: { type: String, required: true, trim: true },
   path: { type: String, required: true, trim: true },
@@ -72,40 +78,96 @@ var OperationSchema = mongoose.Schema({
   args: [
     {value: String}
   ]
+
+  // To be filled in by the server, upon processing.
+  attempted: { type: Date, default: Date.now },
+  error: { type: Schema.Types.Mixed, default: null }, 
+  result: { type: Schema.Types.Mixed, default: null }
+
+  // To be filled in by the server, upon receiving.
+  user: { type: String }
+
 });
 
 /**
- * Input:
- *   Request data, JSON of the form {operations: [{}, {}, ...]}
+ * Args:
+ *   json - Json object.
+ *   cb - Node-style callback.
+ *
+ */
+OperationSchema.statics.createFromJson = function(json, cb) {
+  var get = function(o, prop) {
+    if (o[prop] !== undefined) return o[prop];
+    else return "my default";
+  }
+ 
+  try {
+    var op = new Operation({
+      treeUrl: get(json, 'treeUrl'),
+      treeType: get(json, 'treeType'),
+      path: get(json, 'path'),
+      operator: get(json, 'operator'),
+      args: get(json, 'args')
+    });
+    cb(null, op);
+  } catch (e) {
+    cb(e);
+  }
+};
+
+/**
+ * Args:
+ *   request: HTTP Request object. This should have a JSON body of the form:
+ *      {
+ *         operations: [
+ *             {},
+ *             {},
+ *             ...
+ *         ]
+ *      }
+ *   cb: node-style callback for error or array of operations.
  * Returns:
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest(req) = function(request, cb) {
-  var i=0;
-  var successful = [];
-  var errors = [];
-  async.whilst(function() {
-    return i < request.length;
-  },
-  function (next) {
-    var op = new Operation({ request[i] });
-    op.save(function(err){
-      if(err){
-        console.log('Error, did not save correctly: '+err);
-        errors.push(err);
-      }else{
-        successful.push(op);
-      }
-    });
-    i++;
-    next();
-  },
-  function (err){
-    // done
-    cb(errors, successful);
-  });
+  if (! 'operations' in request.body) {
+    cb({error: "`operations` key missing from request body."});
+  }
+  if (! _.isArray(request.body.operations)) {
+    cb({error: "`operations` key in request body must be an array."});
+  }
+
+  var errors = null;
+  var operations = [];
+  var bodyOps = request.body.operations;
+
+  var processThenFinish = function(i) {
+    if (i < bodyOps.length) {
+      // Process
+      var json = bodyOps[i];
+      OperationSchema.statics.createFromJson(json, function(err, op) {
+        if (err) {
+          errors.push({
+            json: json,
+            index: i,
+            error: err
+          });
+          operations.push(null);
+          processThenFinish(i+1);
+        } else {
+          operations.push(op);
+          processThenFinish(i+1);
+        }
+      });
+    } else {
+      // Finish
+      cb(errors, operations)
+    }
+  }
+  processThenFinish(0);
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
 
 exports.Operation = Operation;
+
