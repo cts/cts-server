@@ -20,12 +20,9 @@ var ERR_NULL_VALUE =
  */
 
 var CacheAdapter = function(opts) {
-  this.opts = opts || {};
-  // globalOpts.FilesystemAdapter stores the default opts (in opts.js) already
-  // overridden by the local opts (in opts-local.js).
-  util.deepExtend(this.opts, globalOpts.CacheAdapter);
-
-
+  this.opts = globalOpts.CacheAdapter;
+  util.deepExtend(this.opts, opts);
+  
   this.opts = opts || {};
   this.client = redis.createClient(opts.redis.port, opts.redis.host, opts.redis);
 

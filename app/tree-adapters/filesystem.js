@@ -15,12 +15,8 @@ var fs = require('fs');
  */
 
 var FilesystemAdapter = function(opts) {
-  this.opts = opts || {};
-  // globalOpts.FilesystemAdapter stores the default opts (in opts.js) already
-  // overridden by the local opts (in opts-local.js).
-  util.deepExtend(this.opts, globalOpts.FilesystemAdapter);
-
-
+  this.opts = globalOpts.FilesystemAdapter;
+  util.deepExtend(this.opts, opts);
 };
 
 /* Methods 
