@@ -139,5 +139,5 @@ OperationSchema.statics.createFromRequest(req) = function(request, cb) {
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
-
 exports.Operation = Operation;
+

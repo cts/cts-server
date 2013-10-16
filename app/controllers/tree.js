@@ -73,7 +73,7 @@ TreeController.prototype.fetch = function(req, res) {
     if (err) {
       res.status(400).send(operation.error.message);
     } else {
-      res.send(operation.result.body);
+      res.send(operation.result.tree);
     }
   });
 };
