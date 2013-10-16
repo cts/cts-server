@@ -13,6 +13,8 @@ var defaultOpts = {
   },
   FilesystemAdapter: {
     rootDir: path.resolve(__dirname, '..', 'filestorage')
+  },
+  HtmlOperator: {
   }
 };
 

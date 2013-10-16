@@ -13,10 +13,14 @@
  *  The processing for each request proceeds in the same fashion:
  *   1) Authenticate user
  *   2) Load the tree they are requesting via the proper tree adapter
- *   3) Ask the tree adapter to perform teh requested operation
+ *   3) Load the operator for handling this TYPE of tree.
+ *   4) Ask the operator to perform the operation
+ *   5) Save the tree via the tree adapter
  */
 
 var AdapterFactory = require('../tree-adapters/adapter-factory').AdapterFactory;
+var OperatorFactory = require('../tree-operators/operator-factory').OperatorFactory;
+var OperationFactory = require('../model/operation').OperationFactory;
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -31,17 +35,27 @@ var TreeController = function(opts) {
  * ----------------------------------------------------------------------------- 
  */
 
+
+/*
+ * This will eventually be the only endpoint. (though we will support pooling of
+ * multiple operations in the same request.
+ */
+TreeController.prototype.performOperation = function(operation, callback) {
+  var adapter = AdapterFactory.adapterForOperation(operation);
+  var operator = OperatorFactory.operatorForOperation(operation);
+  operator.perform(operation, adapter, cb);
+};
+
 /**
  *
  */
 TreeController.prototype.save = function(req, res) {
-  var adapter = AdapterFactory.adapterForRequest(req);
-  var html = req.body.html;
-  console.log(html);
-  adapter.save(html, function(err, key) {
+  var operation = OperationFactory.saveOperation(req);
+  this.performOperation(operation, function(err, operation) {
     if (err) {
-      res.status(400).send("Could not save data. " + err);
+      res.status(400).send(operation.error.message);
     } else {
+      var key = operation.result.url;
       var html = "<html><body>" +
       "<a href='/tree/" + key + "'>" + key + "</a>" +
       "</body></html>";
@@ -50,21 +64,16 @@ TreeController.prototype.save = function(req, res) {
   });
 };
 
-
 /**
  *
  */
 TreeController.prototype.fetch = function(req, res) {
-  var key = req.params.key;
-  var adapter = AdapterFactory.adapterForRequest(req);
-  adapter.fetch(key, function(err, result) {
+  var operation = OperationFactory.fetchOperation(req);
+  this.performOperation(operation, function(err, operation) {
     if (err) {
-      res.status(400).send("Could not lookup key <" + key + ">: " + err);
-    }
-    else if (result == null) {
-      res.status(404).send("No data for key <" + key + ">: " + err);
+      res.status(400).send(operation.error.message);
     } else {
-      res.send(result);
+      res.send(operation.result.body);
     }
   });
 };
