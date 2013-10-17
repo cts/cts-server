@@ -8,11 +8,7 @@
 
 var globalOpts = require('../opts');
 var util = require('../util');
-var uuid = require('node-uuid');
-var redis = require('redis');
-
-var ERR_NULL_VALUE =
-    "[Error: send_command: set value must not be undefined or null]";
+var TreePage = require('../models/tree_page').TreePage;
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -22,13 +18,6 @@ var ERR_NULL_VALUE =
 var CacheAdapter = function(opts) {
   this.opts = globalOpts.CacheAdapter;
   util.deepExtend(this.opts, opts);
-  
-  this.opts = opts || {};
-  this.client = redis.createClient(opts.redis.port, opts.redis.host, opts.redis);
-
-  if (opts.redis.db) {
-    this.client.select(args.db);
-  }
 };
 
 /* Methods 
@@ -39,20 +28,15 @@ var CacheAdapter = function(opts) {
  *
  */
 CacheAdapter.prototype.save = function(data, cb) {
-  var key = uuid.v4();
   var self = this;
-  this.client.get(key, function (err, result) {
-    if (err == null) {
-      self.client.set(key, JSON.stringify(data), function(err) {
-        cb(null, key);
-      });
-    } else if (err == ERR_NULL_VALUE) {
-        // Warning: Dangerous to use error text instead of code.
-        cb(ERR_NULL_VALUE);
+  var treePage = new TreePage({
+    content: data
+  });
+  treePage.save(function(error) {
+    if(error) {
+      cb(error);
     } else {
-      // Key already exists.
-      // Warning: Endless loop possible (though not likely).
-      self.save(data, cb);
+      cb(null, treePage.id);
     }
   });
 };
@@ -61,14 +45,28 @@ CacheAdapter.prototype.save = function(data, cb) {
  *
  */
 CacheAdapter.prototype.fetch = function(key, cb) {
-  this.client.get(key, function (err, result) {
-    cb(err, result);
+  TreePage.findById(key, function(error, treePage) {
+    if (error) {
+      cb(error);
+    } else {
+      if (treePage == null) {
+        cb("Could not page for key.");
+      } else {
+        cb(null, treePage.content);
+      }
+    }
   });
 };
 
 
 CacheAdapter.prototype.remove = function(key, cb) {
-  this.client.del(key, cb);
+  TreePage.findByIdAndRemove(key, function(error) {
+    if (error) {
+      cb(error);
+    } else {
+      cb(null);
+    }
+  })
 };
 
 exports.CacheAdapter = CacheAdapter;

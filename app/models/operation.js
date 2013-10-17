@@ -3,23 +3,24 @@
  */
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+var opts = require('../opts');
 var bcrypt   = require('bcrypt');
 var config   = require('../opts');
 var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var _        = require('underscore');
 
+
 var OperationSchema = mongoose.Schema({
 
   // To be filled in by the client, upon request
   // -------------------------------------------
 
-  /* The operator being applied to the tree.
+  /* The action being applied to the tree.
    *
    * Retuired.
    */
-  operator: { type: String, required: true, trim: true },
+  action: { type: String, required: true, trim: true },
 
   /* The format of the tree that lives at treeUrl. For example, 'json' or
    * 'html'.
@@ -42,13 +43,13 @@ var OperationSchema = mongoose.Schema({
    */
   path: { type: String, trim: true, default: null },
 
-  /* Arguments for the operator.
+  /* Arguments for the action.
    *
    * Optional ([])
    */
   args: [
-    {value: String}
-  ]
+    {type: Schema.Types.Mixed}
+  ],
 
   // To be filled in by the server, upon processing
   // -------------------------------------------
@@ -77,7 +78,7 @@ OperationSchema.statics.createFromJson = function(json, cb) {
       treeUrl: get(json, 'treeUrl'),
       treeType: get(json, 'treeType'),
       path: get(json, 'path'),
-      operator: get(json, 'operator'),
+      action: get(json, 'action'),
       args: get(json, 'args')
     });
     cb(null, op);
@@ -100,7 +101,7 @@ OperationSchema.statics.createFromJson = function(json, cb) {
  * Returns:
  *   Array of Operation objects
  */
-OperationSchema.statics.createFromRequest(req) = function(request, cb) {
+OperationSchema.statics.createFromRequest = function(request, cb) {
   if (! 'operations' in request.body) {
     cb({error: "`operations` key missing from request body."});
   }
@@ -139,6 +140,5 @@ OperationSchema.statics.createFromRequest(req) = function(request, cb) {
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
-
 exports.Operation = Operation;
 
