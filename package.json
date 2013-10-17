@@ -42,6 +42,7 @@
     "connect-mongo": "*",
     "redis": "*",
     "node-uuid": "*",
-    "bcrypt": "*"
+    "bcrypt": "*",
+    "async": "*"
   }
 }
