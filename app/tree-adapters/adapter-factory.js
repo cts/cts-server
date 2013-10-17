@@ -14,7 +14,7 @@ var AdapterFactory = function() {
   }
 };
 
-AdapterFactory.prototype.adapterForRequest = function(req) {
+AdapterFactory.prototype.adapterForOperation = function(operation) {
   // Hardcoded for now..
   return this.adapters['cache'];
 }
