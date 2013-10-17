@@ -6,6 +6,16 @@ var ZipFactoryAdapter = function(opts) {
   this.opts = opts || {};
 };
 
+/*
+ * Takes in +fileData+ which is an associative array of a filename and what you
+ * would like the contents of the file to be. For example:
+ *
+ *  fileData = { 'filename1': 'the body of my file',
+ *               'filename2': 'some more stuff' }
+ *
+ * Using +fileData+ from the above example, you would receive data which is the
+ * zip of 'filename1' and 'filename2'.
+ */
 ZipFactoryAdapter.prototype.zipFileData = function(fileData, cb) {
   var zipDirectory = zip();
   for (var key in fileData) {
@@ -18,9 +28,36 @@ ZipFactoryAdapter.prototype.zipFileData = function(fileData, cb) {
   cb(null, data);
 };
 
+
+/*
+ * Takes in an array of TreePage mongoose objects and returns data in
+ * the callback which is a zip of those html pages.
+ */
+ZipFactoryAdapter.prototype.zipTreePages = function(treePages, cb) {
+  var fileData = {};
+  async.parallel(readFileFunctions(filenames, fileData, populateMongoFileData),
+      function(err) {
+        if (err) {
+          console.log('Unable to read Tree Pages from MongoDB.');
+        }
+        ZipFactoryAdapter.prototype.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
+      });
+};
+
+/*
+ * Takes an array of filenames and zips up the files. Node must be able to access
+ * the paths provided by the filenames. For example:
+ *
+ *  filenames = ['~/some_file.js', '~/another_file.js']
+ *
+ * This would create a zip folder with the contents of the these two files.
+ *
+ */
 ZipFactoryAdapter.prototype.zipFiles = function(filenames, cb) {
   var fileData = {};
-  async.parallel(ZipFactoryAdapter.prototype.readFileFunctions(filenames, fileData),
+  async.parallel(readFileFunctions(filenames, fileData, populateFileSystemFileData),
       function(err) {
         if (err) {
           console.log('Unable to read files from file system.');
@@ -31,18 +68,25 @@ ZipFactoryAdapter.prototype.zipFiles = function(filenames, cb) {
       });
 };
 
-ZipFactoryAdapter.prototype.readFileFunctions = function(filenames, fileData) {
+readFileFunctions = function(files, fileData, populateFunction) {
   var readFileFunctions = [];
-  var filename;
-  for (var i=0; i<filenames.length; i++) {
-    filename = filenames[i];
-    populateFileData(fileData, filename, readFileFunctions);
+  var file;
+  for (var i=0; i<files.length; i++) {
+    file = files[i];
+    populateFunction(fileData, file, readFileFunctions);
   }
 
   return readFileFunctions;
 };
 
-populateFileData = function(fileData, filename, readFileFunctions) {
+populateMongoFileData = function(fileData, treepage, readFileFunctions) {
+  readFileFunctions.push(function(callback) {
+    fileData[treepage.treeHtml] = treepage.treeHtml;
+    callback(err, fileData);
+  });
+};
+
+populateFileSystemFileData = function(fileData, filename, readFileFunctions) {
     readFileFunctions.push(function(callback) {
       fs.readFile(filename, 'utf-8', function(err, data) {
         if (err) {

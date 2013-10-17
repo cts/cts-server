@@ -1,3 +1,11 @@
+/*
+ * Demonstration of how to use 'zip_factory.js'
+ *
+ * You can run this with: `node zip_factory_example.js`. You need to be in a
+ * directory where the filenames defined below are available.
+ *
+ */
+
 var ZipFactoryAdapter = require('./zip_factory').ZipFactoryAdapter;
 
 filenames = [
