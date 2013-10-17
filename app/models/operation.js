@@ -1,111 +1,144 @@
-/*
+/**
  * Operation Model
- * ===============
- *
- * Describes one step in an edit script.
- *
- * Of the form:
- * {
- *   treeUrl:  String        -- The URL of the tree being operated upon
- *   treeType: String        -- The type of the tree being operated upon
- *   path:     String        -- The selector into <treeUrl>
- *   operator: String        -- The operation being performed
- *   arguments:Array[String] -- Arlist for <operator>
- * }
- *
- *
- * Valid Tree Types
- * ================
- *
- * wild
- * ----
- * An HTML tree in the wild; no previous integration in system.
- *
- * jekyll-github
- * -------------
- * A Github hosted Jekyll instance
- *
- * filesystem
- * ----------
- * Just plain HTML files
- *
- *
- * Valid Operators
- * ===============
- *
- * save
- * ----
- * Creates a checkpoint.
- * - Argument 1: save-method : {html, html-link, zip, zip-link, web}
- *
- * edit
- * ----
- * User modified a primitive value.
- * - Argument 1: new_value : String
- *
- * list-add
- * --------
- * User duplicates n^th item of list of n
- *
- * list-del
- * --------
- * User deletes the i^th item from a list
- * - Argument 1: i : Int
- *
- * list-reorder
- * ------------
- * Moves list item i to list item j, with previous j becomming j+1
- * - Argument 1: i : Int
- * - Argument 2: j : Int
- *
  */
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
-var async = require('async');
+var bcrypt   = require('bcrypt');
+var config   = require('../opts');
+var Schema   = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+var _        = require('underscore');
 
 var OperationSchema = mongoose.Schema({
-  treeUrl: { type: String, required: true, trim: true },
-  treeType: { type: String, required: true, trim: true },
-  path: { type: String, required: true, trim: true },
+
+  // To be filled in by the client, upon request
+  // -------------------------------------------
+
+  /* The operator being applied to the tree.
+   *
+   * Retuired.
+   */
   operator: { type: String, required: true, trim: true },
+
+  /* The format of the tree that lives at treeUrl. For example, 'json' or
+   * 'html'.
+   *
+   * Required.
+   */
+  treeType: { type: String, required: true, trim: true },
+
+  /* The URL of the tree this operation pertains to. The URL scheme may be
+   * something other than HTTP, for example we may choose to use
+   * git://path/to/repo.git
+   *
+   * Optional (null)
+   */
+  treeUrl: { type: String, default: null, trim: true },
+
+  /* The path into the tree that this operation concerns.
+   *
+   * Optional (null)
+   */
+  path: { type: String, trim: true, default: null },
+
+  /* Arguments for the operator.
+   *
+   * Optional ([])
+   */
   args: [
     {value: String}
   ]
+
+  // To be filled in by the server, upon processing
+  // -------------------------------------------
+
+  attemptedOn: { type: Date, default: Date.now },
+  attemptedBy: { type: String },
+  error: { type: Schema.Types.Mixed, default: null }, 
+  result: { type: Schema.Types.Mixed, default: null }
+
 });
 
 /**
- * Input:
- *   Request data, JSON of the form {operations: [{}, {}, ...]}
+ * Args:
+ *   json - Json object.
+ *   cb - Node-style callback.
+ *
+ */
+OperationSchema.statics.createFromJson = function(json, cb) {
+  var get = function(o, prop) {
+    if (o[prop] !== undefined) return o[prop];
+    else return "my default";
+  }
+ 
+  try {
+    var op = new Operation({
+      treeUrl: get(json, 'treeUrl'),
+      treeType: get(json, 'treeType'),
+      path: get(json, 'path'),
+      operator: get(json, 'operator'),
+      args: get(json, 'args')
+    });
+    cb(null, op);
+  } catch (e) {
+    cb(e);
+  }
+};
+
+/**
+ * Args:
+ *   request: HTTP Request object. This should have a JSON body of the form:
+ *      {
+ *         operations: [
+ *             {},
+ *             {},
+ *             ...
+ *         ]
+ *      }
+ *   cb: node-style callback for error or array of operations.
  * Returns:
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest(req) = function(request, cb) {
-  var i=0;
-  var successful = [];
-  var errors = [];
-  async.whilst(function() {
-    return i < request.length;
-  },
-  function (next) {
-    var op = new Operation({ request[i] });
-    op.save(function(err){
-      if(err){
-        console.log('Error, did not save correctly: '+err);
-        errors.push(err);
-      }else{
-        successful.push(op);
-      }
-    });
-    i++;
-    next();
-  },
-  function (err){
-    // done
-    cb(errors, successful);
-  });
+  if (! 'operations' in request.body) {
+    cb({error: "`operations` key missing from request body."});
+  }
+  if (! _.isArray(request.body.operations)) {
+    cb({error: "`operations` key in request body must be an array."});
+  }
+
+  var errors = null;
+  var operations = [];
+  var bodyOps = request.body.operations;
+
+  var processThenFinish = function(i) {
+    if (i < bodyOps.length) {
+      // Process
+      var json = bodyOps[i];
+      OperationSchema.statics.createFromJson(json, function(err, op) {
+        if (err) {
+          errors.push({
+            json: json,
+            index: i,
+            error: err
+          });
+          operations.push(null);
+          processThenFinish(i+1);
+        } else {
+          operations.push(op);
+          processThenFinish(i+1);
+        }
+      });
+    } else {
+      // Finish
+      cb(errors, operations)
+    }
+  }
+  processThenFinish(0);
 };
 
 var Operation = mongoose.model('Operation', OperationSchema);
 
 exports.Operation = Operation;
+
