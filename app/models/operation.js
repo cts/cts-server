@@ -61,6 +61,7 @@
  */
 
 var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
 var async = require('async');
 
 var OperationSchema = mongoose.Schema({
