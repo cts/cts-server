@@ -43,6 +43,12 @@
     "redis": "*",
     "node-uuid": "*",
     "bcrypt": "*",
-    "async": "*"
+    "async": "*",
+    "ssh2": "*",
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "assert": "*"
   }
 }
