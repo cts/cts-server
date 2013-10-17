@@ -1,63 +1,5 @@
-/*
+/**
  * Operation Model
- * ===============
- *
- * Describes one step in an edit script.
- *
- * Of the form:
- * {
- *   treeUrl:  String        -- The URL of the tree being operated upon
- *   treeType: String        -- The type of the tree being operated upon
- *   path:     String        -- The selector into <treeUrl>
- *   operator: String        -- The operation being performed
- *   arguments:Array[String] -- Arlist for <operator>
- * }
- *
- *
- * Valid Tree Types
- * ================
- *
- * wild
- * ----
- * An HTML tree in the wild; no previous integration in system.
- *
- * jekyll-github
- * -------------
- * A Github hosted Jekyll instance
- *
- * filesystem
- * ----------
- * Just plain HTML files
- *
- *
- * Valid Operators
- * ===============
- *
- * save
- * ----
- * Creates a checkpoint.
- * - Argument 1: save-method : {html, html-link, zip, zip-link, web}
- *
- * edit
- * ----
- * User modified a primitive value.
- * - Argument 1: new_value : String
- *
- * list-add
- * --------
- * User duplicates n^th item of list of n
- *
- * list-del
- * --------
- * User deletes the i^th item from a list
- * - Argument 1: i : Int
- *
- * list-reorder
- * ------------
- * Moves list item i to list item j, with previous j becomming j+1
- * - Argument 1: i : Int
- * - Argument 2: j : Int
- *
  */
 
 var mongoose = require('mongoose');
@@ -70,22 +12,51 @@ var _        = require('underscore');
 
 var OperationSchema = mongoose.Schema({
 
-  // To be filled in by the client, upon request.
-  treeUrl: { type: String, required: true, trim: true },
-  treeType: { type: String, required: true, trim: true },
-  path: { type: String, required: true, trim: true },
+  // To be filled in by the client, upon request
+  // -------------------------------------------
+
+  /* The operator being applied to the tree.
+   *
+   * Retuired.
+   */
   operator: { type: String, required: true, trim: true },
+
+  /* The format of the tree that lives at treeUrl. For example, 'json' or
+   * 'html'.
+   *
+   * Required.
+   */
+  treeType: { type: String, required: true, trim: true },
+
+  /* The URL of the tree this operation pertains to. The URL scheme may be
+   * something other than HTTP, for example we may choose to use
+   * git://path/to/repo.git
+   *
+   * Optional (null)
+   */
+  treeUrl: { type: String, default: null, trim: true },
+
+  /* The path into the tree that this operation concerns.
+   *
+   * Optional (null)
+   */
+  path: { type: String, trim: true, default: null },
+
+  /* Arguments for the operator.
+   *
+   * Optional ([])
+   */
   args: [
     {value: String}
   ]
 
-  // To be filled in by the server, upon processing.
-  attempted: { type: Date, default: Date.now },
+  // To be filled in by the server, upon processing
+  // -------------------------------------------
+
+  attemptedOn: { type: Date, default: Date.now },
+  attemptedBy: { type: String },
   error: { type: Schema.Types.Mixed, default: null }, 
   result: { type: Schema.Types.Mixed, default: null }
-
-  // To be filled in by the server, upon receiving.
-  user: { type: String }
 
 });
 
