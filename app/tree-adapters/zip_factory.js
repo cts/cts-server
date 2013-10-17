@@ -20,27 +20,40 @@ ZipFactoryAdapter.prototype.zipFileData = function(fileData, cb) {
 
 ZipFactoryAdapter.prototype.zipFiles = function(filenames, cb) {
   var fileData = {};
-  async.parallel(self.readFileFunctions(filenames, fileData),
-      function() {
-        cb(null, fileData);
+  async.parallel(ZipFactoryAdapter.prototype.readFileFunctions(filenames, fileData),
+      function(err) {
+        if (err) {
+          console.log('Unable to read files from file system.');
+        }
+        ZipFactoryAdapter.prototype.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
       });
 };
 
 ZipFactoryAdapter.prototype.readFileFunctions = function(filenames, fileData) {
-  var filenamesArray = [];
-  for (var filename in filenames) {
-    filenamesArray.append(function(fileData) {
-      fs.readFile(filename, function(err, data) {
+  var readFileFunctions = [];
+  var filename;
+  for (var i=0; i<filenames.length; i++) {
+    filename = filenames[i];
+    populateFileData(fileData, filename, readFileFunctions);
+  }
+
+  return readFileFunctions;
+};
+
+populateFileData = function(fileData, filename, readFileFunctions) {
+    readFileFunctions.push(function(callback) {
+      fs.readFile(filename, 'utf-8', function(err, data) {
         if (err) {
           console.log('Unable to find file "' + filename + '": ' + err);
         } else {
           fileData[filename] = data;
         }
+        callback(err, fileData);
       });
     });
-  }
+}
 
-  return filenamesArray;
-};
-
-exports.ZipFactoryAdapter = ZipFactoryAdapter;
+var zipFactory = new ZipFactoryAdapter();
+exports.ZipFactoryAdapter = zipFactory;
