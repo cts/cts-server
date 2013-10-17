@@ -4,6 +4,7 @@
 </head>
 <body>
   <form action="/tree" method="post">
+    Tree Adapter: <select name="adapter"><option value="fs">Filesystem</option><option value="cache">MongoDB</option></select><br />
     <textarea name="html" rows="20" cols="60"></textarea>
     <input type="submit" value="Submit text" />
   </form>

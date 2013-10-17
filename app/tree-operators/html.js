@@ -12,7 +12,7 @@ var util = require('../util');
  */
 
 var HtmlOperator = function(opts) {
-  this.opts = globalOpts.HtmlOperator;
+  this.opts = globalOpts.operators.html;
   util.deepExtend(this.opts, opts);
 };
 
@@ -39,7 +39,7 @@ HtmlOperator.prototype.perform = function(operation, adapter, cb) {
 HtmlOperator.prototype._save = function(operation, adapter, cb) {
   // TODO: This handles the minutae of negotiating tree paths, etc etc.
   // TODO: Right now, we just persist whatever was given to us to disk.
-  adapter.save(operation.args[0], function(err, data) {
+  adapter.save(operation.args[0], function(err, url) {
     // TODO: Persist the result of this operation to Mongo.
     if (err) {
       operation.error = {
@@ -47,7 +47,7 @@ HtmlOperator.prototype._save = function(operation, adapter, cb) {
       };
     } else {
       operation.result = {
-        url: data
+        url: url
       }
     }
     operation.save(); // TODO: is it ok not to wait?
@@ -57,7 +57,7 @@ HtmlOperator.prototype._save = function(operation, adapter, cb) {
 
 
 HtmlOperator.prototype._fetch = function(operation, adapter, cb) {
-  adapter.fetch(operation.args[0], function(err, data) {
+  adapter.fetch(operation.urlKey(), function(err, data) {
     // TODO: Persist the result of this operation to Mongo.
     if (err) {
       operation.error = {

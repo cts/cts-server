@@ -16,7 +16,7 @@ var MongoTree = require('../models/mongo-tree').MongoTree;
  */
 
 var CacheAdapter = function(opts) {
-  this.opts = globalOpts.CacheAdapter;
+  this.opts = globalOpts.adapters.cache;
   util.deepExtend(this.opts, opts);
 };
 
@@ -36,7 +36,7 @@ CacheAdapter.prototype.save = function(data, cb) {
     if(error) {
       cb(error);
     } else {
-      cb(null, mongoTree.id);
+      cb(null, self.opts.scheme + ":" + mongoTree.id);
     }
   });
 };

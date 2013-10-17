@@ -15,7 +15,7 @@ var fs = require('fs');
  */
 
 var FilesystemAdapter = function(opts) {
-  this.opts = globalOpts.FilesystemAdapter;
+  this.opts = globalOpts.adapters.filesystem;
   util.deepExtend(this.opts, opts);
 };
 
@@ -46,7 +46,7 @@ FilesystemAdapter.prototype.save = function(data, cb) {
         if (err) {
           cb(err);
         } else {
-          cb(null, key);
+          cb(null, self.opts.scheme + ":" + key);
         }
       });
     }

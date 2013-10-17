@@ -38,8 +38,10 @@ var TreeController = function(opts) {
 
 TreeController.prototype.save = function(req, res) {
   var html = req.body.html;
+  var adapter = req.body.adapter;
   var operation = new Operation({
     'action': 'save',
+    'treeUrl': adapter + ":",
     'treeType': 'html',
     'args': [html]
   });
@@ -58,7 +60,7 @@ TreeController.prototype.fetch = function(req, res) {
   var operation = new Operation({
     'action': 'fetch',
     'treeType': 'html',
-    'args': [req.params.key]
+    'treeUrl': req.params.key
   });
   this._performOperations([operation], function(err, operations) {
     if (err) {

@@ -14,12 +14,19 @@ var defaultOpts = {
     port: 27017,
     database: 'ctsserver'
   },
-  CacheAdapter: {
+  adapters: {
+    default: 'cache',
+    cache: {
+      scheme: 'cache'
+    },
+    filesystem: {
+      scheme: 'fs',
+      rootDir: path.resolve(__dirname, '..', 'filestorage') 
+    }
   },
-  FilesystemAdapter: {
-    rootDir: path.resolve(__dirname, '..', 'filestorage')
-  },
-  HtmlOperator: {
+  operators: {
+    html: {
+    }
   }
 };
 

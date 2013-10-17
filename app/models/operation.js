@@ -139,6 +139,29 @@ OperationSchema.statics.createFromRequest = function(request, cb) {
   processThenFinish(0);
 };
 
+OperationSchema.methods.urlScheme = function() {
+  if (this.treeUrl) {
+    var parts = this.treeUrl.split(":");
+    if (parts.length > 1) {
+      return parts[0];
+    }
+  }
+  return null;
+}
+
+OperationSchema.methods.urlKey = function() {
+  if (this.treeUrl) {
+    var parts = this.treeUrl.split(":");
+    if (parts.length > 1) {
+      parts.shift();
+      return parts.join(":");
+    } else {
+      return this.treeUrl;
+    }
+  }
+  return null;
+}
+
 var Operation = mongoose.model('Operation', OperationSchema);
 exports.Operation = Operation;
 
