@@ -11,12 +11,11 @@ var ObjectId = Schema.ObjectId;
 
 var UserSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true, trim: true },
-  salt: { type: String, default: '' },
   password: {
     type: String,
     set: function(password){
       return bcrypt.hash(password, 5, function(err, bcryptedPassword){
-        return bcryptedPassword
+        return bcryptedPassword;
       });
     },
     required: true
@@ -32,21 +31,16 @@ var login = function(email, password, done) {
   if (email && password) {
     hash = User.where('email', email);
     bcrypt.compare(password, hash, function(err, doesMatch){
-      if (doesMatch) {
-        console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
-        done(err, doesMatch);
-      }else{
-        console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
-        done(err, doesMatch);
-      }
-    }
+      console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
+      done(err, doesMatch);
+    };
     User.where('email', email).where('password', encodePassword(password)).findOne(function(err, user) {
       console.log("Login DB Result: ERR:", err, "USER:", user);
       done(err, user);
     });
   } else {
     done('Need to provide email and password');
-  }
+  };
 };
 
 exports.User = User;
