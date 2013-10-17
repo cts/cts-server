@@ -8,7 +8,7 @@
 
 var globalOpts = require('../opts');
 var util = require('../util');
-var TreePage = require('../models/tree_page').TreePage;
+var MongoTree = require('../models/mongo-tree').MongoTree;
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -29,14 +29,14 @@ var CacheAdapter = function(opts) {
  */
 CacheAdapter.prototype.save = function(data, cb) {
   var self = this;
-  var treePage = new TreePage({
+  var mongoTree = new MongoTree({
     content: data
   });
-  treePage.save(function(error) {
+  mongoTree.save(function(error) {
     if(error) {
       cb(error);
     } else {
-      cb(null, treePage.id);
+      cb(null, mongoTree.id);
     }
   });
 };
@@ -45,14 +45,14 @@ CacheAdapter.prototype.save = function(data, cb) {
  *
  */
 CacheAdapter.prototype.fetch = function(key, cb) {
-  TreePage.findById(key, function(error, treePage) {
+  MongoTree.findById(key, function(error, mongoTree) {
     if (error) {
       cb(error);
     } else {
-      if (treePage == null) {
+      if (mongoTree == null) {
         cb("Could not page for key.");
       } else {
-        cb(null, treePage.content);
+        cb(null, mongoTree.content);
       }
     }
   });
@@ -60,7 +60,7 @@ CacheAdapter.prototype.fetch = function(key, cb) {
 
 
 CacheAdapter.prototype.remove = function(key, cb) {
-  TreePage.findByIdAndRemove(key, function(error) {
+  MongoTree.findByIdAndRemove(key, function(error) {
     if (error) {
       cb(error);
     } else {
