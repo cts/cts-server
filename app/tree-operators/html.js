@@ -23,8 +23,8 @@ var HtmlOperator = function(opts) {
 /**
  *
  */
-HtmlOperator.prototype.performOperation = function(operation, adapter, cb) {
-  switch(operation.operator) {
+HtmlOperator.prototype.perform = function(operation, adapter, cb) {
+  switch(operation.action) {
     case 'save':
       this._save(operation, adapter, cb);
       break;
@@ -36,7 +36,7 @@ HtmlOperator.prototype.performOperation = function(operation, adapter, cb) {
   }
 };
 
-HtmlOperator.prototype.save = function(operation, adapter, cb) {
+HtmlOperator.prototype._save = function(operation, adapter, cb) {
   // TODO: This handles the minutae of negotiating tree paths, etc etc.
   // TODO: Right now, we just persist whatever was given to us to disk.
   adapter.save(operation.args[0], function(err, data) {
@@ -56,7 +56,7 @@ HtmlOperator.prototype.save = function(operation, adapter, cb) {
 };
 
 
-HtmlOperator.prototype.fetch = function(operation, adapter, cb) {
+HtmlOperator.prototype._fetch = function(operation, adapter, cb) {
   adapter.fetch(operation.args[0], function(err, data) {
     // TODO: Persist the result of this operation to Mongo.
     if (err) {

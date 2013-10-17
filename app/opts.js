@@ -9,6 +9,11 @@ var defaultOpts = {
     uid: 'www-data',
     gid: 'www-data'
   },
+  mongo: {
+    host: 'localhost',
+    port: 27017,
+    database: 'ctsserver'
+  },
   CacheAdapter: {
   },
   FilesystemAdapter: {

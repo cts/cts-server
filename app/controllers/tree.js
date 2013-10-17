@@ -20,7 +20,7 @@
 
 var AdapterFactory = require('../tree-adapters/adapter-factory').AdapterFactory;
 var OperatorFactory = require('../tree-operators/operator-factory').OperatorFactory;
-var OperationFactory = require('../model/operation').OperationFactory;
+var Operation = require('../models/operation').Operation;
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -31,51 +31,82 @@ var TreeController = function(opts) {
   this.opts = opts;
 };
 
-/* Methods 
+/* Public Endpoints
  * ----------------------------------------------------------------------------- 
  */
 
 
-/*
- * This will eventually be the only endpoint. (though we will support pooling of
- * multiple operations in the same request.
- */
-TreeController.prototype.performOperation = function(operation, callback) {
-  var adapter = AdapterFactory.adapterForOperation(operation);
-  var operator = OperatorFactory.operatorForOperation(operation);
-  operator.perform(operation, adapter, cb);
-};
-
-/**
- *
- */
 TreeController.prototype.save = function(req, res) {
-  var operation = OperationFactory.saveOperation(req);
-  this.performOperation(operation, function(err, operation) {
+  var html = req.body.html;
+  var operation = new Operation({
+    'action': 'save',
+    'treeType': 'html',
+    'args': [html]
+  });
+
+  this._performOperations([operation], function(err, operations) {
     if (err) {
-      res.status(400).send(operation.error.message);
+      res.status(400).send(err);
     } else {
-      var key = operation.result.url;
-      var html = "<html><body>" +
-      "<a href='/tree/" + key + "'>" + key + "</a>" +
-      "</body></html>";
-      res.send(html);
+      res.render("tree/save-result.ejs", {'operation': operations[0]});
     }
   });
 };
 
-/**
- *
- */
+
 TreeController.prototype.fetch = function(req, res) {
-  var operation = OperationFactory.fetchOperation(req);
-  this.performOperation(operation, function(err, operation) {
+  var operation = new Operation({
+    'action': 'fetch',
+    'treeType': 'html',
+    'args': [req.params.key]
+  });
+  this._performOperations([operation], function(err, operations) {
     if (err) {
-      res.status(400).send(operation.error.message);
+      res.status(400).send(err);
     } else {
-      res.send(operation.result.tree);
+      res.send(operations[0].result.tree);
     }
   });
+};
+
+
+/* "Private" Methods
+ * ----------------------------------------------------------------------------- 
+ */
+
+/* Performs one or more operations.
+ *
+ * Args:
+ *  operation - An array of operation model objects
+ *  callback  - A node-style callback. On success, the operation will be returned.
+ *
+ */
+TreeController.prototype._performOperations = function(operations, callback) {
+  var error = null, results = [];
+  var processThenFinish = function(i) {
+    if (error != null) {
+      // Bail on the first error.
+      callback(error, results);
+    } else if (i >= operations.length) {
+      // Finish up. We succeeded!
+      callback(null, results);
+    } else {
+      // Attempt Operation i
+      var adapter = AdapterFactory.adapterForOperation(operations[i]);
+      var operator = OperatorFactory.operatorForOperation(operations[i]);
+      operator.perform(operations[i], adapter, function(err, res) {
+        if (err) {
+          error = err;
+        } else {
+          results.push(res);
+        }
+        // Continue on to Operation i+1 (or a termination condition).
+        processThenFinish(i+1);
+      });
+    } 
+  };
+  // Kick off the process.
+  processThenFinish(0);
 };
 
 

@@ -12,7 +12,7 @@ var OperatorFactory = function() {
   }
 };
 
-OperatorFactory.prototype.operatorForRequest = function(req) {
+OperatorFactory.prototype.operatorForOperation = function(operation) {
   // Hardcoded for now..
   return this.operators['html'];
 };

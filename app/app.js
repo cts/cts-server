@@ -12,14 +12,14 @@ var opts          = require('./opts');
 var util          = require('./util');
 
 
+
 /*
  * Connect to database
  * -----------------------------------------------------------------------------
  */
 
-//var mongoose = require('mongoose');
-//var db            = require('./db');
-//mongoose.connect('mongodb://' + Opts.db.host + ':' + Opts.db.port + '/' + Opts.db.database);
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://' + opts.mongo.host + ':' + opts.mongo.port + '/' + opts.mongo.database);
 
 /*
  * Create application
@@ -42,6 +42,12 @@ app.configure(function() {
   if (process.env.DEBUG) {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   }
+
+  // EJS. Cool, huh.
+  app.set('view engine', 'ejs');
+  app.set('views',__dirname + '/views');
+  app.set('view options', { layout:false, root: __dirname + '/templates' } );
+
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
