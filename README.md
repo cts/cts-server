@@ -7,10 +7,7 @@ Dependencies
 You'll need to install the following:
 
 * NodeJS
-* Redis
-
-Before you Begin (Dependencies)
--------------------------------
+* MongoDB
 
 1. If this is the first time you're running the server, make sure you have all
 the required NPM modules.
@@ -19,12 +16,7 @@ the required NPM modules.
      npm install
      ```
 
-2. Install **MongoDB** and have it running.
-
-Running
--------
-
-1. If this is your first time, create a local options file
+2. If this is your first time, create a local options file
 
      ```
      cp app/opts-local.js.example app/opts-local.js
@@ -34,7 +26,7 @@ Running
    environment requires. The `app/opts.js` file loads your local opts and will
    extend and overwrite its own settings.
 
-2. Start the server.
+3. Start the server.
 
      ```
      node app/app.js
