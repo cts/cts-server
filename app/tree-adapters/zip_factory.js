@@ -1,9 +1,75 @@
 var zip = require('node-zip');
 var fs = require('fs');
 var async = require('async');
+var WebScraper = require('web-scraper');
+var uuid = require('node-uuid');
 
 var ZipFactoryAdapter = function(opts) {
   this.opts = opts || {};
+};
+
+/*
+ * Take in a url, and we will scrape all of the assets from that url and 
+ * store those assets, then present them to you in a zip file.
+ */
+ZipFactoryAdapter.prototype.zipTree = function(url, cb) {
+  var scraperOpts = {
+    url: url,
+    basedir: '/tmp',
+  };
+  createTempDirectory(function(err, directory) {
+    scraperOpts['basedir'] = directory
+    new WebScraper(scraperOpts).scrape(function(err) {
+      if (err) {
+        console.log("Scraper unable to find files from url: " + err);
+      } else {
+        findFilesInDirectory(directory, function(err, filenames) {
+          ZipFactoryAdapter.prototype.zipFiles(filenames, cb);
+        });
+      }
+    });
+  });
+};
+
+createTempDirectory = function(cb, tries) {
+  if (typeof tries == 'undefined') {
+    tries = 0;
+  }
+  if (tries > 50) {
+    return cb(new Error('Too many attempts made to create temporary directory'));
+  }
+
+  var scraperDirectory = '/tmp/zip-factory' + uuid.v4();
+  fs.exists(scraperDirectory, function (exists) {
+    if (exists) {
+      createTempDirectory(cb, tries+1);
+    } else {
+      cb(null, scraperDirectory);
+    }
+  });
+};
+
+findFilesInDirectory = function(dir, cb) {
+  var results cb;
+  fs.readdir(dir, function(err, list) {
+    if (err) return cb(err);
+    var pending = list.length;
+    if (!pending) return cb(null, results);
+    list.forEach(function(file) {
+      file = dir + '/' + file;
+      fs.stat(file, function(err, stat) {
+        if (stat && stat.isDirectory()) {
+          findFilesInDirectory(file, function(err, res) {
+            results = results.concat(res);
+            if (!--pending) cb(null, results);
+          });
+        } else {
+          results.push(file);
+          if (!--pending) cb(null, results);
+        }
+      });
+    });
+  });
 };
 
 /*
