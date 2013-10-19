@@ -43,13 +43,10 @@ var OperationSchema = mongoose.Schema({
    */
   path: { type: String, trim: true, default: null },
 
-  /* Arguments for the action.
+  /* Parameters for the action.
    *
-   * Optional ([])
    */
-  args: [
-    {type: Schema.Types.Mixed}
-  ],
+  parameters: { type: Schema.Types.Mixed, default: null },
 
   // To be filled in by the server, upon processing
   // -------------------------------------------

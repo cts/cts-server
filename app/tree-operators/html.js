@@ -5,6 +5,8 @@
 
 var globalOpts = require('../opts');
 var util = require('../util');
+var cheerio = require('cheerio');
+var OperatorBase = require('./operator-base').OperatorBase;
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -13,64 +15,81 @@ var util = require('../util');
 
 var HtmlOperator = function(opts) {
   this.opts = globalOpts.operators.html;
+  opts = opts || {};
   util.deepExtend(this.opts, opts);
 };
 
-/* Methods 
+// Inherit from OperatorBase
+HtmlOperator.prototype = new OperatorBase();
+
+/* "Private" Methods 
  * ----------------------------------------------------------------------------- 
+ *
+ * NOTE: All of these methods are managed by the superclass, OperatorBase.
+ * They should simply perform a manipulation without any regard to persistence.
+ *
  */
 
 /**
- *
+ * Sets $(operation.params.selector) <- operation.params.replacement
  */
-HtmlOperator.prototype.perform = function(operation, adapter, cb) {
-  switch(operation.action) {
-    case 'save':
-      this._save(operation, adapter, cb);
-      break;
-    case 'fetch':
-      this._fetch(operation, adapter, cb);
-      break;
-    default:
-      cb("Unknown operator: " + operation.operator);
+HtmlOperator.prototype._edit = function(operation, data, cb) {
+  var error = this._checkForMissingParams(
+      operation, ['selector', 'replacement']);
+  if (error) {
+    cb(error);
+  } else {
+    $ = cheerio.load(data);
+    var elem = $(operation.parameters.selector);
+    if (elem.length == 0) {
+      cb("Selector did not resolve any elements.");
+    } else {
+      // The duplication.
+      elem.html(operation.parameters.replacement);
+      cb(null, $.html());
+    }
   }
 };
 
-HtmlOperator.prototype._save = function(operation, adapter, cb) {
-  // TODO: This handles the minutae of negotiating tree paths, etc etc.
-  // TODO: Right now, we just persist whatever was given to us to disk.
-  adapter.save(operation.args[0], function(err, url) {
-    // TODO: Persist the result of this operation to Mongo.
-    if (err) {
-      operation.error = {
-        message: err
-      };
+/**
+ * Duplicates $(operation.params.selector).
+ */
+HtmlOperator.prototype._duplicate = function(operation, data, cb) {
+  var error = this._checkForMissingParams(operation, ['selector']);
+  if (error) {
+    cb(error);
+  } else {
+    $ = cheerio.load(data);
+    var elem = $(operation.parameters.selector);
+    if (elem.length == 0) {
+      cb("Selector did not resolve any elements.");
     } else {
-      operation.result = {
-        url: url
-      }
+      // The duplication.
+      elem.after(elem.clone());
+      cb(null, $.html());
     }
-    operation.save(); // TODO: is it ok not to wait?
-    cb(err, operation);
-  });
+  }
 };
 
-
-HtmlOperator.prototype._fetch = function(operation, adapter, cb) {
-  adapter.fetch(operation.urlKey(), function(err, data) {
-    // TODO: Persist the result of this operation to Mongo.
-    if (err) {
-      operation.error = {
-        message: err
-      };
+/**
+ * Removes $(operation.params.selector) from tree.
+ */
+HtmlOperator.prototype._remove = function(operation, data, cb) {
+  var error = this._checkForMissingParams(operation, ['selector']);
+  if (error) {
+    cb(error);
+  } else {
+    $ = cheerio.load(data);
+    var elem = $(operation.parameters.selector);
+    if (elem.length == 0) {
+      cb("Selector did not resolve any elements.");
     } else {
-      operation.result = {
-        tree: data
-      }
+      // The duplication.
+      elem.remove();
+      cb(null, $.html());
     }
-    operation.save(); // TODO: is it ok not to wait?
-    cb(err, operation);
-  });
+  }
 };
+
 
 exports.HtmlOperator = HtmlOperator;

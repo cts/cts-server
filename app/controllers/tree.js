@@ -43,7 +43,7 @@ TreeController.prototype.save = function(req, res) {
     'action': 'save',
     'treeUrl': adapter + ":",
     'treeType': 'html',
-    'args': [html]
+    'parameters': {content: html}
   });
 
   this._performOperations([operation], function(err, operations) {
@@ -96,7 +96,8 @@ TreeController.prototype._performOperations = function(operations, callback) {
       // Attempt Operation i
       var adapter = AdapterFactory.adapterForOperation(operations[i]);
       var operator = OperatorFactory.operatorForOperation(operations[i]);
-      operator.perform(operations[i], adapter, function(err, res) {
+      var operation = operations[i];
+      operator.perform(operation, adapter, function(err, res) {
         if (err) {
           error = err;
         } else {

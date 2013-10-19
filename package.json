@@ -44,7 +44,8 @@
     "bcrypt": "*",
     "async": "*",
     "ssh2": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "cheerio": "*"
   },
   "devDependencies": {
     "mocha": "*",
