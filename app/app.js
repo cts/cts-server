@@ -80,9 +80,9 @@ var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');
 
-//var ZipController = require('./controllers/zip').ZipController;
-//var zipController = new ZipController();
-//zipController.connectToApp(app, '/zip');
+var ZipController = require('./controllers/zip').ZipController;
+var zipController = new ZipController();
+zipController.connectToApp(app, '/zip');
 
 /*
  * 3.. 2.. 1..
