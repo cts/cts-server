@@ -8,7 +8,8 @@
 var mongoose = require('mongoose');
 
 var MongoTreeSchema = mongoose.Schema({
-  content: { type: String, required: true, trim: true }
+  content: { type: String, required: true, trim: true },
+  url: { type: String, required: true, trim: true }
 });
 
 var MongoTree = mongoose.model('MongoTree', MongoTreeSchema);
