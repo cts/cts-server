@@ -13,7 +13,6 @@ var cheerio = require('cheerio');
  */
 
 var OperatorBase = function() {
-  console.log("OperatorBase should never be constructed!");
 };
 
 /**
@@ -36,7 +35,9 @@ OperatorBase.prototype.perform = function(operation, adapter, cb) {
 };
 
 OperatorBase.prototype._save = function(operation, adapter, cb) {
-  if ((typeof operation.parameters == 'undefined') || (typeof operation.parameters.content == 'undefined')) {
+  if ((typeof operation.parameters == 'undefined') ||
+      (typeof operation.parameters.content == 'null') ||
+      (typeof operation.parameters.content == 'undefined')) {
     cb("No content to save");
   } else {
     adapter.save(operation.parameters.content, function(err, url) {
@@ -114,6 +115,7 @@ OperatorBase.prototype._checkForMissingParams = function(operation, params) {
   if (params.length > 0) {
     if (typeof operation.parameters == 'undefined') {
       return "Operation is missing parameters";
+    }
     for (var i = 0; i < params.length; i++) {
       if (typeof operation.parameters[params[i]] == 'undefined') {
         return "Operation is missing parameter " + params[i];
