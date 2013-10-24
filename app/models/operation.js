@@ -43,13 +43,10 @@ var OperationSchema = mongoose.Schema({
    */
   path: { type: String, trim: true, default: null },
 
-  /* Arguments for the action.
+  /* Parameters for the action.
    *
-   * Optional ([])
    */
-  args: [
-    {type: Schema.Types.Mixed}
-  ],
+  parameters: { type: Schema.Types.Mixed, default: null },
 
   // To be filled in by the server, upon processing
   // -------------------------------------------
@@ -79,7 +76,7 @@ OperationSchema.statics.createFromJson = function(json, cb) {
       treeType: get(json, 'treeType'),
       path: get(json, 'path'),
       action: get(json, 'action'),
-      args: get(json, 'args')
+      parameters: get(json, 'parameters')
     });
     cb(null, op);
   } catch (e) {
@@ -102,23 +99,26 @@ OperationSchema.statics.createFromJson = function(json, cb) {
  *   Array of Operation objects
  */
 OperationSchema.statics.createFromRequest = function(request, cb) {
-  if (! 'operations' in request.body) {
+  if (typeof request.body == 'undefined') {
     cb({error: "`operations` key missing from request body."});
   }
-  if (! _.isArray(request.body.operations)) {
+  if (! _.isArray(request.body)) {
     cb({error: "`operations` key in request body must be an array."});
   }
 
   var errors = null;
   var operations = [];
-  var bodyOps = request.body.operations;
 
   var processThenFinish = function(i) {
-    if (i < bodyOps.length) {
+    if (i < request.body.length) {
       // Process
-      var json = bodyOps[i];
+      var json = request.body[i];
       OperationSchema.statics.createFromJson(json, function(err, op) {
         if (err) {
+          console.log(err);
+          if (errors == null) {
+            errors = [];
+          }
           errors.push({
             json: json,
             index: i,

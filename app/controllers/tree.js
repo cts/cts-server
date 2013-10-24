@@ -35,6 +35,47 @@ var TreeController = function(opts) {
  * ----------------------------------------------------------------------------- 
  */
 
+/* CORS Preflight
+ */
+TreeController.prototype.preflight = function(req, res) {
+  // Add CORS Headers
+  console.log("CORS Preflight");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).send();
+};
+
+/* This is the sink for multiple operations coming in.
+ */
+TreeController.prototype.switchboard= function(req, res) {
+  // Add CORS Headers
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  var self = this;
+
+  // Parse operations from body.
+  Operation.createFromRequest(req, function(error, operations) {
+    if (error) {
+      console.log("Error reconstructing ops:", error);
+      res.status(400).send(error);
+    } else {
+      self._performOperations(operations, function(error, ops) {
+        if (error) {
+          console.log("Error performing ops:", error);
+          res.status(400).send(error);
+        } else {
+          res.header('Content-Type', 'application/json');
+          res.status(200);
+          res.send(ops);
+        }
+      });
+    }
+  });
+};
 
 TreeController.prototype.save = function(req, res) {
   var html = req.body.html;
@@ -43,7 +84,7 @@ TreeController.prototype.save = function(req, res) {
     'action': 'save',
     'treeUrl': adapter + ":",
     'treeType': 'html',
-    'args': [html]
+    'parameters': {content: html}
   });
 
   this._performOperations([operation], function(err, operations) {
@@ -96,7 +137,8 @@ TreeController.prototype._performOperations = function(operations, callback) {
       // Attempt Operation i
       var adapter = AdapterFactory.adapterForOperation(operations[i]);
       var operator = OperatorFactory.operatorForOperation(operations[i]);
-      operator.perform(operations[i], adapter, function(err, res) {
+      var operation = operations[i];
+      operator.perform(operation, adapter, function(err, res) {
         if (err) {
           error = err;
         } else {
@@ -118,6 +160,9 @@ TreeController.prototype._performOperations = function(operations, callback) {
 
 TreeController.prototype.connectToApp = function(app, prefix) {
   var self = this;
+  app.post(prefix + '/switchboard', self.switchboard.bind(self));
+  app.options(prefix + '/switchboard', self.preflight.bind(self));
+  // TODO: Delete the ones below.
   app.post(prefix, self.save.bind(self));
   app.get(prefix + '/:key', self.fetch.bind(self));
 };
