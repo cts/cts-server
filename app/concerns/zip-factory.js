@@ -4,7 +4,7 @@ var async = require('async');
 var WebScraper = require('web-scraper');
 var uuid = require('node-uuid');
 
-var ZipFactoryAdapter = function(opts) {
+var ZipFactory = function(opts) {
   this.opts = opts || {};
 };
 
@@ -21,7 +21,7 @@ var ZipFactoryAdapter = function(opts) {
  * has been completed.
  *
  */
-ZipFactoryAdapter.prototype.zipTree = function(url, cb) {
+ZipFactory.prototype.zipTree = function(url, cb) {
   var scraperOpts = {
     url: url,
     basedir: '/tmp',
@@ -33,7 +33,7 @@ ZipFactoryAdapter.prototype.zipTree = function(url, cb) {
         console.log("Scraper unable to find files from url: " + err);
       } else {
         _findFilesInDirectory(directory, function(err, filenames) {
-          ZipFactoryAdapter.prototype.zipFiles(filenames, cb);
+          ZipFactory.prototype.zipFiles(filenames, cb);
         });
       }
     });
@@ -51,7 +51,7 @@ ZipFactoryAdapter.prototype.zipTree = function(url, cb) {
  * which is a string of data representing the zipped form of 'filename1' and
  * 'filename2'.
  */
-ZipFactoryAdapter.prototype.zipFileData = function(fileData, cb) {
+ZipFactory.prototype.zipFileData = function(fileData, cb) {
   var zipDirectory = zip();
   for (var key in fileData) {
     if (fileData.hasOwnProperty(key)) {
@@ -74,14 +74,14 @@ ZipFactoryAdapter.prototype.zipFileData = function(fileData, cb) {
  * will be determined by the TreePage's url.
  *
  */
-ZipFactoryAdapter.prototype.zipTreePages = function(treePages, cb) {
+ZipFactory.prototype.zipTreePages = function(treePages, cb) {
   var fileData = {};
   async.parallel(_readFileFunctions(filenames, fileData, _populateMongoFileData),
     function(err) {
       if (err) {
         console.log('Unable to read Tree Pages from MongoDB.');
       }
-      ZipFactoryAdapter.prototype.zipFileData(fileData, function(err, data) {
+      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
         cb(err, data);
       });
     });
@@ -97,14 +97,14 @@ ZipFactoryAdapter.prototype.zipTreePages = function(treePages, cb) {
  * zip data is returned to the callback.
  *
  */
-ZipFactoryAdapter.prototype.zipFiles = function(filenames, cb) {
+ZipFactory.prototype.zipFiles = function(filenames, cb) {
   var fileData = {};
   async.parallel(_readFileFunctions(filenames, fileData, _populateFileSystemFileData),
     function(err) {
       if (err) {
         console.log('Unable to read files from file system.');
       }
-      ZipFactoryAdapter.prototype.zipFileData(fileData, function(err, data) {
+      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
         cb(err, data);
       });
     });
@@ -196,5 +196,5 @@ _findFilesInDirectory = function(dir, cb) {
   });
 };
 
-var zipFactory = new ZipFactoryAdapter();
-exports.ZipFactoryAdapter = zipFactory;
+var zipFactory = new ZipFactory();
+exports.ZipFactory = zipFactory;
