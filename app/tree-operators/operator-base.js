@@ -40,7 +40,7 @@ OperatorBase.prototype._save = function(operation, adapter, cb) {
       (typeof operation.parameters.content == 'undefined')) {
     cb("No content to save");
   } else {
-    adapter.save(operation.parameters.content, function(err, url) {
+    adapter.save(operation.parameters.content, operation, function(err, url) {
       // TODO: Persist the result of this operation to Mongo.
       if (err) {
         operation.error = {

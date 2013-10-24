@@ -27,10 +27,11 @@ var CacheAdapter = function(opts) {
 /**
  *
  */
-CacheAdapter.prototype.save = function(data, cb) {
+CacheAdapter.prototype.save = function(data, operation, cb) {
   var self = this;
   var mongoTree = new MongoTree({
-    content: data
+    content: data,
+    url: operation.treeUrl
   });
   mongoTree.save(function(error) {
     if(error) {
