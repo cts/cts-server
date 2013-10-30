@@ -26,7 +26,7 @@ var FilesystemAdapter = function(opts) {
 /**
  *
  */
-FilesystemAdapter.prototype.save = function(data, cb) {
+FilesystemAdapter.prototype.save = function(data, operation, cb) {
   var key = uuid.v4();
   var self = this;
   var file = path.join(this.opts.rootDir, key);
@@ -46,6 +46,8 @@ FilesystemAdapter.prototype.save = function(data, cb) {
         if (err) {
           cb(err);
         } else {
+          console.log(self.opts.scheme + ":" + key);
+          console.log(cb);
           cb(null, self.opts.scheme + ":" + key);
         }
       });
