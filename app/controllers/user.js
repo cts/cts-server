@@ -139,10 +139,18 @@ UserController.prototype.login = function(req, res, next) {
       return next(err);
     }
     if (!user) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Credentials', true);
+      res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
       return res.redirect('/account.html#/login/invalid');
     }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Credentials', true);
+      res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
       return res.redirect('/home');
     });
   })(req, res, next);
