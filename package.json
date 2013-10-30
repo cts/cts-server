@@ -2,7 +2,7 @@
   "name": "cts-server",
   "description": "Web Server for CTS",
   "author": [
-    { 
+    {
     "name":"Ted Benson",
     "email":"eob@csail.mit.edu>"
     },
@@ -45,7 +45,6 @@
     "bcrypt": "*",
     "async": "*",
     "ssh2": "*",
-    "underscore": "*",
     "cheerio": "*"
   },
   "devDependencies": {

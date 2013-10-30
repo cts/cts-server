@@ -67,14 +67,14 @@ app.configure(function() {
  *    Acct creation via web, all else via API via CTS-UI.
  */
 
-//var LocalStrategy  = require('passport-local').Strategy;
-//var UserController = require('./controllers/user').UserController;
-//var userController = new UserController({}, passport);
-//userController.connectToApp(app, '/user');
-//
-//var SessionController = require('./controllers/session').SessionController;
-//var sessionController = new SessionController({}, passport);
-//sessionController.connectToApp(app, '/session');
+var LocalStrategy  = require('passport-local').Strategy;
+var UserController = require('./controllers/user').UserController;
+var userController = new UserController({}, passport);
+userController.connectToApp(app, '/user');
+
+var SessionController = require('./controllers/session').SessionController;
+var sessionController = new SessionController({}, passport);
+sessionController.connectToApp(app, '/session');
 
 var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();

@@ -4,7 +4,6 @@
  */
 
 var Mongo          = require('mongodb');
-var db             = require('../db');
 var Connection     = Mongo.Connection;
 var Server         = Mongo.Server;
 var BSON           = Mongo.BSON;
@@ -19,7 +18,7 @@ var crypto         = require('crypto');
 require('date-utils');
 
 /* Constructor
- * ----------------------------------------------------------------------------- 
+ * -----------------------------------------------------------------------------
  * This is the object exported by this file.
  */
 
@@ -28,8 +27,20 @@ var UserController = function(opts, passport) {
   this.passport = passport;
 };
 
-/* Methods 
- * ----------------------------------------------------------------------------- 
+/* CORS Preflight
+ */
+UserController.prototype.preflight = function(req, res) {
+  // Add CORS Headers
+  console.log("CORS Preflight");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).send();
+};
+
+/* Methods
+ * -----------------------------------------------------------------------------
 */
 
 UserController.prototype.create = function(req, res) {
@@ -50,10 +61,10 @@ UserController.prototype.create = function(req, res) {
 UserController.prototype.forgot = function(req, res, next) {
   var user = _.pick(req.body, 'email');
   User.findOne({'email': user.email}, function(err, user) {
-    if (err)   { 
+    if (err)   {
       res.status(401).send("Error");
     }
-    else if (!user) { 
+    else if (!user) {
       res.status(401).send("Error");
     }
     else {
@@ -85,10 +96,10 @@ UserController.prototype.reset = function(req, res, next) {
   var u = _.pick(req.body, 'token', 'password');
 
   User.findOne({'reset_password_token': u.token}, function(err, user) {
-    if (err)   { 
+    if (err)   {
       res.status(401).send("Error");
     }
-    else if (!user) { 
+    else if (!user) {
       res.status(401).send("Error");
     }
     else {
@@ -150,6 +161,8 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.get(prefix + '/logout', self.destroySession.bind(self));
   app.post(prefix + '/token', self.token.bind(self));
   app.post(prefix + '/forgot', self.forgot.bind(self));
+  app.options(prefix + '/login', self.preflight.bind(self));
+  app.options(prefix + '/logout', self.preflight.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {
@@ -158,4 +171,3 @@ UserController.prototype.ensureAuthenticated = function(req, res, next) {
 };
 
 exports.UserController = UserController;
-
