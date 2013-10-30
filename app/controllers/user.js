@@ -121,6 +121,45 @@ UserController.prototype.reset = function(req, res, next) {
   });
 };
 
+UserController.prototype.createWithToken = function(req, res) {
+  if (opts.allowTokens) {
+    // Passport responds with HTTP 401 Unauthorized if this fails.
+    this.passport.authenticate('bearer', {session: false}, function(req, res) {
+      res.send('Logged In');
+    });
+  } else {
+    // 401 = Unauthorized
+    res.status(401).send('Token authentication not permitted.');
+  }
+};
+
+UserController.prototype.login = function(req, res, next) {
+  this.passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.redirect('/account.html#/login/invalid');
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/home');
+    });
+  })(req, res, next);
+};
+
+UserController.prototype.destroySession = function(req, res) {
+  req.logout();
+  res.redirect('/');
+};
+
+UserController.prototype.destroyToken = function(req, res) {
+  if (opts.allowTokens) {
+  } else {
+  }
+  // Clears the user's token
+};
+
 UserController.prototype.connectToApp = function(app, prefix) {
   // Manual Login
 
@@ -159,10 +198,10 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.post(prefix,            self.create.bind(self));
   app.post(prefix + '/login', self.login.bind(self));
   app.get(prefix + '/logout', self.destroySession.bind(self));
-  app.post(prefix + '/token', self.token.bind(self));
   app.post(prefix + '/forgot', self.forgot.bind(self));
   app.options(prefix + '/login', self.preflight.bind(self));
   app.options(prefix + '/logout', self.preflight.bind(self));
+  app.options(prefix + '/forgot', self.preflight.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {
