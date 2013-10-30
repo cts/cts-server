@@ -33,7 +33,7 @@ var login = function(email, password, done) {
     bcrypt.compare(password, hash, function(err, doesMatch){
       console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
       done(err, doesMatch);
-    };
+    });
     User.where('email', email).where('password', encodePassword(password)).findOne(function(err, user) {
       console.log("Login DB Result: ERR:", err, "USER:", user);
       done(err, user);
