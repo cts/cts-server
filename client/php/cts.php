@@ -84,7 +84,7 @@ function report_simple_error($message) {
  *   -  If true, OBJ is an error message.
  *   -  If false, OBJ is the parsed body.
  */
-function parse_request() 
+function parse_request() {
 
   /* From Stack Overflow:
    * ====================
@@ -153,6 +153,12 @@ function is_authenticated($request) {
  *   If an error occured, message is the error message.
  */
 function replace_file($file_path, $new_contents) {
+
+  $filename = null;
+
+  if (! file_exists($filename)) {
+    return array(true, "File does not exist");
+  }
 
 }
 
