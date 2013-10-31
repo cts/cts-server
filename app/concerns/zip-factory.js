@@ -26,8 +26,11 @@ ZipFactory.prototype.zipTree = function(url, cb) {
     url: url,
     basedir: '/tmp',
   };
+  console.log("Beginning scrape: " + url);
   _createTempDirectory(function(err, directory) {
+    console.log("Base directory: " + directory);
     scraperOpts['basedir'] = directory
+    console.log(scraperOpts);
     new WebScraper(scraperOpts).scrape(function(err) {
       if (err) {
         console.log("Scraper unable to find files from url: " + err);
@@ -59,7 +62,7 @@ ZipFactory.prototype.zipFileData = function(fileData, cb) {
     }
   }
 
-  var data = zipDirectory.generate({base64:false,compression:'DEFLATE'});
+  var data = zipDirectory.generate({compression:'DEFLATE'});
   cb(null, data);
 };
 
@@ -174,7 +177,7 @@ _createTempDirectory = function(cb, tries) {
  *
  */
 _findFilesInDirectory = function(dir, cb) {
-  var results, cb;
+  var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return cb(err);
     var pending = list.length;
