@@ -28,7 +28,7 @@ ZipController.prototype.fetch = function(req, res) {
     } else {
       console.log("sending zip data");
       res.header('Content-Type', 'application/zip');
-      res.header('Content-Disposition', 'attachment; filename="site.zip"');
+      res.header('Content-Disposition', 'attachment; filename="' + url + '.zip"');
       res.send(data);
     }
   });

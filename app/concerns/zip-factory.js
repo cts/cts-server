@@ -62,7 +62,7 @@ ZipFactory.prototype.zipFileData = function(fileData, cb) {
     }
   }
 
-  var data = zipDirectory.generate({base64:false,compression:'DEFLATE'});
+  var data = zipDirectory.generate({compression:'DEFLATE'});
   cb(null, data);
 };
 
