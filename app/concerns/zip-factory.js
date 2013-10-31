@@ -43,6 +43,16 @@ ZipFactory.prototype.zipTree = function(url, cb) {
   });
 };
 
+ZipFactory.prototype.zipTreeToFile = function(url, cb) {
+  var filepath = _generateZipFileName('/home/john', url);
+  ZipFactory.prototype.zipTree(url, function(err, data) {
+    fs.writeFile(filepath, data, 'binary', function(err) {
+      console.log("wrote to zip file");
+      cb(err, filepath);
+    });
+  });
+};
+
 /*
  * Takes in +fileData+ which is an associative array of a filename and what you
  * would like the contents of the file to be. For example:
@@ -62,7 +72,7 @@ ZipFactory.prototype.zipFileData = function(fileData, cb) {
     }
   }
 
-  var data = zipDirectory.generate({compression:'DEFLATE'});
+  var data = zipDirectory.generate({type:'string'});
   cb(null, data);
 };
 
@@ -117,6 +127,24 @@ ZipFactory.prototype.zipFiles = function(filenames, cb) {
 /* Private methods
  *-----------------------------------------------------------------------------
  */
+
+_generateZipFileName = function(basedir, url, tries) {
+  if (typeof tries == 'undefined') {
+    tries = 0;
+  }
+  if (tries > 50) {
+    return cb(new Error('Too many attempts made to create temporary directory'));
+  }
+
+  var potentialName = basedir + "/" + url + uuid.v4();
+  fs.exists(potentialName), function(exists) {
+    if (exists) {
+      return potentialName;
+    } else {
+      _generateZipFileName(basedir, url, tries+1);
+    }
+  }
+};
 
 _readFileFunctions = function(files, fileData, populateFunction) {
   var functionList = [];
