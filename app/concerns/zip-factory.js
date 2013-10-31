@@ -177,7 +177,7 @@ _createTempDirectory = function(cb, tries) {
  *
  */
 _findFilesInDirectory = function(dir, cb) {
-  var results, cb;
+  var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return cb(err);
     var pending = list.length;
