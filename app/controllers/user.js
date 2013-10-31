@@ -134,23 +134,20 @@ UserController.prototype.createWithToken = function(req, res) {
 };
 
 UserController.prototype.login = function(req, res, next) {
+  console.log("Setting CORS headers");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   this.passport.authenticate('local', function(err, user, info) {
     if (err) {
       return next(err);
     }
     if (!user) {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Credentials', true);
-      res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type');
       return res.redirect('/account.html#/login/invalid');
     }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Credentials', true);
-      res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type');
       return res.redirect('/home');
     });
   })(req, res, next);
@@ -208,7 +205,6 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.get(prefix + '/logout', self.destroySession.bind(self));
   app.post(prefix + '/forgot', self.forgot.bind(self));
   app.options(prefix + '/login', self.preflight.bind(self));
-  app.options(prefix + '/logout', self.preflight.bind(self));
   app.options(prefix + '/forgot', self.preflight.bind(self));
 };
 
