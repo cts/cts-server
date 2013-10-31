@@ -37,7 +37,7 @@ ZipController.prototype.fetch = function(req, res) {
 
 ZipController.prototype.connectToApp = function(app, prefix) {
   var self = this;
-  app.get(prefix + '/:key', self.fetch.bind(self));
+  app.post(prefix, self.fetch.bind(self));
 };
 
 exports.ZipController = ZipController;

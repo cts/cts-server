@@ -26,8 +26,11 @@ ZipFactory.prototype.zipTree = function(url, cb) {
     url: url,
     basedir: '/tmp',
   };
+  console.log("Beginning scrape: " + url);
   _createTempDirectory(function(err, directory) {
+    console.log("Base directory: " + directory);
     scraperOpts['basedir'] = directory
+    console.log(scraperOpts);
     new WebScraper(scraperOpts).scrape(function(err) {
       if (err) {
         console.log("Scraper unable to find files from url: " + err);
