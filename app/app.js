@@ -81,7 +81,7 @@ var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');
 
 var ZipController = require('./controllers/zip').ZipController;
-var zipController = new ZipController();
+var zipController = new ZipController(opts);
 zipController.connectToApp(app, '/zip');
 
 /*

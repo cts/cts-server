@@ -165,13 +165,13 @@ ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, 
 
 ZipFactory.prototype._generateZipFileName = function(url, cb) {
   var self = this;
-  var name = self.opts.baseDir + "/" + url;
+  var name = self.opts.concerns.zipFactory.baseDir + "/" + url;
   self._getUnusedFile(name, cb);
 };
 
-ZipFactory.prototype._createTempDirectory(cb) {
+ZipFactory.prototype._createTempDirectory = function(cb) {
   var self = this;
-  self._getUnusedFile(self.opts.tempBaseName, cb);
+  self._getUnusedFile(self.opts.concerns.zipFactory.tempBaseName, cb);
 };
 
 /**
@@ -225,5 +225,4 @@ ZipFactory.prototype._findFilesInDirectory = function(dir, cb) {
   });
 };
 
-var zipFactory = new ZipFactory();
-exports.ZipFactory = zipFactory;
+exports.ZipFactory = ZipFactory;
