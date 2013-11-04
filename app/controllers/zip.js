@@ -29,10 +29,14 @@ ZipController.prototype.fetch = function(req, res) {
   var zipFilename = uri.parse(url).host + ".zip";
 
   self.zipFactory.zipTreeToFile(url, function(err, filepath) {
-    var data = fs.readFileSync(filepath);
-    res.header('Content-Type', 'application/zip');
-    res.header('Content-Disposition', 'attachment; filename="' + zipFilename);
-    res.send(data);
+    if (err) { 
+      res.status(400).send(err);
+    } else {
+      var data = fs.readFileSync(filepath);
+      res.header('Content-Type', 'application/zip');
+      res.header('Content-Disposition', 'attachment; filename="' + zipFilename);
+      res.send(data);
+    }
   });
 };
 

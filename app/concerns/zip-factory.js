@@ -36,6 +36,7 @@ ZipFactory.prototype.zipTree = function(url, cb) {
     new WebScraper(scraperOpts).scrape(function(err) {
       if (err) {
         console.log("Scraper unable to find files from url: " + err);
+        cb(err);
       } else {
         self._findFilesInDirectory(directory, function(err, filenames) {
           self.zipFiles(filenames, cb);
@@ -49,10 +50,14 @@ ZipFactory.prototype.zipTreeToFile = function(url, cb) {
   var self = this;
   self._generateZipFileName(url, function(err, filepath) {
     self.zipTree(url, function(err, data) {
-      fs.writeFile(filepath, data, 'binary', function(err) {
-        console.log("wrote to zip file");
-        cb(err, filepath);
-      });
+      if (err) {
+        cb(err);
+      } else {
+        fs.writeFile(filepath, data, 'binary', function(err) {
+          console.log("wrote to zip file");
+          cb(err, filepath);
+        });
+      }
     });
   });
 };
@@ -98,10 +103,12 @@ ZipFactory.prototype.zipTreePages = function(treePages, cb) {
     function(err) {
       if (err) {
         console.log('Unable to read Tree Pages from MongoDB.');
+        cb(err);
+      } else {
+        self.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
       }
-      self.zipFileData(fileData, function(err, data) {
-        cb(err, data);
-      });
     });
 };
 
@@ -122,10 +129,12 @@ ZipFactory.prototype.zipFiles = function(filenames, cb) {
     function(err) {
       if (err) {
         console.log('Unable to read files from file system.');
+        cb(err);
+      } else {
+        self.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
       }
-      self.zipFileData(fileData, function(err, data) {
-        cb(err, data);
-      });
     });
 };
 
@@ -147,7 +156,7 @@ ZipFactory.prototype._readFileFunctions = function(files, fileData, populateFunc
 ZipFactory.prototype._populateMongoFileData = function(fileData, treepage, functionList) {
   functionList.push(function(callback) {
     fileData[treepage.url] = treepage.content;
-    callback(err, fileData);
+    callback(null, fileData);
   });
 };
 
