@@ -3,6 +3,8 @@ var fs = require('fs');
 var async = require('async');
 var WebScraper = require('web-scraper');
 var uuid = require('node-uuid');
+var util = require('../util');
+var uri = require('uri-js');
 
 var ZipFactory = function(opts) {
   this.opts = opts || {};
@@ -28,16 +30,15 @@ ZipFactory.prototype.zipTree = function(url, cb) {
     basedir: '/tmp',
   };
   console.log("Beginning scrape: " + url);
-  _createTempDirectory(function(err, directory) {
+  self._createTempDirectory(function(err, directory) {
     console.log("Base directory: " + directory);
     scraperOpts['basedir'] = directory
-    console.log(scraperOpts);
     new WebScraper(scraperOpts).scrape(function(err) {
       if (err) {
         console.log("Scraper unable to find files from url: " + err);
       } else {
         self._findFilesInDirectory(directory, function(err, filenames) {
-          ZipFactory.prototype.zipFiles(filenames, cb);
+          self.zipFiles(filenames, cb);
         });
       }
     });
@@ -45,8 +46,9 @@ ZipFactory.prototype.zipTree = function(url, cb) {
 };
 
 ZipFactory.prototype.zipTreeToFile = function(url, cb) {
-  this._generateZipFileName(url, function(filepath) {
-    ZipFactory.prototype.zipTree(url, function(err, data) {
+  var self = this;
+  self._generateZipFileName(url, function(err, filepath) {
+    self.zipTree(url, function(err, data) {
       fs.writeFile(filepath, data, 'binary', function(err) {
         console.log("wrote to zip file");
         cb(err, filepath);
@@ -97,7 +99,7 @@ ZipFactory.prototype.zipTreePages = function(treePages, cb) {
       if (err) {
         console.log('Unable to read Tree Pages from MongoDB.');
       }
-      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
+      self.zipFileData(fileData, function(err, data) {
         cb(err, data);
       });
     });
@@ -121,7 +123,7 @@ ZipFactory.prototype.zipFiles = function(filenames, cb) {
       if (err) {
         console.log('Unable to read files from file system.');
       }
-      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
+      self.zipFileData(fileData, function(err, data) {
         cb(err, data);
       });
     });
@@ -162,10 +164,9 @@ ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, 
   });
 }
 
-
 ZipFactory.prototype._generateZipFileName = function(url, cb) {
   var self = this;
-  var name = self.opts.concerns.zipFactory.baseDir + "/" + url;
+  var name = self.opts.concerns.zipFactory.baseDir + "/" + uri.parse(url).host;
   self._getUnusedFile(name, cb);
 };
 

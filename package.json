@@ -46,7 +46,8 @@
     "async": "*",
     "ssh2": "*",
     "underscore": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "uri-js": "*"
   },
   "devDependencies": {
     "mocha": "*",
