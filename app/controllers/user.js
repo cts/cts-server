@@ -139,17 +139,15 @@ UserController.prototype.login = function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  console.log("Authenticating user");
   this.passport.authenticate('local', function(err, user, info) {
     if (err) {
-      return next(err);
+      res.send(401, err);
+    }else{
+      // create session, get the key and return it
+      res.send(200, 'Session key');
     }
-    if (!user) {
-      return res.redirect('/account.html#/login/invalid');
-    }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return res.redirect('/home');
-    });
   })(req, res, next);
 };
 

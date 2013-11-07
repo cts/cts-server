@@ -48,14 +48,14 @@ app.configure(function() {
   app.set('views',__dirname + '/views');
   app.set('view options', { layout:false, root: __dirname + '/templates' } );
 
+  app.use(express.static(static_dir));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.methodOverride());
   app.use(express.session({secret: 'asldjfwiouworuoeruwioroiweru'}));
-  //app.use(passport.initialize());
-  //app.use(passport.session());
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(static_dir));
 });
 
 /*
@@ -75,7 +75,6 @@ userController.connectToApp(app, '/user');
 
 var SessionController = require('./controllers/session').SessionController;
 var sessionController = new SessionController({}, passport);
-// sessionController.connectToApp(app, '/session');
 
 var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();

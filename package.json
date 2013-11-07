@@ -48,6 +48,7 @@
     "cheerio": "*"
   },
   "devDependencies": {
+    "grunt": "*",
     "mocha": "*",
     "assert": "*"
   }

@@ -14,9 +14,7 @@ var UserSchema = mongoose.Schema({
   password: {
     type: String,
     set: function(password){
-      return bcrypt.hash(password, 5, function(err, bcryptedPassword){
-        return bcryptedPassword;
-      });
+      return bcrypt.hashSync(password, 5);
     },
     required: true
   }
@@ -29,18 +27,25 @@ var User = mongoose.model('User', UserSchema);
 var login = function(email, password, done) {
   console.log("Attempting login", email, password);
   if (email && password) {
-    hash = User.where('email', email);
-    bcrypt.compare(password, hash, function(err, doesMatch){
-      console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
-      done(err, doesMatch);
-    });
-    User.where('email', email).where('password', encodePassword(password)).findOne(function(err, user) {
-      console.log("Login DB Result: ERR:", err, "USER:", user);
-      done(err, user);
+    hash = User.findOne({email: email}, function(err, userObject){
+      if (err){
+        console.log('Error: '+err);
+        return done('Incorrect username or password.', false);
+      }else{
+        bcrypt.compare(password, userObject.password, function(err, doesMatch){
+          console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
+          console.log(userObject);
+          if(!doesMatch||err){
+            return done('Incorrect username or password.', userObject);
+          }else{
+            return done(null, userObject);
+          }
+        });
+      }
     });
   } else {
-    done('Need to provide email and password');
-  };
+    return done('Need to provide email and password', false);
+  }
 };
 
 exports.User = User;
