@@ -46,6 +46,7 @@
     "async": "*",
     "ssh2": "*",
     "underscore": "*",
+    "node-github": "*",
     "cheerio": "*"
   },
   "devDependencies": {

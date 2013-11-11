@@ -102,7 +102,10 @@ OperationSchema.statics.createFromRequest = function(request, cb) {
   if (typeof request.body == 'undefined') {
     cb({error: "`operations` key missing from request body."});
   }
-  if (! _.isArray(request.body)) {
+  if (! _.isObject(request.body)) {
+    cb({error: "Request body must be an object."});
+  }
+  if (! _.isArray(request.body.operations)) {
     cb({error: "`operations` key in request body must be an array."});
   }
 
@@ -110,9 +113,9 @@ OperationSchema.statics.createFromRequest = function(request, cb) {
   var operations = [];
 
   var processThenFinish = function(i) {
-    if (i < request.body.length) {
+    if (i < request.body.operations.length) {
       // Process
-      var json = request.body[i];
+      var json = request.body.operations[i];
       OperationSchema.statics.createFromJson(json, function(err, op) {
         if (err) {
           console.log(err);

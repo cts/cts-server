@@ -81,6 +81,12 @@ UserController.prototype.forgot = function(req, res, next) {
   });
 };
 
+
+UserController.prototype.githubAuthorize = function(req, res, next) {
+  console.log(req);
+};
+
+
 UserController.prototype.reset = function(req, res, next) {
   var u = _.pick(req.body, 'token', 'password');
 
