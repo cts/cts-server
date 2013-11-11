@@ -47,7 +47,6 @@ FilesystemAdapter.prototype.save = function(data, operation, cb) {
           cb(err);
         } else {
           console.log(self.opts.scheme + ":" + key);
-          console.log(cb);
           cb(null, self.opts.scheme + ":" + key);
         }
       });

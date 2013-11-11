@@ -5,6 +5,8 @@
  */
 
 var ZipFactory = require('../concerns/zip-factory').ZipFactory;
+var fs = require('fs');
+var uri = require('uri-js');
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -13,6 +15,7 @@ var ZipFactory = require('../concerns/zip-factory').ZipFactory;
 
 var ZipController = function(opts) {
   this.opts = opts;
+  this.zipFactory = new ZipFactory(opts);
 };
 
 /* Public Endpoints
@@ -21,14 +24,17 @@ var ZipController = function(opts) {
 
 
 ZipController.prototype.fetch = function(req, res) {
+  var self = this;
   var url = req.body['url'];
-  ZipFactory.zipTree(url, function(err, data) {
-    if (err) {
+  var zipFilename = uri.parse(url).host + ".zip";
+
+  self.zipFactory.zipTreeToFile(url, function(err, filepath) {
+    if (err) { 
       res.status(400).send(err);
     } else {
-      console.log("sending zip data");
+      var data = fs.readFileSync(filepath);
       res.header('Content-Type', 'application/zip');
-      res.header('Content-Disposition', 'attachment; filename="' + url + '.zip"');
+      res.header('Content-Disposition', 'attachment; filename="' + zipFilename);
       res.send(data);
     }
   });

@@ -3,6 +3,8 @@ var fs = require('fs');
 var async = require('async');
 var WebScraper = require('web-scraper');
 var uuid = require('node-uuid');
+var util = require('../util');
+var uri = require('uri-js');
 
 var ZipFactory = function(opts) {
   this.opts = opts || {};
@@ -22,21 +24,38 @@ var ZipFactory = function(opts) {
  *
  */
 ZipFactory.prototype.zipTree = function(url, cb) {
+  var self = this;
   var scraperOpts = {
     url: url,
     basedir: '/tmp',
   };
   console.log("Beginning scrape: " + url);
-  _createTempDirectory(function(err, directory) {
+  self._createTempDirectory(function(err, directory) {
     console.log("Base directory: " + directory);
     scraperOpts['basedir'] = directory
-    console.log(scraperOpts);
     new WebScraper(scraperOpts).scrape(function(err) {
       if (err) {
         console.log("Scraper unable to find files from url: " + err);
+        cb(err);
       } else {
-        _findFilesInDirectory(directory, function(err, filenames) {
-          ZipFactory.prototype.zipFiles(filenames, cb);
+        self._findFilesInDirectory(directory, function(err, filenames) {
+          self.zipFiles(filenames, cb);
+        });
+      }
+    });
+  });
+};
+
+ZipFactory.prototype.zipTreeToFile = function(url, cb) {
+  var self = this;
+  self._generateZipFileName(url, function(err, filepath) {
+    self.zipTree(url, function(err, data) {
+      if (err) {
+        cb(err);
+      } else {
+        fs.writeFile(filepath, data, 'binary', function(err) {
+          console.log("wrote to zip file");
+          cb(err, filepath);
         });
       }
     });
@@ -62,7 +81,7 @@ ZipFactory.prototype.zipFileData = function(fileData, cb) {
     }
   }
 
-  var data = zipDirectory.generate({compression:'DEFLATE'});
+  var data = zipDirectory.generate({type:'string'});
   cb(null, data);
 };
 
@@ -78,15 +97,18 @@ ZipFactory.prototype.zipFileData = function(fileData, cb) {
  *
  */
 ZipFactory.prototype.zipTreePages = function(treePages, cb) {
+  var self = this;
   var fileData = {};
-  async.parallel(_readFileFunctions(filenames, fileData, _populateMongoFileData),
+  async.parallel(self._readFileFunctions(filenames, fileData, self._populateMongoFileData),
     function(err) {
       if (err) {
         console.log('Unable to read Tree Pages from MongoDB.');
+        cb(err);
+      } else {
+        self.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
       }
-      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
-        cb(err, data);
-      });
     });
 };
 
@@ -101,15 +123,18 @@ ZipFactory.prototype.zipTreePages = function(treePages, cb) {
  *
  */
 ZipFactory.prototype.zipFiles = function(filenames, cb) {
+  var self = this;
   var fileData = {};
-  async.parallel(_readFileFunctions(filenames, fileData, _populateFileSystemFileData),
+  async.parallel(self._readFileFunctions(filenames, fileData, self._populateFileSystemFileData),
     function(err) {
       if (err) {
         console.log('Unable to read files from file system.');
+        cb(err);
+      } else {
+        self.zipFileData(fileData, function(err, data) {
+          cb(err, data);
+        });
       }
-      ZipFactory.prototype.zipFileData(fileData, function(err, data) {
-        cb(err, data);
-      });
     });
 };
 
@@ -117,8 +142,7 @@ ZipFactory.prototype.zipFiles = function(filenames, cb) {
 /* Private methods
  *-----------------------------------------------------------------------------
  */
-
-_readFileFunctions = function(files, fileData, populateFunction) {
+ZipFactory.prototype._readFileFunctions = function(files, fileData, populateFunction) {
   var functionList = [];
   var file;
   for (var i=0; i<files.length; i++) {
@@ -129,14 +153,14 @@ _readFileFunctions = function(files, fileData, populateFunction) {
   return functionList;
 };
 
-_populateMongoFileData = function(fileData, treepage, functionList) {
+ZipFactory.prototype._populateMongoFileData = function(fileData, treepage, functionList) {
   functionList.push(function(callback) {
     fileData[treepage.url] = treepage.content;
-    callback(err, fileData);
+    callback(null, fileData);
   });
 };
 
-_populateFileSystemFileData = function(fileData, filename, functionList) {
+ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, functionList) {
   functionList.push(function(callback) {
     fs.readFile(filename, 'utf-8', function(err, data) {
       if (err) {
@@ -149,23 +173,34 @@ _populateFileSystemFileData = function(fileData, filename, functionList) {
   });
 }
 
+ZipFactory.prototype._generateZipFileName = function(url, cb) {
+  var self = this;
+  var name = self.opts.concerns.zipFactory.baseDir + "/" + uri.parse(url).host;
+  self._getUnusedFile(name, cb);
+};
+
+ZipFactory.prototype._createTempDirectory = function(cb) {
+  var self = this;
+  self._getUnusedFile(self.opts.concerns.zipFactory.tempBaseName, cb);
+};
+
 /**
  * Creates a directory in the `/tmp` folder. Returns the directory name as a string.
  */
-_createTempDirectory = function(cb, tries) {
+ZipFactory.prototype._getUnusedFile = function(name, cb, tries) {
   if (typeof tries == 'undefined') {
     tries = 0;
   }
   if (tries > 50) {
-    return cb(new Error('Too many attempts made to create temporary directory'));
+    return cb(new Error('Too many attempts made to find unused file.'));
   }
 
-  var scraperDirectory = '/tmp/zip-factory' + uuid.v4();
-  fs.exists(scraperDirectory, function (exists) {
+  var file = name + uuid.v4();
+  fs.exists(file, function (exists) {
     if (exists) {
-      _createTempDirectory(cb, tries+1);
+      _getUnusedFile(name, cb, tries+1);
     } else {
-      cb(null, scraperDirectory);
+      cb(null, file);
     }
   });
 };
@@ -176,7 +211,8 @@ _createTempDirectory = function(cb, tries) {
  * results as a list.
  *
  */
-_findFilesInDirectory = function(dir, cb) {
+ZipFactory.prototype._findFilesInDirectory = function(dir, cb) {
+  var self = this;
   var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return cb(err);
@@ -186,7 +222,7 @@ _findFilesInDirectory = function(dir, cb) {
       file = dir + '/' + file;
       fs.stat(file, function(err, stat) {
         if (stat && stat.isDirectory()) {
-          _findFilesInDirectory(file, function(err, res) {
+          self._findFilesInDirectory(file, function(err, res) {
             results = results.concat(res);
             if (!--pending) cb(null, results);
           });
@@ -199,5 +235,4 @@ _findFilesInDirectory = function(dir, cb) {
   });
 };
 
-var zipFactory = new ZipFactory();
-exports.ZipFactory = zipFactory;
+exports.ZipFactory = ZipFactory;

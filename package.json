@@ -47,7 +47,8 @@
     "ssh2": "*",
     "underscore": "*",
     "node-github": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "uri-js": "*"
   },
   "devDependencies": {
     "mocha": "*",
