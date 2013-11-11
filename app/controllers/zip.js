@@ -22,9 +22,23 @@ var ZipController = function(opts) {
  * ----------------------------------------------------------------------------- 
  */
 
+ZipController.prototype.fetchPreflight = function(req, res) {
+  var self = this;
+  console.log("Zip preflight");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).send();
+};
 
 ZipController.prototype.fetch = function(req, res) {
   var self = this;
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
   var url = req.body['url'];
   var zipFilename = uri.parse(url).host + ".zip";
 
@@ -47,6 +61,7 @@ ZipController.prototype.fetch = function(req, res) {
 ZipController.prototype.connectToApp = function(app, prefix) {
   var self = this;
   app.post(prefix, self.fetch.bind(self));
+  app.options(prefix, self.fetchPreflight.bind(self));
 };
 
 exports.ZipController = ZipController;
