@@ -1,0 +1,3 @@
+[submodule "static/mockups"]
+	path = static/mockups
+	url = https://github.com/cts/mockups.git

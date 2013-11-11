@@ -37,6 +37,13 @@ console.log("Static dir  : " + static_dir);
 console.log("Options     : " + opt_str);
 console.log("");
 
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}
+
 app.configure(function() {
   // JUST FOR DEBUG
   if (process.env.DEBUG) {
@@ -47,10 +54,10 @@ app.configure(function() {
   app.set('view engine', 'ejs');
   app.set('views',__dirname + '/views');
   app.set('view options', { layout:false, root: __dirname + '/templates' } );
-
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(allowCrossDomain);
   app.use(express.session({secret: 'asldjfwiouworuoeruwioroiweru'}));
   //app.use(passport.initialize());
   //app.use(passport.session());

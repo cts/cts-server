@@ -9,14 +9,17 @@ You'll need to install the following:
 * NodeJS
 * MongoDB
 
-1. If this is the first time you're running the server, make sure you have all
+Running
+-------
+
+1. **Install Dependencies:** If this is the first time you're running the server, make sure you have all
 the required NPM modules.
 
      ```
      npm install
      ```
 
-2. If this is your first time, create a local options file
+2. **Create optons file:** If this is your first time, create a local options file
 
      ```
      cp app/opts-local.js.example app/opts-local.js
@@ -26,7 +29,16 @@ the required NPM modules.
    environment requires. The `app/opts.js` file loads your local opts and will
    extend and overwrite its own settings.
 
-3. Start the server.
+3. **Initialize submodules:** If this is your first time, run:
+
+     ```
+     git submodule init
+     git submodule update
+     ```
+
+If this is your nth time, you might just want to run the update.
+
+4. **Start the server.**
 
      ```
      node app/app.js
