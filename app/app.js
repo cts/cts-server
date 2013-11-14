@@ -73,9 +73,6 @@ var UserController = require('./controllers/user').UserController;
 var userController = new UserController({}, passport);
 userController.connectToApp(app, '/user');
 
-var SessionController = require('./controllers/session').SessionController;
-var sessionController = new SessionController({}, passport);
-
 var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');

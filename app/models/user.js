@@ -28,7 +28,7 @@ var login = function(email, password, done) {
   console.log("Attempting login", email, password);
   if (email && password) {
     hash = User.findOne({email: email}, function(err, userObject){
-      if (err){
+      if (!userObject||err){
         console.log('Error: '+err);
         return done('Incorrect username or password.', false);
       }else{

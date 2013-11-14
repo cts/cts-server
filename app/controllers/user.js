@@ -146,7 +146,7 @@ UserController.prototype.login = function(req, res, next) {
       res.send(401, err);
     }else{
       // create session, get the key and return it
-      res.send(200, 'Session key');
+      res.send(200, 'log in successful');
     }
   })(req, res, next);
 };
@@ -182,21 +182,20 @@ UserController.prototype.connectToApp = function(app, prefix) {
   //  ));
   //}
 
-  if (this.opts.allowSessions) {
-    console.log("Setting serialize user");
-    this.passport.serializeUser(function(user, done) {
-      console.log("serializeUser", user);
-      done(null, user.id);
-    });
+  console.log("Setting serialize user");
+  this.passport.serializeUser(function(user, done) {
+    console.log("serializeUser", user);
+    done(null, user.id);
+  });
 
-    console.log("Setting deserialize user");
-    this.passport.deserializeUser(function(id, done) {
-      console.log("DE-serializeUser");
-      User.findById(id, function (err, user) {
-        done(err, user);
-      });
+  console.log("Setting deserialize user");
+  this.passport.deserializeUser(function(id, done) {
+    console.log("DE-serializeUser");
+    User.findById(id, function (err, user) {
+      done(err, user);
     });
-  }
+  });
+
   var self = this;
   app.post(prefix,            self.create.bind(self));
   app.post(prefix + '/login', self.login.bind(self));
