@@ -1,4 +1,27 @@
 <?php
+/*
+ * Cascading Tree Sheets PHP Sink.
+ * by Ted Benson <eob@csail.mit.edu>
+ *
+ *
+ *
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 
+ * Important!
+ *
+ * Please set the AUTH_TYPE and (if appropriate) MY_KEY below.
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
+
+// Set this to either 'http' or 'none' or 'key'
+$AUTH_TYPE = "http";
+
+// If AUTH_TYPE is 'key', this is the secret key to 
+$MY_KEY = "changeme";
+
+// An additional layer of fool proofing, if necessary. AUTH_TYPE is restricted
+// to the following values
+$PERMITTED_AUTH_TYPES = array('http', 'none', 'key');
+
+
 /**
  * Website: http://sourceforge.net/projects/simplehtmldom/
  * Additional projects that may be used: http://sourceforge.net/projects/debugobject/
@@ -1741,32 +1764,80 @@ class simple_html_dom
 
 ?><?php
 /**
- * Cascading Tree Sheets PHP Sink.
- * Author: Ted Benson <eob@csail.mit.edu>
  *
  * The PHP Sink is going to receive a POST from the CTS Server with
  * the following location.
  *
- * Table of contents:
- *  1. report_result - Reports a result (success or error) as JSON.
- *  2. report_error - Helper for error results.
- *  3. parse_request - Parses the incoming request from JSON.
- *  4. authenticate - Checks whether an incoming request should proceed.
- *  5. handle_incoming - The main() function.
  */
 
 
-/*==========================================================================
- * IMPORTANT: Set your password here!
- *========================================================================== */
-
-$MY_KEY = "changeme";
-$ALLOW_ANYONE = True;
+/*
+ * LOGGING
+ * ========================================================================= */
 
 function stash($str) {
   $file = '_log.txt';
   file_put_contents($file, $str, FILE_APPEND | LOCK_EX);
 }
+
+/*
+ * AUTHENTICATION
+ * ========================================================================= */
+
+/* Decides whether this attempted push is a valid one.
+ *
+ * The following criteria are used:
+ * -  Is request.key equal to $MY_KEY
+ *
+ * Assumptions:
+ *   $request is a valid PHP dictionary object that does not need to be
+ *   checked for null/undefined.
+ *
+ * Args:
+ *   A tuple: [BOOL, message], where BOOL is whether the user is authenticated.
+ *   If not authenticated, message contains an error string.
+ *
+ */
+function authenticate($request) {
+  global $AUTH_TYPE;
+  global $PERMITTED_AUTH_TYPES;
+  global $MY_KEY;
+
+  if (! in_array($AUTH_TYPE, $AUTH_TYPES)) {
+    throw new Exception("Auth type '" . $AUTH_TYPE . "' not in permitted list.");
+  }
+
+  if ($AUTH_TYPE == 'none') {
+    return true;
+  } else if ($AUTH_TYPE == 'key') {
+    if (array_key_exists("key", $request) and ($request["key"] == $MY_KEY)) {
+      return true;
+    } else {
+      throw new Exception("Incorrect key.");
+    }
+  } else if ($AUTH_TYPE == 'http') {
+    if (!isset($_SERVER['PHP_AUTH_USER'])) {
+      header('WWW-Authenticate: Basic realm="My Realm"');
+      header('HTTP/1.0 401 Unauthorized');
+      throw new Exception("Did not pass HTTP authentication.");
+    } else {
+      // $_SERVER['PHP_AUTH_USER'] and _PW are the keys
+      return true;
+    }
+  } else {
+    throw new Exception("Missing implementation for auth type '" . $AUTH_TYPE . "'.");
+  }
+}
+
+  if ($authenticated) {
+    return true;
+  } else {
+    throw new Exception("Not authenticated");
+  }
+}
+
+
+
 
 /* Returns a result of the form:
  *
@@ -1866,36 +1937,6 @@ function validate_request($request) {
   }
 
   return true;
-}
-
-/* Decides whether this attempted push is a valid one.
- *
- * The following criteria are used:
- * -  Is request.key equal to $MY_KEY
- *
- * Assumptions:
- *   $request is a valid PHP dictionary object that does not need to be
- *   checked for null/undefined.
- *
- * Args:
- *   A tuple: [BOOL, message], where BOOL is whether the user is authenticated.
- *   If not authenticated, message contains an error string.
- *
- */
-function authenticate($request) {
-  global $ALLOW_ANYONE;
-  global $MY_KEY;
-
-  $authenticated = (
-    ($ALLOW_ANYONE) or
-    (array_key_exists("key", $request) and ($request["key"] == $MY_KEY))
-  );
-
-  if ($authenticated) {
-    return true;
-  } else {
-    throw new Exception("Not authenticated");
-  }
 }
 
 /* Replaces $file_path with the $new_contents.
