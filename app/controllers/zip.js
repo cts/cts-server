@@ -40,18 +40,25 @@ ZipController.prototype.fetch = function(req, res) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
   var url = req.body['url'];
-  var zipFilename = uri.parse(url).host + ".zip";
-
   self.zipFactory.zipTreeToFile(url, function(err, filepath) {
-    if (err) { 
+    if (err) {
       res.status(400).send(err);
     } else {
-      var data = fs.readFileSync(filepath);
-      res.header('Content-Type', 'application/zip');
-      res.header('Content-Disposition', 'attachment; filename="' + zipFilename);
-      res.send(data);
+      res.render("zip/save-result.ejs", {'filepath': filepath});
     }
   });
+};
+
+ZipController.prototype.downloadZip = function(req, res) {
+  var filepath = req.params.key;
+  var data = fs.readFileSync(filepath);
+  res.header('Content-Type', 'application/zip');
+  res.header('Content-Disposition', 'attachment; filename="' + filepath);
+  res.send(data);
+};
+
+ZipController.prototype.displayZip = function(req, res) {
+
 };
 
 /* App integration
@@ -61,6 +68,8 @@ ZipController.prototype.fetch = function(req, res) {
 ZipController.prototype.connectToApp = function(app, prefix) {
   var self = this;
   app.post(prefix, self.fetch.bind(self));
+  app.get(prefix + "download/:key", self.downloadZip.bind(self));
+  app.get(prefix + "/:key", self.downloadZip.bind(self));
   app.options(prefix, self.fetchPreflight.bind(self));
 };
 

@@ -26,8 +26,8 @@ var defaultOpts = {
   },
   concerns: {
     zipFactory: {
-      baseDir: path.resolve(__dirname, '..', 'zipstorage'),
-      tempBaseName: '/tmp/zipFactory'
+      zipBaseDir: path.resolve(__dirname, '..', 'zipstorage'),
+      tempBaseName: websiteBaseDir: path.resolve(__dirname, '..', 'websitestorage'),
     }
   },
   operators: {
