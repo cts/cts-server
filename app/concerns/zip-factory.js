@@ -2,6 +2,7 @@ var zip = require('node-zip');
 var fs = require('fs');
 var async = require('async');
 var WebScraper = require('web-scraper');
+var FilenameUtil = require('./filename-util').FilenameUtil;
 var uuid = require('node-uuid');
 var util = require('../util');
 var uri = require('uri-js');
@@ -143,11 +144,12 @@ ZipFactory.prototype.zipFiles = function(filenames, cb) {
  *-----------------------------------------------------------------------------
  */
 ZipFactory.prototype._readFileFunctions = function(files, fileData, populateFunction) {
+  var self = this;
   var functionList = [];
   var file;
   for (var i=0; i<files.length; i++) {
     file = files[i];
-    populateFunction(fileData, file, functionList);
+    populateFunction(fileData, file, functionList, { basedir: self.opts.concerns.zipFactory.tempBaseName });
   }
 
   return functionList;
@@ -160,13 +162,24 @@ ZipFactory.prototype._populateMongoFileData = function(fileData, treepage, funct
   });
 };
 
-ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, functionList) {
+ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, functionList, opts) {
+  var self = this;
   functionList.push(function(callback) {
     fs.readFile(filename, 'utf-8', function(err, data) {
       if (err) {
         console.log('Unable to find file "' + filename + '": ' + err);
       } else {
-        fileData[filename] = data;
+        if (typeof opts === 'undefined') {
+          fileData[filename] = data;
+        } else {
+          FilenameUtil.filepathStub(filename, opts.basedir, function(err, stub) {
+            if (err) {
+              fileData[filename] = data;
+            } else {
+              fileData[stub] = data;
+            }
+          });
+        }
       }
       callback(err, fileData);
     });

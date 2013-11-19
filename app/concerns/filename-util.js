@@ -1,5 +1,5 @@
 var FilenameUtil = function(opts) {
-  this.opts = opts;
+  this.opts = opts || {};
 };
 
 /*
@@ -14,7 +14,7 @@ var FilenameUtil = function(opts) {
  * console.log(res);    # => "and/a/new/path";
  *
  */
-FilenameUtil.prototype.filepathStub(filepath, basedir, cb) {
+FilenameUtil.prototype.filepathStub = function(filepath, basedir, cb) {
   // Note the +1's come from the extra "/" at the end of the basedir
   if (filepath.length < basedir.length + 1) {
     var err = new Error('Cannot strip filepaths which have shorter length than the basedir');
@@ -44,4 +44,6 @@ FilenameUtil.prototype.filepathStub(filepath, basedir, cb) {
   }
 };
 
-exports.FilenameUtil = FilenameUtil;
+var filenameUtil = new FilenameUtil();
+
+exports.FilenameUtil = filenameUtil;
