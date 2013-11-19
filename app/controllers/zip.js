@@ -5,6 +5,7 @@
  */
 
 var ZipFactory = require('../concerns/zip-factory').ZipFactory;
+var FilenameUtil = require('../concerns/filename-util').FilenameUtil;
 var fs = require('fs');
 var uri = require('uri-js');
 var Util = require('../util');
@@ -37,7 +38,7 @@ ZipController.prototype.fetch = function(req, res) {
       if (onlyDownload) {
         _performDownload(filepath, res, uri.parse(url).host);
       } else {
-        var filepathStub = _getFilepathStub(filepath, self.opts.concerns.zipFactory.zipBaseDir);
+        var filepathStub = FilenameUtil.filepathStub(filepath, self.opts.concerns.zipFactory.zipBaseDir);
         if (filepathStub) {
           res.render("zip/save-result.ejs", {'filepath': filepathStub});
         } else {
@@ -60,21 +61,6 @@ var _performDownload = function(filepath, res, name) {
   res.header('Content-Type', 'application/zip');
   res.header('Content-Disposition', 'attachment; filename="' + name + ".zip");
   res.send(data);
-};
-
-var _getFilepathStub = function(filepath, basedir) {
-  // Note the +1's come from the extra "/" at the end of the basedir
-  if (filepath.length < basedir.length + 1) {
-    throw new Error('');
-  }
-
-  for (var i=0; i++; i<basedir.length + 1) {
-    if (basedir[i] != filepath[i]) {
-      throw new Error('');
-    }
-  }
-
-  return filepath.slice(basedir.length + 1, filepath.length);
 };
 
 ZipController.prototype.displayZip = function(req, res) {
