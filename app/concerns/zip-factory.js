@@ -54,7 +54,7 @@ ZipFactory.prototype.zipTreeToFile = function(url, cb) {
         cb(err);
       } else {
         fs.writeFile(filepath, data, 'binary', function(err) {
-          console.log("wrote to zip file");
+          console.log("wrote to zip file: " + filepath);
           cb(err, filepath);
         });
       }
@@ -175,13 +175,13 @@ ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, 
 
 ZipFactory.prototype._generateZipFileName = function(url, cb) {
   var self = this;
-  var name = self.opts.concerns.zipFactory.baseDir + "/" + uri.parse(url).host;
+  var name = self.opts.concerns.zipFactory.zipBaseDir + "/" + uri.parse(url).host;
   self._getUnusedFile(name, cb);
 };
 
 ZipFactory.prototype._createTempDirectory = function(cb) {
   var self = this;
-  self._getUnusedFile(self.opts.concerns.zipFactory.tempBaseName, cb);
+  self._getUnusedFile(self.opts.concerns.zipFactory.tempBaseName + "/", cb);
 };
 
 /**
