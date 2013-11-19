@@ -86,6 +86,13 @@ UserController.prototype.githubAuthorize = function(req, res, next) {
   console.log(req);
 };
 
+UserController.prototype.isLoggedIn = function(req, res, next) {
+  if (req.isAuthenticated()) {
+    res.send("Yes");
+  } else {
+    res.send("No");
+  }
+};
 
 UserController.prototype.reset = function(req, res, next) {
   var u = _.pick(req.body, 'token', 'password');
@@ -154,6 +161,7 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.post(prefix,            self.create.bind(self));
   app.post(prefix + '/login', self.login.bind(self));
   app.get(prefix + '/logout', self.destroySession.bind(self));
+  app.get(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
   app.post(prefix + '/token', self.token.bind(self));
   app.post(prefix + '/forgot', self.forgot.bind(self));
 };
