@@ -29,17 +29,26 @@ ZipController.prototype.fetch = function(req, res) {
   Util.addCORSHeaders(req, res);
 
   var url = req.body['url'];
+  var onlyDownload = req.body['onlyDownload'];
   self.zipFactory.zipTreeToFile(url, function(err, filepath) {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.render("zip/save-result.ejs", {'filepath': filepath});
+      if (onlyDownload) {
+        _performDownload(filepath, res);
+      } else {
+        res.render("zip/save-result.ejs", {'filepath': filepath});
+      }
     }
   });
 };
 
 ZipController.prototype.downloadZip = function(req, res) {
   var filepath = req.params.key;
+  _performDownload(filepath, res);
+};
+
+var _performDownload = function(filepath, res) {
   var data = fs.readFileSync(filepath);
   res.header('Content-Type', 'application/zip');
   res.header('Content-Disposition', 'attachment; filename="' + filepath);
