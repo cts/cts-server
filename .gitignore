@@ -3,3 +3,4 @@ opts-local.js
 filestorage/*
 zipstorage/*
 *.pyc
+websitestorage/*
