@@ -95,8 +95,8 @@ ZipController.prototype.displayZip = function(req, res) {
           if (err) {
             res.status(400).send(err);
           } else {
-            // TODO: get this content-type correct based on the filename
-            res.header('Content-Type', 'text/html');
+            var contentType = FilenameUtil.contentType(filepath);
+            res.header('Content-Type', contentType);
             res.send(data);
           }
         });

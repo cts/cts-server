@@ -1,5 +1,18 @@
 var FilenameUtil = function(opts) {
   this.opts = opts || {};
+  this.contentTypeMapping = this.opts.contentTypeMapping || {
+    'jpg': 'image/jpg',
+    'gif': 'image/gif',
+    'jpeg': 'image/jpeg', 
+    'png': 'image/png',
+    'tiff': 'image/tiff',
+    'html': 'text/html',
+    'css': 'text/css',
+    'csv': 'text/csv',
+    'js': 'text/javascript',
+    'xml': 'text/xml'
+  };
+  this.defaultContentType = 'text/html';
 };
 
 /*
@@ -7,11 +20,11 @@ var FilenameUtil = function(opts) {
  * the filepath. Whatever is left is returned in either the callback
  * or by the function if the callback is undefined.
  *
- * var res = filepathStub("/this/is/a/filepath", "/this/is")
- * console.log(res);    # => "a/filepath";
+ *   var res = filepathStub("/this/is/a/filepath", "/this/is")
+ *   console.log(res);    # => "a/filepath";
  *
- * var res = filepathStub("/some/base/dir/and/a/new/path", "/some/base/dir")
- * console.log(res);    # => "and/a/new/path";
+ *   var res = filepathStub("/some/base/dir/and/a/new/path", "/some/base/dir")
+ *   console.log(res);    # => "and/a/new/path";
  *
  */
 FilenameUtil.prototype.filepathStub = function(filepath, basedir, cb) {
@@ -42,6 +55,35 @@ FilenameUtil.prototype.filepathStub = function(filepath, basedir, cb) {
   } else {
     cb(null, result);
   }
+};
+
+/*
+ * Figures out the content-type (MIME type) for a particular filename.
+ *
+ *   contentType('hello.js')  # => 'text/javascript'
+ *   contentType('blah.jpg')  # => 'image/jpg'
+ *
+ */
+FilenameUtil.prototype.contentType = function(filename) {
+  var self = this;
+  var suffix = _filenameSuffix(filename);
+
+  if (self.contentTypeMapping.hasOwnProperty(suffix)) {
+    return self.contentTypeMapping[suffix];
+  } else {
+    return self.defaultContentType;
+  }
+};
+
+/*
+ *-------------------------------------------------------------------------
+ *                        Private Methods
+ *-------------------------------------------------------------------------
+ */
+
+var _filenameSuffix = function(filename) {
+  var fileparts = filename.split(".");
+  return fileparts[fileparts.length-1];
 };
 
 var filenameUtil = new FilenameUtil();
