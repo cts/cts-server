@@ -32,7 +32,7 @@ var UserController = function(opts, passport) {
 UserController.prototype.preflight = function(req, res) {
   // Add CORS Headers
   console.log("CORS Preflight");
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -133,9 +133,23 @@ UserController.prototype.createWithToken = function(req, res) {
   }
 };
 
+UserController.prototype.isLoggedIn = function(req, res, next) {
+  console.log("CORS Preflight");
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.isAuthenticated()) {
+    res.send("Yes");
+  } else {
+    res.send("No");
+  }
+};
+
 UserController.prototype.login = function(req, res, next) {
   console.log("Setting CORS headers");
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -146,6 +160,7 @@ UserController.prototype.login = function(req, res, next) {
       res.send(401, err);
     }else{
       // create session, get the key and return it
+      // res.redirect('/');
       res.send(200, 'log in successful');
     }
   })(req, res, next);
@@ -203,6 +218,8 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.post(prefix + '/forgot', self.forgot.bind(self));
   app.options(prefix + '/login', self.preflight.bind(self));
   app.options(prefix + '/forgot', self.preflight.bind(self));
+  app.options(prefix + '/isLoggedIn', self.preflight.bind(self));
+  app.get(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {
