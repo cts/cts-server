@@ -1,4 +1,4 @@
-from fabric.api import run, sudo, cd, env
+from fabric.api import run, sudo, cd, env, local
 
 env.roledefs = {
   'prod': ['eob@treesheets.csail.mit.edu'],
@@ -10,13 +10,28 @@ def restart_nginx():
 
 def restart_treesheets():
   """Restarts the NodeJS process."""
-  sudo('/etc/init.d/treesheets restart')
+  # The restart command in my init.d script fails for some reason.
+  # But stop and start works.
+  # TODO(eob): Fix the restart init.d script.
+  sudo('/etc/init.d/treesheets stop')
+  sudo('/etc/init.d/treesheets start')
 
 def update_treesheets():
   """Updates git."""
   with cd('/sites/treesheets.org/code'):
     run('git pull origin master')
     run('git submodule update')
+
+def refresh_cts():
+  """Refreshes the local CTS and CTSUI files."""
+  local('cd ../../cts-js && grunt')
+  local('cp ../../cts-js/release/cts.js ../static/hotlink/cts.js')
+  local('cd ../../cts-ui && grunt')
+  local('cp ../../cts-ui/release/cts-ui.js ../static/hotlink/cts-ui.js')
+  local('git add ../static/hotlink/cts.js')
+  local('git add ../static/hotlink/cts-ui.js')
+  local('git commit -m "refreshing CTS JS and UI"')
+  local('git push origin master')
 
 def deploy():
   """Updates git and restarts."""
@@ -28,13 +43,10 @@ def main():
   This file uses Fabric <http://fabfile.org> to run.
 
   Usage:
-    fab -H <HOST> <COMMAND>
+    fab -R prod <COMMAND>
 
-  Commands:
-    upkick -- updates git and restarts
-    update_treesheets
-    restart_treesheets
-    restart_nginx
+  For fab list of commands:
+    fab --list
 """  
  
 if __name__ == "__main__":
