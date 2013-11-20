@@ -17,6 +17,7 @@ var Util = require('../util');
 
 var ZipController = function(opts) {
   this.opts = opts;
+  this.prefix = '';
   this.zipFactory = new ZipFactory(opts);
 };
 
@@ -56,13 +57,6 @@ ZipController.prototype.downloadZip = function(req, res) {
   _performDownload(filepath, res, filepathStub);
 };
 
-var _performDownload = function(filepath, res, name) {
-  var data = fs.readFileSync(filepath);
-  res.header('Content-Type', 'application/zip');
-  res.header('Content-Disposition', 'attachment; filename="' + name + ".zip");
-  res.send(data);
-};
-
 ZipController.prototype.displayZip = function(req, res) {
   var self = this;
   res.header('Access-Control-Allow-Origin', '*');
@@ -80,7 +74,6 @@ ZipController.prototype.displayZip = function(req, res) {
     if (exists) {
       fs.stat(filepath, function(err, stats) {
         if (stats.isDirectory()) {
-          console.log('redirect to: zip/' + urlPath + "/index.html");
           res.redirect("zip/" + urlPath + "/index.html");
         } else {
           fs.readFile(filepath, function(err, data){
@@ -100,12 +93,31 @@ ZipController.prototype.displayZip = function(req, res) {
   });
 };
 
+/*
+ * Private methods
+ * ----------------------------------------------------------------------------- 
+ */
+ZipController.prototype._redirectToIndex = function(url, res) {
+  var self = this;
+  var redirectUrl = self.prefix + "/" + urlPath + "/index.html";
+  console.log('redirecting to: ' + redirectUrl);
+  res.redirect(redirectUrl);
+};
+
+var _performDownload = function(filepath, res, name) {
+  var data = fs.readFileSync(filepath);
+  res.header('Content-Type', 'application/zip');
+  res.header('Content-Disposition', 'attachment; filename="' + name + ".zip");
+  res.send(data);
+};
+
 /* App integration
  * ----------------------------------------------------------------------------- 
  */
 
 ZipController.prototype.connectToApp = function(app, prefix) {
   var self = this;
+  self.prefix = prefix;
   app.post(prefix, self.fetch.bind(self));
   app.options(prefix, Util.preflightHandler);
   app.get(prefix + "/download/:key", self.downloadZip.bind(self));
