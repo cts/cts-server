@@ -64,7 +64,36 @@ var _performDownload = function(filepath, res, name) {
 };
 
 ZipController.prototype.displayZip = function(req, res) {
-  console.log("displaying zip");
+  var self = this;
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  console.log("Attempting to display website for: " + req.params.key);
+  var filepath = self.opts.concerns.zipFactory.zipBaseDir + "/" + req.params.key;
+  fs.exists(filepath, function(exists) {
+    console.log(filepath);
+    if (exists) {
+      fs.stat(filepath, function(err, stats) {
+        if (stats.isDirectory()) {
+          filepath = filepath + "/index.html";
+        }
+
+        fs.readFile(filepath, function(err, data){
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            // TODO: get this content-type correct based on the filename
+            res.header('Content-Type', 'text/html');
+            res.send(data);
+          }
+        });
+      });
+    } else {
+      res.status(400).send('Website id "' + req.params.key + '" does not exist');
+    }
+  });
 };
 
 /* App integration
