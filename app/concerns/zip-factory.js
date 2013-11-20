@@ -3,9 +3,6 @@ var fs = require('fs');
 var async = require('async');
 var WebScraper = require('web-scraper');
 var FilenameUtil = require('./filename-util').FilenameUtil;
-var uuid = require('node-uuid');
-var util = require('../util');
-var uri = require('uri-js');
 
 var ZipFactory = function(opts) {
   this.opts = opts || {};
@@ -27,12 +24,12 @@ var ZipFactory = function(opts) {
 ZipFactory.prototype.zipTree = function(scraperOpts, cb) {
   var self = this;
   if (scraperOpts.hasOwnProperty('basedir')) {
-    self._performScrape(scraperOpts);
+    self._performScrape(scraperOpts, cb);
   } else {
     var tempStorageDirectory = self.opts.concerns.zipFactory.tempBaseName + "/";
     FilenameUtil.unusedPath(tempStorageDirectory, function(err, directory) {
       scraperOpts['basedir'] = directory;
-      self._performScrape(scraperOpts);
+      self._performScrape(scraperOpts, cb);
     });
   }
 };
@@ -182,7 +179,8 @@ ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, 
   });
 }
 
-ZipFactory.prototype._performScrape = function(scraperOpts) {
+ZipFactory.prototype._performScrape = function(scraperOpts, cb) {
+  var self = this;
   new WebScraper(scraperOpts).scrape(function(err) {
     if (err) {
       console.log("Scraper unable to find files from url: " + err);
