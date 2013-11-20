@@ -1,3 +1,6 @@
+var uuid = require('node-uuid');
+var fs = require('fs');
+
 var FilenameUtil = function(opts) {
   this.opts = opts || {};
   this.contentTypeMapping = this.opts.contentTypeMapping || {

@@ -70,28 +70,29 @@ ZipController.prototype.displayZip = function(req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-  var filepath = self.opts.concerns.zipFactory.tempBaseName + "/" + req.params.key;
+  var urlPath = req.params.key;
   if (typeof req.params[0] !== 'undefined') {
-    filepath = filepath + req.params[0];
+    urlPath += req.params[0];
   }
+  var filepath = self.opts.concerns.zipFactory.tempBaseName + "/" + urlPath;
   console.log("Attempting to display resource for: " + filepath);
   fs.exists(filepath, function(exists) {
     if (exists) {
       fs.stat(filepath, function(err, stats) {
         if (stats.isDirectory()) {
-          res.status(400).send("DON't use this BRO!!?!?");
-          filepath = filepath + "/index.html";
+          console.log('redirect to: zip/' + urlPath + "/index.html");
+          res.redirect("zip/" + urlPath + "/index.html");
+        } else {
+          fs.readFile(filepath, function(err, data){
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              var contentType = FilenameUtil.contentType(filepath);
+              res.header('Content-Type', contentType);
+              res.send(data);
+            }
+          });
         }
-
-        fs.readFile(filepath, function(err, data){
-          if (err) {
-            res.status(400).send(err);
-          } else {
-            var contentType = FilenameUtil.contentType(filepath);
-            res.header('Content-Type', contentType);
-            res.send(data);
-          }
-        });
       });
     } else {
       res.status(400).send('Website id "' + req.params.key + '" does not exist');
