@@ -70,13 +70,16 @@ ZipController.prototype.displayZip = function(req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-  console.log("Attempting to display website for: " + req.params.key);
-  var filepath = self.opts.concerns.zipFactory.zipBaseDir + "/" + req.params.key;
+  var filepath = self.opts.concerns.zipFactory.tempBaseName + "/" + req.params.key;
+  if (typeof req.params[0] !== 'undefined') {
+    filepath = filepath + req.params[0];
+  }
+  console.log("Attempting to display resource for: " + filepath);
   fs.exists(filepath, function(exists) {
-    console.log(filepath);
     if (exists) {
       fs.stat(filepath, function(err, stats) {
         if (stats.isDirectory()) {
+          res.status(400).send("DON't use this BRO!!?!?");
           filepath = filepath + "/index.html";
         }
 
@@ -105,7 +108,7 @@ ZipController.prototype.connectToApp = function(app, prefix) {
   app.post(prefix, self.fetch.bind(self));
   app.options(prefix, Util.preflightHandler);
   app.get(prefix + "/download/:key", self.downloadZip.bind(self));
-  app.get(prefix + "/:key", self.displayZip.bind(self));
+  app.get(prefix + "/:key*", self.displayZip.bind(self));
 };
 
 exports.ZipController = ZipController;
