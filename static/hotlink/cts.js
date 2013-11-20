@@ -8,6 +8,9 @@ if (typeof exports !== 'undefined') {
   CTS = root.CTS = {};
 }
 
+CTS.Constants = {
+};
+
 CTS.Utilities = {
   getUrlParameter: function(param, url) {
     if (typeof url == 'undefined') {
@@ -38,7 +41,8 @@ CTS.autoloadCheck = function() {
       if ((typeof script.src != 'undefined') &&
           (script.src != null) && 
           ((script.src.indexOf('cts.js') != -1) ||
-           (script.src.indexOf('cts.min.js') != -1))) {
+           (script.src.indexOf('cts.min.js') != -1) ||
+           (script.src.indexOf('cts.dev.js') != -1))) {
         var param = CTS.Utilities.getUrlParameter('autoload', script.src)
         if (param == 'false') {
           return false;
@@ -67,6 +71,8 @@ if (CTS.autoloadCheck()) {
 }
 
 (function() {
+
+CTS.Constants.mockupBase = "http://www.treesheets.org/mockups/";
 
 // Initial Setup
 // ==========================================================================
@@ -2969,7 +2975,6 @@ CTS.Fn.extend(CTS.Utilities, {
       }
     }, this);
     CTS.Fn.each(CTS.$('script[data-theme]'), function(elem) {
-      console.log(elem);
       var str = CTS.$(elem).attr('data-theme');
       var sub = CTS.$(elem).attr('data-subtheme');
       if (str != null) {
@@ -3044,15 +3049,15 @@ CTS.Fn.extend(CTS.Utilities, {
     if ((typeof subthemeRef != 'undefined') && (subthemeRef !== null)) {
       page = subthemeRef;
     }
-
+    var base = CTS.Constants.mockupBase;
     if (page == null) {
-      return "http://treesheets.csail.mit.edu/mockups/" + kind + "/" + name + "/" + name + ".cts"
-    } else {
-      return [
-        "http://treesheets.csail.mit.edu/mockups/" + kind + "/" + page + ".cts",
-        "http://treesheets.csail.mit.edu/mockups/" + kind + "/" + name + "/" + page + ".cts"
-      ];
+      page = 'index';
     }
+
+    return [
+      (base + kind + "/" + page + ".cts"),
+      (base + kind + "/" + name + "/" + page + ".cts")
+    ];
   },
 
   fixRelativeUrl: function(url, loadedFrom) {
@@ -6337,6 +6342,7 @@ CTS.Fn.extend(Engine.prototype, Events, {
   },
 
   loadCts: function() {
+    console.log("HI");
     var promises = [];
     var self = this;
 
