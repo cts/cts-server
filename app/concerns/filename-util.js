@@ -75,6 +75,35 @@ FilenameUtil.prototype.contentType = function(filename) {
   }
 };
 
+
+/*
+ * Returns a path to a filename which is not currently in use (using
+ * name as the root).
+ * 
+ * A uuid will be appended onto the end of name, and this method will
+ * check to see if the resulting filepath is being used.
+ * 
+ * Returns an error if too many unsuccessful attempts have been made.
+ */
+FilenameUtil.prototype.unusedPath = function(name, cb, tries) {
+  if (typeof tries == 'undefined') {
+    tries = 0;
+  }
+  if (tries > 50) {
+    return cb(new Error('Too many attempts made to find unused file.'));
+  }
+
+  var uuidAppendage = uuid.v4();
+  var file = name + uuidAppendage;
+  fs.exists(file, function (exists) {
+    if (exists) {
+      self.unusedPath(name, cb, tries+1);
+    } else {
+      cb(null, file, uuidAppendage);
+    }
+  });
+};
+
 /*
  *-------------------------------------------------------------------------
  *                        Private Methods

@@ -24,42 +24,38 @@ var ZipFactory = function(opts) {
  * has been completed.
  *
  */
-ZipFactory.prototype.zipTree = function(url, cb) {
+ZipFactory.prototype.zipTree = function(scraperOpts, cb) {
   var self = this;
-  var scraperOpts = {
-    url: url,
-    basedir: '/tmp',
-  };
-  console.log("Beginning scrape: " + url);
-  self._createTempDirectory(function(err, directory) {
-    console.log("Base directory: " + directory);
-    scraperOpts['basedir'] = directory
-    new WebScraper(scraperOpts).scrape(function(err) {
-      if (err) {
-        console.log("Scraper unable to find files from url: " + err);
-        cb(err);
-      } else {
-        self._findFilesInDirectory(directory, function(err, filenames) {
-          self.zipFiles(filenames, cb);
-        });
-      }
+  if (scraperOpts.hasOwnProperty('basedir')) {
+    self._performScrape(scraperOpts);
+  } else {
+    var tempStorageDirectory = self.opts.concerns.zipFactory.tempBaseName + "/";
+    FilenameUtil.unusedPath(tempStorageDirectory, function(err, directory) {
+      scraperOpts['basedir'] = directory;
+      self._performScrape(scraperOpts);
     });
-  });
+  }
 };
 
 ZipFactory.prototype.zipTreeToFile = function(url, cb) {
   var self = this;
-  self._generateZipFileName(url, function(err, filepath) {
-    self.zipTree(url, function(err, data) {
-      if (err) {
-        cb(err);
-      } else {
-        fs.writeFile(filepath, data, 'binary', function(err) {
-          console.log("wrote to zip file: " + filepath);
-          cb(err, filepath);
-        });
-      }
-    });
+  var tempBasename = self.opts.concerns.zipFactory.tempBaseName + "/";
+  FilenameUtil.unusedPath(tempBasename, function(err, filepath, uuidAppendage) {
+    if (err) {
+      cb(err);
+    } else {
+      self.zipTree({'url': url, 'basedir': filepath}, function(err, data) {
+        if (err) {
+          cb(err);
+        } else {
+          var zipFilepath = self.opts.concerns.zipFactory.zipBaseDir + "/" + uuidAppendage;
+          fs.writeFile(zipFilepath, data, 'binary', function(err) {
+            console.log("wrote to zip file: " + zipFilepath);
+            cb(err, zipFilepath);
+          });
+        }
+      });
+    }
   });
 };
 
@@ -186,37 +182,18 @@ ZipFactory.prototype._populateFileSystemFileData = function(fileData, filename, 
   });
 }
 
-ZipFactory.prototype._generateZipFileName = function(url, cb) {
-  var self = this;
-  var name = self.opts.concerns.zipFactory.zipBaseDir + "/" + uri.parse(url).host;
-  self._getUnusedFile(name, cb);
-};
-
-ZipFactory.prototype._createTempDirectory = function(cb) {
-  var self = this;
-  self._getUnusedFile(self.opts.concerns.zipFactory.tempBaseName + "/", cb);
-};
-
-/**
- * Creates a directory in the `/tmp` folder. Returns the directory name as a string.
- */
-ZipFactory.prototype._getUnusedFile = function(name, cb, tries) {
-  if (typeof tries == 'undefined') {
-    tries = 0;
-  }
-  if (tries > 50) {
-    return cb(new Error('Too many attempts made to find unused file.'));
-  }
-
-  var file = name + uuid.v4();
-  fs.exists(file, function (exists) {
-    if (exists) {
-      _getUnusedFile(name, cb, tries+1);
+ZipFactory.prototype._performScrape = function(scraperOpts) {
+  new WebScraper(scraperOpts).scrape(function(err) {
+    if (err) {
+      console.log("Scraper unable to find files from url: " + err);
+      cb(err);
     } else {
-      cb(null, file);
+      self._findFilesInDirectory(scraperOpts['basedir'], function(err, filenames) {
+        self.zipFiles(filenames, cb);
+      });
     }
   });
-};
+}
 
 
 /**
