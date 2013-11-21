@@ -1,9 +1,9 @@
 _CTSUI = {
   Domains: {
-    UIMockups: 'http://www.treesheets.org/mockups/cts-ui',
-    CTS: 'http://www.treesheets.org/hotlink/',
-    Server: 'http://www.treesheets.org/',
-    Theme: 'http://www.treesheets.org/mockups/blog/',
+    UIMockups: 'http://www.treesheets.csail.mit.edu/mockups/cts-ui',
+    CTS: 'http://www.treesheets.csail.mit.edu/hotlink/',
+    Server: 'http://www.treesheets.csail.mit.edu/',
+    Theme: 'http://www.treesheets.csail.mit.edu/mockups/blog/',
   }
 };
 
@@ -1647,7 +1647,7 @@ _CTSUI.Tray.prototype.popPage = function() {
   newPage.$page.show();
 };
 
-_CTSUI.Tray.prototype.transitionToWidth = function(width) {
+_CTSUI.Tray.prototype.transitionToWidth = function(width, completeFn) {
   this._width = width;
   var outerWidth = width + this._buttonWidth;
   this.$node.find('.cts-ui-tray-contents').animate({
@@ -1656,7 +1656,9 @@ _CTSUI.Tray.prototype.transitionToWidth = function(width) {
   this.$node.animate({
     'width': outerWidth + 'px'
   });
-  var spec2 = {'left': ((this._width + 1) + "px")};
+  var spec2 = {
+    'left': ((this._width + 1) + "px"),
+  };
   this.$node.find('.cts-ui-expand-tray').animate(spec2);
 };
 
@@ -1692,7 +1694,7 @@ _CTSUI.Tray.prototype.updateSize = function() {
   this.$node.height(windowHeight);
   this.$trayContents.height(windowHeight);
   for (var i = 0; i < this._pages.length; i++) {
-    this._pages[i].updateSize(windowHeight);
+    this._pages[i].updateSize(windowHeight, this._width);
   }
 };
 
@@ -2858,10 +2860,54 @@ _CTSUI.Theminator.prototype.requestedWidth = function() {
   return 200;
 };
 
-_CTSUI.Theminator.prototype.updateSize = function(height) {
+_CTSUI.Theminator.prototype.updateSize = function(height, width) {
     this.$container.height(height);
     this.$themeList.height(height - this.$header.height());
+    this.$header.width(width);
 };
+
+_CTSUI.Scraper = function(tray, $page) {
+  this._tray = tray; // A Javascript object
+  this.$page = $page;
+  this.$container = null;
+  this.$node = null;
+
+  this.loadMockup();
+};
+
+_CTSUI.Scraper.prototype.loadMockup = function() {
+  this.$container = CTS.$("<div class='cts-ui-scraper-page'></div>");
+  var cts = "@html scraper " + CTS.UI.URLs.Mockups.scraper + ";";
+  CTS.UI.Util.addCss(CTS.UI.URLs.Styles.scraper);
+  cts += "this :is scraper | #cts-ui-scraper;";
+  this.$container.attr("data-cts", cts);
+  var self = this;
+  this.$container.on("cts-received-is", function(evt) {
+    self.setupMockup()
+    evt.stopPropagation();
+  });
+  this.$container.appendTo(this.$page);
+};
+
+_CTSUI.Scraper.prototype.setupMockup = function() {
+    var self = this;
+    this.$node = this.$container.find('.cts-ui-scraper');
+    this.$header = this.$node.find('.cts-ui-header');
+    this.$back = this.$node.find('.cts-ui-back');
+    this.$back.on('click', function() {
+      self._tray.popPage();
+    });
+};
+
+_CTSUI.Scraper.prototype.requestedWidth = function() {
+  return 200;
+};
+
+_CTSUI.Scraper.prototype.updateSize = function(height) {
+    this.$container.height(height);
+    this.$header.width(width);
+};
+
 
 _CTSUI.Editor = function(tray, $page) {
   this._tray = tray; // A Javascript object
@@ -3284,10 +3330,8 @@ _CTSUI.Editor.prototype.scrapeClicked = function() {
   if (this._isEditing) {
     this.completeEdit();
   }
-  this._tray.invokeTheminator();
+  this._tray.invokeScraper();
 };
-
-
 
 
 /* CLONE
