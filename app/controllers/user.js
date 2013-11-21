@@ -137,13 +137,20 @@ UserController.prototype.isLoggedIn = function(req, res, next) {
   console.log("CORS Preflight");
   res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
+  console.log("USER*******************");
+  console.log(req.user);
+  console.log("session*******************");
+  console.log(req.session);
+  console.log("XHR************************");
+  console.log(req.xhr);
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
-    res.send("Yes");
+    return res.send("Yes");
   } else {
-    res.send("No");
+    return res.send("No");
   }
 };
 
@@ -154,14 +161,35 @@ UserController.prototype.login = function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
+  console.log("USER*******************");
+  console.log(req.user);
+  console.log("session*******************");
+  console.log(req.session);
+  console.log("XHR************************");
+  console.log(req.xhr);
+
   console.log("Authenticating user");
   this.passport.authenticate('local', function(err, user, info) {
     if (err) {
-      res.send(401, err);
+      return res.send(401, err);
     }else{
       // create session, get the key and return it
       // res.redirect('/');
-      res.send(200, 'log in successful');
+      return res.send(200, 'log in successful');
+    }
+  })(req, res, next);
+};
+
+UserController.prototype.loginRedirect = function(req, res, next){
+  console.log('traditional login triggered');
+  this.passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      console.log('bad login');
+      return res.redirect('/no');
+    }else{
+      // create session, get the key and return it
+      console.log('good login');
+      return res.redirect('/');
     }
   })(req, res, next);
 };
@@ -219,7 +247,8 @@ UserController.prototype.connectToApp = function(app, prefix) {
   app.options(prefix + '/login', self.preflight.bind(self));
   app.options(prefix + '/forgot', self.preflight.bind(self));
   app.options(prefix + '/isLoggedIn', self.preflight.bind(self));
-  app.get(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
+  app.post(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
+  app.post(prefix + '/login-redirect', self.loginRedirect.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {

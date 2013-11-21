@@ -52,15 +52,7 @@ app.configure(function() {
   app.use(express.static(static_dir));
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({
-    secret: 'asldjfwiouworuoeruwioroiweru',
-    maxAge: new Date(Date.now() + 3600000),
-    store: new MongoStore(
-      {db:mongoose.connection.db},
-      function(err){
-        console.log(err || 'connect-mongodb setup ok');
-      })
-  }));
+  app.use(express.session({ secret: 'asldjfwiouworuoeruwioroiweru' }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(express.methodOverride());
