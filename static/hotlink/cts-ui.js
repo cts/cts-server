@@ -40,6 +40,7 @@ _CTSUI.URLs = {
   },
   Services: {
     switchboard: _CTSUI.Domains.Server + 'tree/switchboard',
+    clipboard: _CTSUI.Domains.Server + 'hotlink/clipboard/clipboard.html',
     zipFactory: _CTSUI.Domains.Server + 'zip'
   }
 };
@@ -2368,7 +2369,7 @@ _CTSUI.Clipboard = function(server) {
   this._key = "cts-clipboard";
   this._server = server;
   if (typeof server == "undefined") {
-    this._server = "http://www.treesheets.org/clipboard.html";
+    this._server = CTS.UI.URLs.Services.clipboard;
   }
   this._deferred = CTS.$.Deferred();
   this._serverWindow = null;
