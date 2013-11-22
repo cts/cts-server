@@ -1,0 +1,1018 @@
+/*
+ * License purchased 
+ * Nerds with Hair
+ * Uno One Page HTML Theme Styling
+ * @nerdswithhair
+ * www.nerdswithhair.com
+*/
+
+@media screen and (min-width:992px) and (max-width:1199px) {
+
+    .media-list .blog--comment img.img-responsive {
+        max-width: 80px;
+    }
+
+}
+
+@media screen and (max-width: 1199px) { 
+
+    /* type */
+    .nav li {
+        font-size: 16px;
+        font-size: 1.6rem;
+    }
+
+    .font-icons code {
+        font-size: 12px;
+        font-size: 1.2rem;
+    }
+
+    .uno--list {
+        margin-bottom: 10px;
+    }
+
+    .uno--list li {
+        padding-bottom: 20px;
+    }
+
+    .title-bar {
+        margin-bottom: 30px;
+    }
+
+    .push--bottom {
+        margin-bottom: 30px;
+    }
+
+    .push--bottom-sml {
+        margin-bottom: 20px;
+    }
+
+    .contact--right {
+        padding-left: 80px;
+    }
+
+    .work--featured .box--lg {
+        padding-bottom: 50px;
+    }
+
+    .work--featured-slider {
+        margin-bottom: 30px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .work--featured-breakdown {
+        text-align: center;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-bottom: 10px;
+    }
+
+    .team-members img {
+        padding: 0px;
+    }
+
+    .clients--logo {
+        padding: 0px 50px;
+    }
+
+    .work--detail {
+        padding: 30px 0px 10px;
+    }
+
+    .extras .box--lg {
+        padding: 30px 60px;
+    }
+
+    .popular-blog-post--list li {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    .blog--search.push--bottom {
+        margin-bottom: 30px!important;
+    }
+
+    .popular-blog-post--list.push--bottom-smallest {
+        margin-bottom: 0px!important;
+    }
+
+    .popular-blog-post--list .media {
+        margin-top: 0px;
+    }
+
+    .blog .right-hand-bar.col-lg-4 .box--md {
+        padding-bottom: 40px;
+    }
+
+    #blog-comment-form .error {
+        top: -65px;    
+    }    
+
+    .nav > li > a {
+        padding: 15px 10px;
+    }
+
+    .font-icons td {
+        padding: 8px!important;
+    }
+
+}
+
+@media (min-width: 992px) {
+
+    .box--md {
+        padding: 50px 60px;
+    }
+
+}
+
+@media screen and (max-width:991px) {
+
+    /* type */
+    h1 {
+        font-size: 40px;
+        font-size: 4rem;
+    }
+
+    h2,
+    .h2 {
+        font-size: 90px;
+        font-size: 9rem;
+    }
+
+    h3,
+    .h3 {
+        font-size: 25px;
+        font-size: 2.5rem;
+    }
+
+    .uno--list.about h4 {
+        font-size: 18px;
+        font-size: 1.8rem;
+    }
+
+    .font-icons code {
+        font-size: 13px;
+        font-size: 1.3rem;
+    }
+
+    .font-icons span {
+        font-size: 13px;
+        font-size: 1.3rem;
+    }
+
+    .jumbotron {
+        padding: 240px 0px 90px;
+    }
+
+    .jumbotron.jumbotron--slider {
+        padding: 240px 0px 0px;
+    }
+
+    .jumbotron--slider .bx-pager {
+        margin-top: 50px!important;
+    }
+
+    .title-bar {
+        padding: 30px 0px;
+    }
+
+    .contact--right {
+        padding-left: 15px;
+    }
+
+    .box--lg {
+        padding: 50px 60px 60px;
+    }
+
+    .box--md {
+        padding: 30px 40px;
+    }
+
+    .uno--list.about .box--sm {
+        padding: 50px 30px 60px;
+    }
+
+    .work--featured-breakdown {
+        padding-right: 0px;
+    }
+
+    .feedback--image {
+        margin-top: 20px;
+    }
+
+    .feedback--info h4 {
+        margin-bottom: 20px;
+    }
+
+    .clients--logo {
+        padding: 0px 20px;
+    }
+
+    .tweet .btn {
+        margin-bottom: 40px;
+    }
+
+    .contact .box--md {
+        padding-bottom: 20px;
+    }
+
+    .extras .box--lg {
+        padding: 30px 50px;
+    }
+
+    .blog {
+        margin-bottom: 10px;
+    }
+
+    .box--blog-comments {
+        padding: 30px 40px 50px!important;
+    }
+
+    .box--blog-comments-header ul li:first-child {
+        padding-left: 0px;
+    }
+
+    .popular-blog-post--list li p.brand--font-light {
+        margin-bottom: 20px;
+    }
+
+    .popular-blog-post--list li:last-child p.brand--font-light {
+        margin-bottom: 30px;
+    }
+
+    .footer .col-sm-12 {
+        text-align: left;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-width:991px) {
+
+    /* type */
+    .nav .h4 {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    .nav li a {
+        padding: 15px 7px;
+    }
+
+    /* animated header */
+    .navbar-shrink {
+        padding: 30px 15px 30px;
+    }
+
+
+}
+
+@media (max-width:767px) {
+
+    /* grid */
+    .col-xs-offset-1 {
+        margin-left: 8.333333333333332%;
+    }
+
+    .col-xs-offset-2 {
+      margin-left: 16.666666666666664%;
+    }
+
+    .col-xs-offset-3 {
+        margin-left: 25%;
+    }    
+
+    /* type */
+    h1 {
+        font-size: 40px;
+        font-size: 4rem;
+        display: inline;
+    }
+
+    h2 {
+        font-size: 70px;
+        font-size: 7rem;
+    }
+
+    .uno--list.about h4 {
+        font-size: 20px;
+        font-size: 2rem;
+    }
+
+    pre {
+        font-size: 14px;
+        font-size: 1.4rem;
+    }
+
+    .table--price {
+        font-size: 30px;
+        font-size: 3rem;
+    }
+
+    .table--header {
+        line-height: 1.5!important;
+    }
+
+    .icon-menu {
+        font-size: 18px;
+        font-size: 1.8rem;
+    }
+
+    .navbar-default .navbar-toggle {
+        border: 2px solid #d3d3d3;
+        color: #d3d3d3;
+        margin-top: 0px;
+        border-radius: 0px;
+        line-height: 1.5; 
+    }
+
+    .navbar-default .navbar-toggle:hover, 
+    .navbar-default .navbar-toggle:focus {
+        background: #6397ba;
+        border: 2px solid #6397ba;
+        color: #fff;
+    }
+
+    /* animated header */
+    .navbar, 
+    .navbar-shrink {
+        padding: 20px 15px 10px;
+    }
+
+    .navbar.navbar-shrink .icon-menu {
+        font-size: 18px;
+        font-size: 1.8rem;
+    }
+
+    .navbar.navbar-shrink ul.nav li a,
+    .navbar ul.nav li a {
+        z-index: 1000; /* ensures links are tappable on some mobile devices */
+    }
+
+    /* styling for the collapsed menu */
+    .navbar-collapse {
+        border-top: 0px;
+        padding-top: 5px;
+        padding-right: 0px;
+        padding-left: 0px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .navbar-nav {
+        text-align: center;
+        float: none;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }  
+
+    .navbar-nav li {
+        padding: 0px 15px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .navbar-nav > li > a {
+        padding-top: 15px;
+        padding-bottom: 10px;
+    }
+
+    .navbar-nav li:last-of-type {
+        margin-bottom: 0px;
+    }
+
+    .navbar-nav > li.active > a,
+    .navbar-nav > li.active > a:hover, 
+    .navbar-nav > li.active > a:focus, 
+    .navbar-nav > li.active, 
+    .navbar-nav > li.active:hover, 
+    .navbar-nav > li.active:focus {
+        color: #fff!important;
+        background-color: #d3d3d3!important;
+        border-bottom: none;
+        margin-left: 15px;
+        margin-right: 15px;
+        border-radius: 0px;
+    }
+
+    .navbar-nav li:last-child a {
+        padding-right: 15px;
+    }
+
+    /* styling of collapsed menu items on hover */
+    .navbar-default .navbar-nav > li > a:hover {      
+        background: #6397ba;
+        color: #fff;
+    }
+
+    .title-bar {
+        margin-bottom: 15px;
+    }
+
+    .uno--list {
+        margin-bottom: 0px;
+    }
+
+    .uno--list li {
+        padding-bottom: 15px;
+    }
+
+    .push--bottom {
+        margin-bottom: 15px;
+    }  
+
+     .push--bottom-sml {
+        margin-bottom: 15px;
+    }    
+
+    .jumbotron {
+        padding: 200px 30px 110px;
+    }
+
+    .jumbotron.jumbotron--slider {
+        padding: 200px 0px 20px;
+    }
+
+    .jumbotron--slider h3 {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .box--md {
+        padding: 30px;
+    }
+
+    .clients--logo {
+        padding: 0px 80px;
+    }
+
+    .footer {
+        padding-top: 40px;
+        padding-bottom: 20px;
+    }
+
+    .footer .col-sm-2,
+    .footer .col-sm-3 {
+        margin-bottom: 10px;
+    }
+
+    .work--detail {
+        padding: 15px 0px 0px;
+    }
+
+    .feedback--slider .bx-pager {
+        margin-bottom: 10px;
+    }
+
+    .tweet .btn {
+        margin-bottom: 30px;
+    }
+
+    .box--md.tweet {
+       padding-top: 20px;
+    }
+
+    .work--featured .box--lg {
+        padding-bottom: 40px;
+    }
+
+    .extras .box--lg {
+        padding: 30px 40px;
+    }
+
+    .blog .box--md {
+        padding: 30px!important;
+    }
+
+    .blog .box--blog-comments {
+        padding-bottom: 30px!important;
+    }
+
+    .blog .right-hand-bar .box--md {
+        padding-bottom: 30px!important;
+    }
+
+    .blog .blog--post .btn {
+        margin-bottom: 15px;
+    }
+
+    .blog {
+        margin-top: 15px;
+        margin-bottom: 15px!important;
+    }
+
+    .blog .blog--post.push--bottom-sml {
+        margin-bottom: 15px!important;
+    }
+
+    ul.blog--tags.push--bottom-tiny {
+        margin-bottom: 10px!important;
+    }
+
+    .popular-blog-post--list li p.brand--font-light {
+        margin-bottom: 10px;
+    }
+
+    .popular-blog-post--list li:last-child p.brand--font-light {
+        margin-bottom: 20px;
+    }
+
+    .pagination {
+        margin-bottom: 0px;
+    }
+
+    .right-hand-bar .blog--post.push--bottom-sml {
+        margin-bottom: 0px!important;
+    }
+
+    .blog .right-hand-bar.col-lg-4 .box--md {
+        padding-top: 40px!important;
+    }
+
+    .footer ul.list-unstyled li {
+        display: inline-block;
+        padding-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .blog--comment .col-xs-12 {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .blog--comment .col-xs-12 img {
+        margin-bottom: 20px;
+        max-width: 60px;
+    }
+
+    .blog--article .form-group .col-xs-12 {
+        padding-left: 0px!important;
+        padding-right: 0px!important;
+    }
+
+    #blog-comment-form .error {
+        right: 0px;    
+    } 
+
+    .box--blog-comments-header,
+    .box--blog-categories-header {
+        padding: 30px;
+    }
+
+    .blog .blog--post-content {
+        padding-bottom: 10px!important;
+    }
+
+    .box--blog-categories-header.push--bottom-sml {
+        margin-bottom: 15px!important;
+    }
+
+    body.success {
+        padding-top: 15px;
+    }
+
+}
+
+@media screen and (min-width:710px) and (max-width:767px) {
+
+    .popular-blog-post--list li.col-xs-12 {        
+        float: left;
+        width: 50%;
+    }
+
+    .popular-blog-post--list li p.brand--font-light {
+        margin-bottom: 20px;
+    }
+
+    .popular-blog-post--list li:last-child p.brand--font-light {
+        margin-bottom: 30px;
+    }
+
+}
+
+@media screen and (min-width:530px) and (max-width:767px) {
+
+    .footer .col-xs-12 {
+        float: left;
+        width: 50%;
+    }
+
+    .footer ul.list-unstyled li {
+        display: block;
+    }
+
+    .col-xs-12.footer--nwh-info {
+        width: 100%;
+        float: none;
+    }
+
+}
+
+@media screen and (min-width:480px) and (max-width:767px) {
+
+    .footer .col-sm-3:first-of-type,
+    .footer .col-xs-12 {
+        padding-left: 25px;
+    }
+
+    .clients--list li {
+        width: 50%;
+        float: left;
+    }
+
+    .clients--list li:nth-child(even) {
+        padding-left: 7px;
+    }
+
+    .clients--list li:nth-child(odd) {
+        padding-right: 7px;
+    }
+
+    .clients--logo {
+        padding: 0px;
+    }
+
+}
+
+@media screen and (min-width:480px) and (max-width:510px) {
+    h2,
+    .h2 {
+        font-size: 60px;
+        font-size: 6rem;    
+    }
+}
+
+@media screen and (max-width:479px) {
+
+    /* type */
+    body,
+    blockquote p {
+        font-size: 14px;
+        font-size: 1.4rem;
+    }
+
+    h1,
+    .h1,
+    .navbar-shrink h1 {
+        font-size: 30px;
+        font-size: 3rem;
+        padding-top: 6px;
+        display: inline-block;
+    }
+
+    h2,
+    .h2 {
+        font-size: 50px;
+        font-size: 5rem;
+    }
+
+    h3,
+    .h3 {
+        font-size: 25px;
+        font-size: 2.5rem;
+    }
+
+    .blog--post h3,
+    .blog--post .h3,
+    .extras h3,
+    .extras .h3 {
+        font-size: 20px;
+        font-size: 2rem;
+    }
+
+    h4,
+    .h4 {
+        font-size: 20px;
+        font-size: 2rem;
+    }
+
+    .blog--comment h4,
+    .blog--comment .h4 {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    h5,
+    .h5 {
+        font-size: 12px;
+        font-size: 1.2rem;
+    }
+
+    h6,
+    .h6 {
+        font-size: 12px;
+        font-size: 1.2rem;
+    }
+
+    span.icon-search {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    .feedback--info h4 {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    pre {
+        font-size: 11px;
+        font-size: 1.1rem;
+        padding: 15px;
+    }
+
+    .font-icons code {
+        font-size: 10px;
+        font-size: 1rem;
+    }
+
+    .extras .font-icons span {
+        font-size: 13px;
+        font-size: 1.3rem;
+    }
+
+    .navbar,
+    .navbar-shrink {
+        padding-top: 15px;
+    }
+
+    .navbar-toggle {
+        padding: 5px 8px;
+        margin-bottom: 4px;
+    }
+
+    .jumbotron {
+        padding: 140px 30px 55px;
+    }
+
+    .jumbotron.jumbotron--slider {
+        padding: 140px 0px 0px;
+    }
+
+    .jumbotron--slider .bx-pager {
+        margin-top: 40px!important;
+    }
+
+
+    .title-bar {
+        padding: 15px;
+    }
+
+    .portfolio--list {
+        margin-bottom: 0px;
+    }
+
+    .portfolio--list figcaption {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    .portfolio--list figcaption p {
+        padding: 15px 20px;
+    }
+
+    .portfolio--list figcaption a {
+        padding-top: 15px;
+    }
+
+    .form-control {
+        padding: 20px 15px;
+    }
+
+    .control-label {
+        font-size: 15px;
+        font-size: 1.5rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .btn--social {
+        width: auto;
+    }
+
+    .control-label {
+        font-size: 15px;
+        font-size: 1.5rem;
+        padding-bottom: 10px;
+    }
+
+    .error {
+        top: -40px;
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .box--lg {
+        padding: 40px 15px 50px;
+    }
+
+    .box--sm {
+        padding: 40px 15px 50px;
+    }
+
+    .box--md {
+        padding: 25px 15px;
+    }
+
+    .footer {
+        padding: 40px 15px 20px;
+    }
+
+    .footer h3 {
+        margin-bottom: 10px;
+    }
+
+    .footer ul.list-unstyled {
+        margin-bottom: 10px;
+    }
+
+    .footer ul.list-unstyled li:last-child {
+        padding-right: 0px;
+    }    
+
+    .work--featured-slider {
+        margin-bottom: 10px;
+    }
+
+    .work--featured h3,
+    .work--featured h4 {
+        margin-bottom: 20px;
+    }
+
+    .work--featured p {
+        margin-bottom: 30px;
+    }
+
+    .work--featured .box--lg {
+        padding-bottom: 40px;
+    }
+
+    .bx-controls {
+        margin-top: 20px;
+    }
+
+    .clients--logo {
+        padding: 0px 40px;
+    }
+
+    .tweet .btn {
+        margin-bottom: 20px;
+    }
+
+    .box--md.tweet {
+        padding: 5px 20px 10px!important;
+    }
+
+    .work--featured .box--lg {
+        padding-bottom: 20px;   
+    }
+
+    .contact .box--md {
+        padding: 20px 5px 0px!important;    
+    }
+
+    .extras .box--lg {
+        padding: 10px 20px;
+    }
+
+    .extras section.components {
+        margin-bottom: 15px;
+    }
+
+    blockquote {
+        border-width: 8px;
+        padding: 20px;
+    }
+
+    .extras--icons li img {
+        padding: 5px;
+    }
+
+    .blog .blog--post.push--bottom-sml {
+        margin-bottom: 15px!important;
+    }
+
+    .blog .blog--post img.push--bottom {
+        margin-bottom: 30px!important;
+    }
+
+    .blog {
+        margin-bottom: 0px!important;
+    }
+
+    .popular-blog-post--list li {
+        display: inline-block;
+        white-space: normal!important;
+    }
+
+    .popular-blog-post--list li p.brand--font-standard {
+        margin-bottom: 5px!important;
+        margin-top: 2px;
+    }
+
+    .popular-blog-post--list li p.brand--font-light {
+        margin-bottom: 10px;
+    }
+
+    .popular-blog-post--list li:last-child p.brand--font-light {
+        margin-bottom: 30px;
+    }
+
+    .blog--search button.orange {
+        padding: 0px 10px;
+    }
+
+    .blog--comment:last-of-type {
+        margin-bottom: 30px;
+    }   
+
+    .blog--comment {
+        padding: 20px 20px 0px;
+    } 
+
+    .blog--comment .blog--user-image {
+        margin-bottom: 20px;
+    }
+
+    .blog--comment p {
+        margin-bottom: 20px;
+    }
+
+    .blog--comment .col-xs-12 {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    .blog--comment .col-xs-12 img {
+        max-width: 50px;
+    }
+
+    #blog-comment-form .error {
+        top: -46px;
+        padding: 10px;
+    }
+
+    .blog .box--md {
+        padding-bottom: 30px!important;
+    }
+
+    .blog .blog--post-content {
+        padding-bottom: 10px!important;
+    }
+
+    .box--blog-comments-header, .box--blog-categories-header {
+        padding: 15px 20px!important;
+    }
+
+    .blog .box--blog-comments {
+        padding: 15px 20px!important;
+    }
+
+    .right-hand-bar .box--md {
+        padding-bottom: 30px!important;
+    }
+
+    .box--blog-comments-header ul li,
+    .blog--comment ul.list-inline li {
+        display: block;
+        padding-left: 0px;
+    }
+
+    .success .box--md {
+        padding: 30px 30px 40px;
+    }
+
+    .box--md.blog--post {
+        padding: 20px 20px 10px!important;
+    }
+
+    .blog .right-hand-bar .box--md.blog--post {
+        padding-top: 20px!important;
+        padding-bottom: 20px!important;
+    }
+
+    .font-icons code {
+        background: transparent;
+        border: 0px;
+    }
+
+    .work--featured .box--lg.push--bottom-sml {
+        margin-bottom: 15px!important;
+    }
+
+    .push--bottom,
+    .push--bottom-sml {
+        margin-bottom: 15px!important;
+    }
+
+    .push--bottom-smallest {
+        margin-bottom: 10px!important;
+    }
+
+}
+

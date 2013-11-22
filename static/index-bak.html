@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+	  <title>Overlay</title>
+
+    <!-- For the sake of web standards -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Ted Benson" />
+    <meta name="description" content="CTS does for structure what CSS does for style."/ >
+    <meta name="keywords" content="content management, web design, blog, cms, static blogging" />
+
+    <!-- For Google -->
+    <link rel="author" href="https://plus.google.com/+TedBensonNow" />
+    <meta name="robots" content="INDEX,FOLLOW">
+
+    <!-- For Facebook -->
+    <meta property="og:title" content="Cascading Tree Sheets"/>
+    <meta property="og:description" content="CTS does for structure what CSS does for style."/>
+    <meta property="og:url" content="http://www.treeshets.org/" />
+
+    <!-- For Twitter-->
+    <meta property="twitter:title" content="Cascading Tree Sheetes"/>
+    <meta property="twitter:description" content="CTS does for structure what CSS does for style."/>
+    <meta property="twitter:url" content="http://www.treesheets.org/" />
+    <meta property="twitter:creator" content="@edwardbenson" />
+
+    <link href="/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="/css/styles.css" rel="stylesheet" media="screen">
+    <link href="/css/media-queries.css" rel="stylesheet" media="screen">
+    <script src="/js/modernizr.custom.js"></script> 
+  </head>
+  <body data-spy="scroll" data-target=".navbar">
+
+  <!-- **** START - NAVBAR SCROLLSPY FIX DO NOT REMOVE **** -->
+  <div id="top" class="hide"></div>
+  <!-- **** END - NAVBAR SCROLLSPY FIX DO NOT REMOVE **** -->
+
+  <!-- **** START - NAV **** -->
+  <nav class="navbar  navbar-default  navbar-fixed-top" role="navigation">
+    <div class="container">
+
+      <div class="navbar-header">
+        <!-- main-logo goes here-->
+        <h1 class="brand--font">Overlay</h1>
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+
+      <div class="collapse  navbar-collapse  navbar-ex1-collapse">
+        <ul class="nav  navbar-nav">
+          <!-- **** START - NAVBAR SCROLLSPY FIX DO NOT REMOVE **** -->
+          <li class="hide"><a href="#top"></a></li>
+          <!-- **** END - NAVBAR SCROLLSPY FIX DO NOT REMOVE **** -->
+          <li class="brand--font  h4"><a href="#about">About</a></li>
+          <li class="brand--font  h4"><a href="#work">Work</a></li>
+          <li class="brand--font  h4"><a href="#feedback">Feedback</a></li>
+          <li class="brand--font  h4"><a href="#team">Team</a></li>
+          <li class="brand--font  h4"><a href="#clients">Clients</a></li>
+          <li class="brand--font  h4"><a href="#contact">Contact</a></li>
+          <li class="brand--font  h4"><a href="blog.html">Blog</a></li>
+          <li class="brand--font  h4"><a href="extras.html">Extras</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav><!-- **** END - NAV **** -->
+
+  <!-- **** START - JUMBOTRON **** -->
+  <div class="jumbotron  text-center  jumbotron--slider">
+    <ul class="slider">
+      <!-- slide 1 -->
+      <li>
+        <h3 class="jumbotron--sub-title  brand--font-standard">Content Management without the System</h3>
+      </li>
+      <!-- slide 2 -->
+      <li>
+        <h2 class="jumbotron--title  brand--font">Dos</h2>
+        <h3 class="jumbotron--sub-title  brand--font-standard">We're award winning</h3>
+      </li>
+      <!-- slide 2 -->
+      <li>
+        <h2 class="jumbotron--title  brand--font">Tres</h2>
+        <h3 class="jumbotron--sub-title  brand--font-standard">We like to drink tea</h3>
+      </li>             
+    </ul>
+  </div><!-- **** END - JUMBOTRON **** -->
+
+    <!-- **** START - ABOUT TITLE **** -->
+    <div id="about" class="title-bar  brand--font  h3">
+      <div class="container">
+        about
+      </div>
+    </div><!-- **** END - ABOUT TITLE **** -->
+
+    <!-- **** START - ABOUT ITEMS **** -->
+    <div class="container">
+      <div class="row">
+
+
+        <ul class="list-unstyled  uno--list  about">
+          <!-- about item 1 -->
+          <li class="col-sm-4  col-md-4  col-lg-4">
+            <div class="box  box--sm  text-center">
+              <h4 class="brand--font-standard">Overlay an editor on any web page.</h4>
+                <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                    <img src="img/map.jpg" class="img-responsive" alt="map">
+                  </div>
+                </div>
+            </div>
+          </li><!-- /about item 1 -->
+          <!-- about item 2 -->
+          <li class="col-sm-4  col-md-4  col-lg-4">
+            <div class="box  box--sm  text-center">
+              <h4 class="brand--font-standard">Content Management without the System</h4>
+                <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                    <img src="img/pencil.jpg" class="img-responsive" alt="pencil">
+                  </div>
+                </div>
+            </div>
+          </li><!-- /about item 2 -->
+          <!-- about item 3 -->
+          <li class="col-sm-4  col-md-4  col-lg-4">
+            <div class="box  box--sm  text-center">
+              <h4 class="brand--font-standard">Copy-Paste-Tweak Editing</h4>
+                <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                    <img src="img/clock.jpg" class="img-responsive" alt="clock">
+                  </div>
+                </div>
+            </div>
+          </li><!-- /about item 3 -->
+        </ul>
+
+      </div>
+    </div><!-- **** END - ABOUT ITEMS **** -->
+
+    <!-- **** START - WORK TITLE **** -->
+    <div id="work" class="title-bar  brand--font  h3">
+      <div class="container">
+        work
+      </div>
+    </div><!-- **** END - WORK TITLE **** -->
+
+    <!-- **** START - WORK/PORTFOLIO **** -->
+    <div class="container">
+      <div class="row">
+
+        <!-- **** START - FEATURED WORK **** -->
+        <div class="col-lg-12  work--featured">
+          <div class="box  box--lg  push--bottom-sml">
+            <div class="row">
+              <!-- carousel of featured work -->
+              <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6  work--featured-slider">
+                <ul class="slider">
+                  <li><img src="img/uno-featured-1.jpg" class="img-responsive" alt="featured-work-1" /></li>
+                  <li><img src="img/uno-featured-2.jpg" class="img-responsive" alt="featured-work-2" /></li>
+                  <li><img src="img/uno-featured-3.jpg" class="img-responsive" alt="featured-work-3" /></li>
+                </ul>
+              </div><!-- /carousel of featured work -->
+              <!-- featured work breakdown -->
+              <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                <h3 class="brand--font-standard">Featured Project</h3>
+                <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                <p>
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                </p>
+                <a href="#" target="_blank" class="btn  btn--orange  brand--font">view project</a>
+              </div><!-- /featured work breakdown -->
+            </div>
+          </div>
+        </div>
+        <!-- **** END - FEATURED WORK -->
+
+        <ul class="list-unstyled  uno--list  cs-style-3">
+          <!-- work item 1 -->
+          <li id="portfolio-1" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/globe.jpg" class="img-responsive" alt="globe">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-1" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 1 -->
+          <!-- work item 2 -->
+          <li id="portfolio-2" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/eye.jpg" class="img-responsive" alt="eye">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-2" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 2 -->
+          <!-- work item 3 -->
+          <li id="portfolio-3" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/drop.jpg" class="img-responsive" alt="eye">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-3" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 3 -->
+          <!-- work item 4 -->
+          <li id="portfolio-4" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/comment.jpg" class="img-responsive" alt="comment">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-4" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 4 -->
+          <!-- work item 5 -->
+          <li id="portfolio-5" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/photo.jpg" class="img-responsive" alt="photo">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-5" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 5 -->
+          <!-- work item 6 -->
+          <li id="portfolio-6" class="col-sm-6  col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+                <h4 class="brand--font-standard">Project Title</h4>
+                  <div class="row">
+                  <div class="col-xs-offset-2  col-xs-8  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-3  col-lg-6">
+                      <img src="img/money.jpg" class="img-responsive" alt="money">
+                    </div>
+                  </div>
+                <figcaption>
+                  <p>Project comment</p>
+                  <a id="link-6" class="orange  portfolio-toggle  pull-right  brand--font" href="#">View</a>
+                </figcaption>
+            </figure>
+          </li><!-- /work item 6 -->
+        </ul>
+
+      </div><!-- row -->
+      <span class="hidden-content-top"></span>
+    </div><!-- **** END - WORK/PORTFOLIO **** -->
+
+      <!-- **** START - HIDDEN WORK DETAILS **** -->
+      <div class="work--detail">
+
+        <!-- work 1 - hidden portfolio details -->
+        <div id="work-1" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/globe-lg.jpg" class="img-responsive" alt="globe large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-1" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 1 - hidden portfolio details -->
+
+        <!-- work 2 - hidden portfolio details -->
+        <div id="work-2" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/eye-lg.jpg" class="img-responsive" alt="eye large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-2" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 2 - hidden portfolio details -->
+
+        <!-- work 3 - hidden portfolio details -->
+        <div id="work-3" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/drop-lg.jpg" class="img-responsive" alt="drop large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-3" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 3 - hidden portfolio details -->
+
+        <!-- work 4 - hidden portfolio details -->
+        <div id="work-4" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/comment-lg.jpg" class="img-responsive" alt="comment large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-4" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 4 - hidden portfolio details -->
+
+        <!-- work 5 - hidden portfolio details -->
+        <div id="work-5" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/photo-lg.jpg" class="img-responsive" alt="photo large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-5" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 5 - hidden portfolio details -->
+
+        <!-- work 6 - hidden portfolio details -->
+        <div id="work-6" class="container  work">
+          <!-- row -->
+          <div class="row">
+            <div class="col-lg-12  work--featured">
+              <div class="box  box--lg  push--bottom-sml">
+                <div class="row">
+                  <!-- large image -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-2  col-md-8  col-lg-offset-1  col-lg-6">
+                    <img src="img/money-lg.jpg" class="img-responsive" alt="money large" />
+                  </div><!-- /large image -->
+                  <!-- work breakdown -->
+                  <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-1  col-lg-4  work--featured-breakdown">
+                    <h3 class="brand--font-standard">Project Title</h3>
+                    <h4 class="brand--font-standard">Client name <span class="brand--font-light">(Sept '13)</span></h4>
+                    <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.
+                    </p>
+                    <!-- link to live project goes here -->
+                    <a href="#" class="btn  btn--orange  brand--font">view</a>
+                    <a id="close-link-6" href="#" class="btn  btn--grey  brand--font  close-link" onclick="">close</a>  
+                  </div><!-- /work breakdown -->
+                </div>
+              </div>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /work 6 - hidden portfolio details -->
+
+      </div><!-- **** END - HIDDEN WORK DETAILS -->
+
+    <!-- **** START - FEEDBACK TITLE **** -->
+    <div id="feedback" class="title-bar  brand--font  h3">
+      <div class="container">
+        feedback
+      </div>
+    </div><!-- **** END - FEEDBACK TITLE **** -->
+
+    <!-- **** START - FEEDBACK **** -->
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-12">
+          <div class="box  box--md  text-center  push--bottom  feedback--slider">
+
+            <ul class="slider">
+                <li>
+                  <!-- row -->
+                  <div class="row">
+                    <!-- feedback image -->
+                    <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-5  col-md-2  col-lg-offset-5  col-lg-2  feedback--image">
+                      <img src="img/ivane.jpg" class="img-responsive  img-circle" alt="ivane"/>
+                    </div><!-- /feedback image -->
+
+                    <!-- clear fixes to prevent feedback info from wrapping -->
+                    <div class="clearfix visible-sm"></div>
+                    <div class="clearfix visible-xs"></div><!-- /clear fixes to prevent feedback info from wrapping -->
+
+                    <!-- feedback info -->
+                    <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-2  col-lg-8  feedback--info">
+                      <p>  
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry".
+                      </p>
+                      <h4 class="brand--font-standard">Ivane</h4>
+                    </div><!-- /feedback info -->
+                  </div><!-- /row -->
+                </li>
+                <li>
+                  <!-- row -->
+                  <div class="row">                  
+                    <!-- feedback image -->
+                    <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-5  col-md-2  col-lg-offset-5  col-lg-2  feedback--image">
+                      <img src="img/ivane.jpg" class="img-responsive  img-circle" alt="ivane"/>
+                    </div><!-- /feedback image -->
+
+                    <!-- clear fixes to prevent feedback info from wrapping -->
+                    <div class="clearfix visible-sm"></div>
+                    <div class="clearfix visible-xs"></div><!-- /clear fixes to prevent feedback info from wrapping -->
+
+                    <!-- feedback info -->
+                    <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-2  col-lg-8  feedback--info">
+                      <p>  
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry".
+                      </p>
+                      <h4 class="brand--font-standard">Ivane</h4>
+                    </div><!-- /feedback info -->
+                  </div><!-- /row -->
+                </li>
+                <li>
+                  <!-- row -->
+                  <div class="row">                  
+                    <!-- feedback image -->
+                    <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-5  col-md-2  col-lg-offset-5  col-lg-2  feedback--image">
+                      <img src="img/ivane.jpg" class="img-responsive  img-circle" alt="ivane"/>
+                    </div><!-- /feedback image -->
+
+                    <!-- clear fixes to prevent feedback info from wrapping -->
+                    <div class="clearfix visible-sm"></div>
+                    <div class="clearfix visible-xs"></div><!-- /clear fixes to prevent feedback info from wrapping -->
+
+                    <!-- feedback info -->
+                    <div class="col-xs-offset-1  col-xs-10  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-2  col-lg-8  feedback--info">
+                      <p>  
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry".
+                      </p>
+                      <h4 class="brand--font-standard">Ivane</h4>
+                    </div><!-- /feedback info -->
+                  </div><!-- /row -->
+                </li>
+            </ul>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- **** END - FEEDBACK -->
+
+    <!-- **** START - MEET THE TEAM TITLE ****-->
+    <div id="team" class="title-bar  brand--font  h3">
+      <div class="container">
+        team
+      </div>
+    </div><!-- **** END - MEET THE TEAM TITLE ****-->
+
+    <!-- **** START - TEAM **** -->
+    <div class="container">
+      <!-- team members row -->
+      <div class="row">
+
+        <ul class="team-members  list-unstyled  uno--list  cs-style-3">
+          <!-- team member 1 -->
+          <li class="col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+              <div class="row">
+                  <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-2  col-md-8  col-lg-offset-2  col-lg-8">
+                  <img src="img/eve.jpg" class="img-responsive  img-circle" alt="eve"/>
+                </div>
+              </div>
+                <h4 class="brand--font-standard">Eve</h4>
+                <h4 class="brand--font-light">(CEO)</h4>
+                  <figcaption>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--twitter  brand--font"><span class="icon-twitter"></span></a>
+                    <a href="http://www.facebook.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--facebook  brand--font"><span class="icon-facebook"></span></a>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--dribbble  brand--font"><span class="icon-dribbble"></span></a>
+                  </figcaption>
+            </figure>
+          </li><!-- /team member 1 -->
+          <!-- team member 2 -->
+          <li class="col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+              <div class="row">
+                  <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-2  col-md-8  col-lg-offset-2  col-lg-8">
+                    <img src="img/sarah.jpg" class="img-responsive  img-circle" alt="sarah"/>
+                </div>
+              </div>
+                <h4 class="brand--font-standard">Sarah</h4>
+                <h4 class="brand--font-light">(Lead Designer)</h4>
+                  <figcaption>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--twitter  brand--font"><span class="icon-twitter"></span></a>
+                    <a href="http://www.facebook.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--facebook  brand--font"><span class="icon-facebook"></span></a>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--dribbble  brand--font"><span class="icon-dribbble"></span></a>
+                  </figcaption>
+            </figure>
+          </li><!-- /team member 2 -->
+          <!-- team member 3 -->
+          <li class="col-md-4  col-lg-4">
+            <figure class="box  box--sm  text-center">
+              <div class="row">
+                  <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-2  col-md-8  col-lg-offset-2  col-lg-8">
+                    <img src="img/peter.jpg" class="img-responsive  img-circle" alt="peter"/>
+                </div>
+              </div>
+                <h4 class="brand--font-standard">Peter</h4>
+                <h4 class="brand--font-light">(Lead Developer)</h4>
+                  <figcaption>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--twitter  brand--font"><span class="icon-twitter"></span></a>
+                    <a href="http://www.facebook.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--facebook  brand--font"><span class="icon-facebook"></span></a>
+                    <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--small  btn--social  btn--dribbble  brand--font"><span class="icon-dribbble"></span></a>
+                  </figcaption>
+            </figure>
+          </li><!-- /team member 3 -->
+        </ul>
+
+      </div><!-- /team members row -->
+
+      <!-- tweet row -->
+      <div class="row">
+
+        <div class="col-lg-12">
+          <div class="box  box--md  text-center  push--bottom  tweet">
+
+            <!-- row -->
+            <div class="row">
+              <!-- tweet icon -->
+              <div class="col-xs-offset-3  col-xs-6  col-sm-offset-4  col-sm-4  col-md-offset-5  col-md-2  col-lg-offset-5  col-lg-2">
+                <span class="icon-twitter"></span>
+              </div><!-- /tweet icon -->
+
+              <!-- clear fixes to prevent tweet below from wrapping -->
+              <div class="clearfix visible-sm"></div>
+              <div class="clearfix visible-xs"></div><!-- /clear fixes to prevent tweet below from wrapping -->
+
+              <!-- tweet from twitter -->
+              <div class="col-xs-12  col-sm-offset-1  col-sm-10  col-md-offset-1  col-md-10  col-lg-offset-2  col-lg-8">
+              
+              <h4 class="brand--font-standard">Why not drop us a line on Twitter?</h4>
+              <p>
+                We'd love to hear from you!
+              </p>
+
+              <a href="http://www.twitter.com/nerdswithhair" target="_blank" class="btn  btn--orange  brand--font">@nerdswithhair</a>
+              </div><!-- /tweet from twitter -->
+            </div><!-- /row -->
+
+          </div>
+        </div>
+
+      </div><!-- /tweet row -->
+
+    </div><!-- **** END - TEAM **** -->
+      
+    <!-- **** START - CLIENTS TITLE **** -->
+    <div id="clients" class="title-bar  brand--font  h3">
+      <div class="container">
+        clients
+      </div>
+    </div><!-- **** END - CLIENTS TITLE **** -->
+
+    <!-- **** START - CLIENTS **** -->
+    <div class="container">
+      <div class="row">
+
+        <ul class="list-unstyled  uno--list  clients--list">
+          <!-- client 1 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.dribbble.com" target="_blank">
+                <img src="img/dribbble.jpg" class="img-responsive  clients--logo" alt="dribbble logo" />
+              </a>
+            </div>
+          </li><!-- /client 1 -->
+          <!-- client 2 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.themeforest.net" target="_blank">
+                <img src="img/envato.jpg" class="img-responsive  clients--logo" alt="envato logo" />
+              </a>
+            </div>
+          </li><!-- client 2 -->
+          <!-- client 3 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.instagram.com" target="_blank">
+                <img src="img/instagram.jpg" class="img-responsive  clients--logo" alt="instagram logo" />
+              </a>
+            </div>
+          </li><!-- client 3 -->
+          <!-- client 4 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.facebook.com" target="_blank">
+                <img src="img/facebook.jpg" class="img-responsive  clients--logo" alt="facebook logo" />
+              </a>
+            </div>
+          </li><!-- /client 4 -->
+          <!-- client 5 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.vine.co" target="_blank">
+                <img src="img/vine.jpg" class="img-responsive  clients--logo" alt="vine logo" />
+              </a>
+            </div>
+          </li><!-- client 5 -->
+          <!-- client 6 -->
+          <li class="col-sm-4  col-md-4  col-lg-2">
+            <div class="box  box--xs  text-center">
+              <a href="http://www.nerdswithhair.com" target="_blank">
+                <img src="img/nwh.jpg" class="img-responsive  clients--logo" alt="nerds with hair logo" />
+              </a>
+            </div>
+          </li><!-- client 6 -->
+        </ul>
+
+      </div>
+    </div><!-- **** END - CLIENTS **** -->
+
+    <!-- **** START - CONTACT US TITLE **** -->
+    <div id="contact" class="title-bar  contact-title-bar  brand--font  h3">
+      <div class="container">
+        contact
+      </div>
+    </div><!-- **** END - CONTACT US TITLE **** -->
+
+    <!-- **** START - CONTACT **** -->
+    <div class="container  contact">
+      <div class="row">
+
+        <div class="col-lg-12">
+          <div class="box  box--md  push--bottom">
+
+            <!-- **** START - FORM **** -->
+            <form method="post" action="send-email.php" id="contact-form" class="form-horizontal" role="form">
+              <fieldset> 
+
+                <div class="col-md-6  col-lg-6  contact--left">
+                  <div class="form-group">
+                    <label for="name" class="control-label  h4  brand--font-standard">Name:</label>
+                    <div class="col-12">
+                      <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                  </div>                  
+                  <div class="form-group">
+                    <label for="email" class="control-label  h4  brand--font-standard">Email:</label>
+                    <div class="col-12">
+                      <input type="email" class="form-control" name="email" id="email">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone" class="control-label  h4  brand--font-standard">Telephone:</label>
+                    <div class="col-12">
+                      <input type="tel" class="form-control" name="phone" id="phone">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6  col-lg-6  contact--right">
+                  <div class="form-group">
+                    <label for="message" class="control-label  h4  brand--font-standard">Message:</label>
+                    <div class="col-12">
+                      <textarea class="form-control  brand--font--standard" rows="10" name="message" id="message"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn  btn-block  btn--orange  brand--font">Submit</button>
+                  </div>
+                </div>
+
+              </fieldset>
+            </form><!-- **** END - FORM **** -->
+
+          </div><!-- /box -->
+        </div><!-- cols -->
+
+      </div><!-- /row -->
+    </div><!-- **** END - CONTACT **** -->
+
+    <!-- **** START - FOOTER **** -->
+    <section class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12  col-sm-6  col-md-3  col-lg-2">
+            <address>
+              <strong>Nerds with Hair</strong><br>
+              2 Nerds with Hair<br>
+              Barnet Quarter<br>
+              York<br>
+              HA1 1R<br>
+              <strong><abbr title="Phone">P:</abbr> (01234) 567890</strong>
+            </address>
+          </div>
+          <div class="col-xs-12  col-sm-6  col-md-3  col-lg-offset-1  col-lg-2">
+            <ul class="list-unstyled">
+              <li><a href="mailto:info@nerdswithhair.com">Email</a></li>
+              <li><a href="http://www.twitter.com/nerdswithhair" target="_blank">Twitter</a></li>
+              <li><a href="http://www.facebook.com/nerdswithhair" target="_blank">Facebook</a></li>
+              <li><a href="http://www.themeforest.net/user/nerdswithhair" target="_blank">Themeforest</a></li>
+              <li><a href="https://creativemarket.com/nerdswithhair" target="_blank">Creative Market</a></li>
+            </ul>
+          </div>
+          <div class="clearfix visible-xs"></div>
+          <div class="clearfix visible-sm"></div>
+          <div class="col-xs-12  col-sm-12  col-md-offset-1  col-md-5  col-lg-offset-2  col-lg-5  text-right  footer--nwh-info">
+            <h3 class="brand--font-standard">UNO</h3>
+            <p>
+             Designed and built by <a href="http://www.nerdswithhair.com" target="_blank">Nerds with Hair</a> &#169; 2013
+            </p>
+          </div>
+        </div>
+      </div>
+    </section><!-- **** END - FOOTER **** -->
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/toucheffects.min.js"></script>
+    <script src="/js/cbpAnimatedHeader.min.js"></script>
+    <script src="/js/classie.min.js"></script> 
+    <script src="/js/jquery.validate.min.js"></script> 
+    <script src="/js/uno-form-validation.js"></script> 
+    <script src="/js/jquery.bxslider.js"></script>
+    <script src="/js/uno.js"></script>
+
+  </body>
+</html>
