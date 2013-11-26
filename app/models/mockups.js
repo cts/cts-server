@@ -1,51 +1,56 @@
 var opts = require('../opts.js');
 var path = require('path');
+var fs = require('fs');
 
-var _loadWidgetDefinitionForKindAndCategory(kind, category) {
+var _loadMockup = function(kind, category, mockup) {
+  var basedir = opts.mockups[kind].baseDir;
+  var filepath = path.resolve(basedir, category, mockup, 'package.json');
+  var json = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+  return json;
+};
+
+var _loadCategory = function(kind, category) {
   var basedir = opts.mockups[kind].baseDir;
   var filepath = path.resolve(basedir, category, 'package.json');
+  var ret = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+  for (var mockup in ret.mockups) {
+    ret.mockups[mockup] = _loadMockup(kind, category, mockup);
+  }
+  return ret;
 };
 
-var _loadWidgetDefinitionForKind(kind) {
+var _loadKind = function(kind) {
   var basedir = opts.mockups[kind].baseDir;
   var filepath = path.resolve(basedir, 'package.json');
-  var json = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-  var ret = {
-    categories: json.categories;
-  };
+  var ret = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   for (var category in ret.categories) {
-    var mockups = _loadWidgetDefinitionForKindAndCategory(kind, category)
-    ret.categories[category]['mockups'] = mockups;
-  }
-  return ret;
-}
-
-var _loadWidgetDefinitions = function(kinds) {
-  var ret = {};
-  for (var i = 0; i < kinds.length; i++) {
-    ret[kinds[i]] = _loadWidgetDefinitionForKind(kinds[i]);
+    ret.categories[category] = _loadCategory(kind, category);
   }
   return ret;
 };
 
-var _WIDGETS = _loadWidgetDefinitions(['scraper', 'theme', 'widget']);
+var _MOCKUPS = {
+  'kinds': {
+    'widget': _loadKind('widget')
+  }
+}
 
 var _validateKindAndCategory = function(kind, category) {
-  if (typeof _WIDGETS[kind] == 'undefined') {
+  if (typeof _MOCKUPS.kinds[kind] == 'undefined') {
     return false;
   }
-  if (typeof _WIDGETS[kind][category] == 'undefined') {
+  if (typeof _MOCKUPS.kinds[kind].categories[category] == 'undefined') {
     return false;
   }
   return true;
-}
+};
 
 /*
  * Assumptions: 
  *  * kind and category have been pre-validated.
  */
 var _kindCategoryIndex = function(kind, category) {
-  return _WIDGETS[kind].categories[category];
+  return _MOCKUPS.kinds[kind].categories[category];
 }
 
 /*
@@ -93,6 +98,5 @@ var list = function(opts) {
 };
 
 // Make visible..
-exports = {
-  list: list
-};
+exports.list = list;
+exports._MOCKUPS = _MOCKUPS;
