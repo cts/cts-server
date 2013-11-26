@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt');
-var config   = require('../opts');
+var config   = require('../../config/opts');
 var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 

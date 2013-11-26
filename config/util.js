@@ -12,7 +12,7 @@ exports.ApiError = function(res, code, message) {
     res.write(JSON.stringify({'message': message}));
   }
   res.end();
-}
+};
 
 exports.ApiSuccess = function(res, message) {
   res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -20,7 +20,7 @@ exports.ApiSuccess = function(res, message) {
     res.write(JSON.stringify({'message': message}));
   }
   res.end();
-}
+};
 
 /**
  * Like Underscore's extend but recurses.

@@ -3,9 +3,9 @@
  * Wraps HTML files on the local disk.
  */
 
-var globalOpts = require('../opts');
+var globalOpts = require('../../config/opts');
 var uuid = require('node-uuid');
-var util = require('../util');
+var util = require('../../config/util');
 var path = require('path');
 var fs = require('fs');
 

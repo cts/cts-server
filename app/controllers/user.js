@@ -207,48 +207,17 @@ UserController.prototype.destroyToken = function(req, res) {
 };
 
 UserController.prototype.connectToApp = function(app, prefix) {
-  // Manual Login
-
-  this.passport.use(new LocalStrategy(
-    { usernameField: "email", passwordField: "password"}, LoginFn));
-
-  // Token Login
-  //if (this.opts.allowTokens) {
-  //  this.passport.use(new BearerStrategy(
-  //    function(token, done) {
-  //      User.findOne({ oauthToken: token}, function(err, user) {
-  //        if (err)   { return done(err); }
-  //        if (!user) { return done(null, false); }
-  //        return done(null, user, { scope: 'read' });
-  //      });
-  //    }
-  //  ));
-  //}
-
-  console.log("Setting serialize user");
-  this.passport.serializeUser(function(user, done) {
-    console.log("serializeUser", user);
-    done(null, user.id);
-  });
-
-  console.log("Setting deserialize user");
-  this.passport.deserializeUser(function(id, done) {
-    console.log("DE-serializeUser");
-    User.findById(id, function (err, user) {
-      done(err, user);
-    });
-  });
-
+  console.log('hooking up user routes');
   var self = this;
-  app.post(prefix,            self.create.bind(self));
-  app.post(prefix + '/login', self.login.bind(self));
-  app.get(prefix + '/logout', self.destroySession.bind(self));
-  app.post(prefix + '/forgot', self.forgot.bind(self));
-  app.options(prefix + '/login', self.preflight.bind(self));
-  app.options(prefix + '/forgot', self.preflight.bind(self));
-  app.options(prefix + '/isLoggedIn', self.preflight.bind(self));
-  app.post(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
-  app.post(prefix + '/login-redirect', self.loginRedirect.bind(self));
+  app.post(prefix                     , self.create.bind(self));
+  app.post(prefix + '/login'          , self.login.bind(self));
+  app.get(prefix + '/logout'          , self.destroySession.bind(self));
+  app.post(prefix + '/forgot'         , self.forgot.bind(self));
+  app.options(prefix + '/login'       , self.preflight.bind(self));
+  app.options(prefix + '/forgot'      , self.preflight.bind(self));
+  app.options(prefix + '/isLoggedIn'  , self.preflight.bind(self));
+  app.post(prefix + '/isLoggedIn'     , self.isLoggedIn.bind(self));
+  app.post(prefix + '/login-redirect' , self.loginRedirect.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {

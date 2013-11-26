@@ -2,7 +2,7 @@
  * Adapter Factory
  */
 
-var opts = require('../opts')
+var opts = require('../../config/opts')
 var CacheAdapter = require('./cache').CacheAdapter;
 var FilesystemAdapter = require('./filesystem').FilesystemAdapter;
 

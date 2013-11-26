@@ -3,9 +3,8 @@
  */
 
 var mongoose = require('mongoose');
-var opts = require('../opts');
 var bcrypt   = require('bcrypt');
-var config   = require('../opts');
+var config   = require('../../config/opts');
 var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var _        = require('underscore');

@@ -7,57 +7,43 @@ var express       = require('express');
 var MongoStore    = require('connect-mongo')(express);
 var passport      = require('passport');
 var fs            = require('fs');
-//var flash         = require('connect-flash');
+//var flash       = require('connect-flash');
+var env           = process.env.NODE_ENV || 'development';
 var path          = require('path');
-var opts          = require('./opts');
-var util          = require('./util');
-
-
+var opts          = require('./config/opts');
+var util          = require('./config/util');
+var mongoose      = require('mongoose');
+var LocalStrategy = require('passport-local').Strategy;
+var User          = require('./app/models/user');
 
 /*
  * Connect to database
  * -----------------------------------------------------------------------------
  */
-
-var mongoose = require('mongoose');
 mongoose.connect('mongodb://' + opts.mongo.host + ':' + opts.mongo.port + '/' + opts.mongo.database);
+
+/*
+ * Initialize passport
+ * -----------------------------------------------------------------------------
+ */
+require('./config/passport')(passport, opts);
 
 /*
  * Create application
  * -----------------------------------------------------------------------------
  */
-
 var app = express();
-var static_dir = path.normalize(path.join(__dirname, '..', 'static'));
-
-var opt_str = JSON.stringify(opts, null, 2)
-    .replace(/\n/g, '\n              ');
+var opt_str = JSON.stringify(opts, null, 2).replace(/\n/g, '\n              ');
 
 console.log(util.Banner);
-console.log("Static dir  : " + static_dir);
 console.log("Options     : " + opt_str);
 console.log("");
 
-app.configure(function() {
-  // JUST FOR DEBUG
-  if (process.env.DEBUG) {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  }
-
-  // EJS. Cool, huh.
-  app.set('view engine', 'ejs');
-  app.set('views',__dirname + '/views');
-  app.set('view options', { layout:false, root: __dirname + '/templates' } );
-
-  app.use(express.static(static_dir));
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.session({ secret: 'asldjfwiouworuoeruwioroiweru' }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(express.methodOverride());
-  app.use(app.router);
-});
+/*
+ * Set express settings
+ * -----------------------------------------------------------------------------
+ */
+require('./config/express')(app, opts, passport);
 
 /*
  * Register controllers
@@ -68,17 +54,15 @@ app.configure(function() {
  *    Acct creation via web, all else via API via CTS-UI.
  */
 
-var LocalStrategy  = require('passport-local').Strategy;
-
-var UserController = require('./controllers/user').UserController;
+var UserController = require('./app/controllers/user').UserController;
 var userController = new UserController({}, passport);
 userController.connectToApp(app, '/user');
 
-var TreeController = require('./controllers/tree').TreeController;
+var TreeController = require('./app/controllers/tree').TreeController;
 var treeController = new TreeController();
 treeController.connectToApp(app, '/tree');
 
-var ZipController = require('./controllers/zip').ZipController;
+var ZipController = require('./app/controllers/zip').ZipController;
 var zipController = new ZipController();
 zipController.connectToApp(app, '/zip');
 

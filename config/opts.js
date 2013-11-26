@@ -21,7 +21,7 @@ var defaultOpts = {
     },
     filesystem: {
       scheme: 'fs',
-      rootDir: path.resolve(__dirname, '..', 'filestorage') 
+      rootDir: path.resolve(__dirname, '../..', 'filestorage')
     }
   },
   operators: {
@@ -34,4 +34,3 @@ util.deepExtend(exports, defaultOpts);
 
 // Overwrite default options with local options
 util.deepExtend(exports, localOpts);
-
