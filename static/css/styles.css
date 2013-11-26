@@ -1829,3 +1829,47 @@ div.jumbotron a {
 #about {
   margin-top: 35px;
 }
+
+section.footer p {
+  line-height: 1.1;
+}
+
+.nojumbo {
+    padding: 150px 0px 10px;
+}
+
+.twitter-card-row {
+  padding: 0px 0px 20px 30px;
+}
+
+a.twitter-card {
+  float: left;
+  border-radius: 0 10px 10px 0;
+  color: #ee7064;
+  border: 1px solid #b34b41;
+  border-left: 13px solid #b34b41;
+  padding: 7px 10px 7px 10px;
+  height: 110px;
+  width: 300px;
+  margin-right: 25px;
+}
+
+a.twitter-card img {
+  float: left;
+  display: block;
+}
+
+a.twitter-card div {
+  float: left;
+  display: block;
+}
+
+a.twitter-card div h4 {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+a.twitter-card div i {
+  color: #444;
+}
+

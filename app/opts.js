@@ -33,6 +33,17 @@ var defaultOpts = {
   operators: {
     html: {
     }
+  },
+  mockups: {
+    scraper: {
+      baseDir: path.resolve(__dirname, '..', 'static', 'mockups', 'scrapers')
+    },
+    theme: {
+      baseDir: path.resolve(__dirname, '..', 'static', 'mockups', 'themes')
+    },
+    widget: {
+      baseDir: path.resolve(__dirname, '..', 'static', 'mockups', 'widgets')
+    }
   }
 };
 
