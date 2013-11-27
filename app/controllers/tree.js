@@ -21,6 +21,7 @@
 var AdapterFactory = require('../tree-adapters/adapter-factory').AdapterFactory;
 var OperatorFactory = require('../tree-operators/operator-factory').OperatorFactory;
 var Operation = require('../models/operation').Operation;
+var Util = require('../util');
 
 /* Constructor
  * ----------------------------------------------------------------------------- 
@@ -35,26 +36,11 @@ var TreeController = function(opts) {
  * ----------------------------------------------------------------------------- 
  */
 
-/* CORS Preflight
- */
-TreeController.prototype.preflight = function(req, res) {
-  // Add CORS Headers
-  console.log("CORS Preflight");
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.status(200).send();
-};
 
 /* This is the sink for multiple operations coming in.
  */
 TreeController.prototype.switchboard= function(req, res) {
-  // Add CORS Headers
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  Util.addCORSHeaders(req, res);
   var self = this;
 
   // Parse operations from body.
@@ -161,7 +147,7 @@ TreeController.prototype._performOperations = function(operations, callback) {
 TreeController.prototype.connectToApp = function(app, prefix) {
   var self = this;
   app.post(prefix + '/switchboard', self.switchboard.bind(self));
-  app.options(prefix + '/switchboard', self.preflight.bind(self));
+  app.options(prefix + '/switchboard', Util.preflightHandler);
   // TODO: Delete the ones below.
   app.post(prefix, self.save.bind(self));
   app.get(prefix + '/:key', self.fetch.bind(self));

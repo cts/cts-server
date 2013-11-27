@@ -2,7 +2,6 @@
  * cts-server
  * Persists client-side cts-ui operations.
  */
-
 var express       = require('express');
 var passport      = require('passport');
 var fs            = require('fs');
@@ -10,8 +9,6 @@ var fs            = require('fs');
 var path          = require('path');
 var opts          = require('./opts');
 var util          = require('./util');
-
-
 
 /*
  * Connect to database
