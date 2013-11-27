@@ -72,12 +72,33 @@ var _kindCategoryIndex = function(kind, category) {
  * }
  *
  */
+var list_mockups = function(opts) {
+  var data = _kindCategoryIndex(opts.kind, opts.category);
+  return { results: data };
+};
+
+/*
+ * Assumptions:
+ *  - kind has already been validated
+ */
+var list_categories = function(opts) {
+  var ret = {
+    results: {}
+  };
+
+  for (var category in _MOCKUPS.kinds[opts.kind].categories) {
+    ret.results[category] = {
+      name: _MOCKUPS.kinds[opts.kind].categories[category].name,
+      desc: _MOCKUPS.kinds[opts.kind].categories[category].description
+    }
+  }
+
+  return ret;
+};
+
 var list = function(opts) {
   // Provide required opts
   if (typeof opts.kind == 'undefined') {
-    return {error: {message: 'No kind specified'}};
-  }
-  if (typeof opts.category == 'undefined') {
     return {error: {message: 'No kind specified'}};
   }
 
@@ -88,13 +109,16 @@ var list = function(opts) {
     return {error: {message: 'Provided kind is unsupported: ' + opts.kind}};
   }
 
-  // Provide right kind/category
-  if (! _validateKindAndCategory) {
-    return {error: {message: 'Provided kind/category pairing is unsupported: ' + opts.kind + '/' + opts.category}};
+  if (typeof opts.category == 'undefined') {
+    return list_categories(opts);
+  } else {
+    // Provide right kind/category
+    if (! _validateKindAndCategory) {
+      return {error: {message: 'Provided kind/category pairing is unsupported: ' + opts.kind + '/' + opts.category}};
+    }
+    return list_mockups(opts);
   }
 
-  var data = _kindCategoryIndex(kind, category);
-  return { results: data };
 };
 
 // Make visible..

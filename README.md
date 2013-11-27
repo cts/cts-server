@@ -45,7 +45,7 @@ If this is your nth time, you might just want to run the update.
      ```
 
 This will start the server on port 8888 by default, which the development build
-of `cts-ui` is preconfigured to work with.
+of `cts-ui` is preconfigured to work with. 
 
 Testing
 -------
