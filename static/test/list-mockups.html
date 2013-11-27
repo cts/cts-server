@@ -1,0 +1,52 @@
+<html>
+<head>
+</head>
+<body>
+<script src="/hotlink/cts.js"></script>
+</body>
+
+Kind: <input id="kind"> <br>
+Category: <input id="category"> <br>
+<table>
+  <tr><th>Req</th><th>Res</th></tr>
+  <tr><td>
+      <textarea id="request" rows="20" cols="80"></textarea></td><td>
+      <textarea id="response" rows="20" cols="80"></textarea>
+  </td></tr>
+</table>
+<button style="display: none;" id="go">Go</button>
+
+<script>
+CTS.ready.then(function() {
+  CTS.$('button').show();
+  CTS.$('#go').on('click', go);
+});
+function go() {
+  var kind = CTS.$('#kind').val();
+  var category = CTS.$('#category').val();
+  
+  var opts = {};
+
+
+  console.log(kind);
+  if (kind.length > 0) {
+    opts.kind = kind;
+  }
+  if (category.length > 0) {
+    opts.category = category;
+  }
+  CTS.$('#request').val(JSON.stringify(opts));
+  
+  CTS.$.ajax('/mockups/list', {
+    method: 'POST',
+    data: opts
+  }).done(function(data) {
+    CTS.$('#response').val(JSON.stringify(data));
+  }).fail(function(xhr, status, err) {
+    CTS.$('#response').val('ERROR: ' + JSON.stringify(xhr.responseJSON));
+  });
+}
+
+</script>
+
+</html>

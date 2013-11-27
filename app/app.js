@@ -88,6 +88,11 @@ var ZipController = require('./controllers/zip').ZipController;
 var zipController = new ZipController(opts);
 zipController.connectToApp(app, '/zip');
 
+var MockupController = require('./controllers/mockup').MockupController;
+var mockupController = new MockupController();
+mockupController.connectToApp(app, '/mockups');
+
+
 /*
  * 3.. 2.. 1..
  * -----------------------------------------------------------------------------
