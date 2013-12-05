@@ -10,8 +10,8 @@ var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var WebsiteOwnershipSchema = mongoose.Schema({
-  website_id: { type: String, required: true, unique: true },
-  owner_id: { type: String, require: false, unique: false},
+  websiteId: { type: String, required: true, unique: true },
+  ownerId: { type: String, require: false, unique: false},
 });
 
 var WebsiteOwnership = mongoose.model('WebsiteOwnership', WebsiteOwnershipSchema);

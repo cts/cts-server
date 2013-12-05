@@ -6,6 +6,7 @@
 
 var ZipFactory = require('../concerns/zip-factory').ZipFactory;
 var FilenameUtil = require('../concerns/filename-util').FilenameUtil;
+var WebsiteOwnership = require('../models/website-ownership').WebsiteOwnership;
 var fs = require('fs');
 var uri = require('uri-js');
 var Util = require('../util');
@@ -42,6 +43,14 @@ ZipController.prototype.fetch = function(req, res) {
         var filepathStub = FilenameUtil.filepathStub(filepath, self.opts.concerns.zipFactory.zipBaseDir);
         if (filepathStub) {
           res.render("zip/save-result.ejs", {'filepath': filepathStub});
+          var ownership = new WebsiteOwnership({
+            websiteId: filepathStub,
+            ownerId: getUserId()
+          }).save(function(err) {
+            if (err) {
+              res.status(400).send('Unable to save filepath due to user ownership');
+            }
+          });
         } else {
           res.status(400).send('Bad filepath: ' + filepath);
         }
@@ -54,43 +63,50 @@ ZipController.prototype.downloadZip = function(req, res) {
   var self = this;
   var filepathStub = req.params.key;
   var filepath = self.opts.concerns.zipFactory.zipBaseDir + "/" + filepathStub;
-  _performDownload(filepath, res, filepathStub);
+
+  if (hasWebsiteOwnership(getUserId(), filepathStub)) {
+    _performDownload(filepath, res, filepathStub);
+  } else {
+    res.status(401).send("You don't have permission to access this")
+  }
 };
 
 ZipController.prototype.displayZip = function(req, res) {
   var self = this;
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  Util.addCORSHeaders(req, res);
 
   var urlPath = req.params.key;
-  if (typeof req.params[0] !== 'undefined') {
-    urlPath += req.params[0];
-  }
-  var filepath = self.opts.concerns.zipFactory.tempBaseName + "/" + urlPath;
-  console.log("Attempting to display resource for: " + filepath);
-  fs.exists(filepath, function(exists) {
-    if (exists) {
-      fs.stat(filepath, function(err, stats) {
-        if (stats.isDirectory()) {
-          res.redirect("zip/" + urlPath + "/index.html");
-        } else {
-          fs.readFile(filepath, function(err, data){
-            if (err) {
-              res.status(400).send(err);
-            } else {
-              var contentType = FilenameUtil.contentType(filepath);
-              res.header('Content-Type', contentType);
-              res.send(data);
-            }
-          });
-        }
-      });
-    } else {
-      res.status(400).send('Website id "' + req.params.key + '" does not exist');
+
+  if (hasWebsiteOwnership(getUserId(), urlPath)) {
+    if (typeof req.params[0] !== 'undefined') {
+      urlPath += req.params[0];
     }
-  });
+    var filepath = self.opts.concerns.zipFactory.tempBaseName + "/" + urlPath;
+    console.log("Attempting to display resource for: " + filepath);
+    fs.exists(filepath, function(exists) {
+      if (exists) {
+        fs.stat(filepath, function(err, stats) {
+          if (stats.isDirectory()) {
+            res.redirect("zip/" + urlPath + "/index.html");
+          } else {
+            fs.readFile(filepath, function(err, data){
+              if (err) {
+                res.status(400).send(err);
+              } else {
+                var contentType = FilenameUtil.contentType(filepath);
+                res.header('Content-Type', contentType);
+                res.send(data);
+              }
+            });
+          }
+        });
+      } else {
+        res.status(400).send('Website id "' + req.params.key + '" does not exist');
+      }
+    });
+  } else {
+    res.status(401).send("You don't have permission to access that");
+  }
 };
 
 /*
@@ -109,6 +125,17 @@ var _performDownload = function(filepath, res, name) {
   res.header('Content-Type', 'application/zip');
   res.header('Content-Disposition', 'attachment; filename="' + name + ".zip");
   res.send(data);
+};
+
+var getUserId = function() {
+  // TODO: implement this
+  return 1;
+};
+
+var hasWebsiteOwnership = function(userId, websiteId) {
+  WebsiteOwnership.findOne({'websiteId': filepathStub}, function(err, ownership) {
+    return (!(err || !ownership || ownership.userId != userId));
+  });
 };
 
 /* App integration
