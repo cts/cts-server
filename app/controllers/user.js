@@ -140,13 +140,13 @@ UserController.prototype.isLoggedIn = function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-  console.log("USER*******************");
-  console.log(req.user);
   console.log("session*******************");
   console.log(req.session);
   console.log("XHR************************");
   console.log(req.xhr);
+  console.log("isAuthenticated**************");
   console.log(req.isAuthenticated());
+
   if (req.isAuthenticated()) {
     return res.send("Yes");
   } else {

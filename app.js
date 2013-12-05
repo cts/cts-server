@@ -40,6 +40,12 @@ console.log("Options     : " + opt_str);
 console.log("");
 
 /*
+ * Bootstrap routes
+ * -----------------------------------------------------------------------------
+ */
+require('./config/routes')(app, passport);
+
+/*
  * Set express settings
  * -----------------------------------------------------------------------------
  */

@@ -4,11 +4,6 @@ var login         = require('../app/models/user').login;
 var User          = mongoose.model('User');
 
 module.exports = function (passport, config) {
-  // Manual Login
-
-  passport.use(new LocalStrategy(
-    { usernameField: "email", passwordField: "password"}, login));
-
   // Token Login
   //if (this.opts.allowTokens) {
   //  this.passport.use(new BearerStrategy(
@@ -35,4 +30,7 @@ module.exports = function (passport, config) {
       done(err, user);
     });
   });
+
+  passport.use(new LocalStrategy(
+    { usernameField: "email", passwordField: "password"}, login));
 };
