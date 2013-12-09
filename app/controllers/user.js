@@ -171,12 +171,21 @@ UserController.prototype.login = function(req, res, next) {
   console.log("Authenticating user");
   this.passport.authenticate('local', function(err, user, info) {
     if (err) {
+      console.log("error "+ err);
       return res.send(401, err);
-    }else{
-      // create session, get the key and return it
-      // res.redirect('/');
-      return res.send(200, 'log in successful');
     }
+    if (!user) {
+      console.log("no such user");
+      return res.send(401, 'no such user');
+    }
+    req.logIn(user, function(err){
+      if (err) {
+        console.log("error "+ err);
+        return res.send(401, err);
+      }
+      console.log('It worked');
+      return res.send(200, 'log in successful');
+    });
   })(req, res, next);
 };
 
