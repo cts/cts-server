@@ -4,8 +4,10 @@ var Auth = require('./middlewares/authorization.js');
 module.exports = function(app, passport){
   app.get('/', function(req, res){
     if (req.isAuthenticated()){
+      console.log("IS AUTHENTICATED");
       res.render("landing", {user: req.user});
     }else{
+      console.log("IS NOT");
       res.render("landing");
     }
   });
