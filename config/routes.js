@@ -11,14 +11,31 @@ module.exports = function(app, passport){
   });
 
   app.get("/login", function(req, res){
+    console.log("get");
     res.render("login");
   });
 
-  app.post("/login", passport.authenticate('local', {
-        successRedirect : "/home",
-        failureRedirect : "/login"
-    })
-  );
+  app.post("/login", function(req, res, next) {
+    console.log('calling authentication');
+    passport.authenticate('local', function(err, user, info) {
+      if (err) {
+        console.log("error "+ err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("no such user");
+        return res.redirect('/login');
+      }
+      req.logIn(user, function(err) {
+        if (err) {
+          console.log("error "+ err);
+          return next(err);
+        }
+        console.log('It worked');
+        return res.redirect('/home');
+      });
+    })(req, res, next);
+  });
 
   app.get("/signup", function (req, res) {
     res.render("signup");
@@ -43,4 +60,4 @@ module.exports = function(app, passport){
     res.redirect('/');
   });
 
-}
+};

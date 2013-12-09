@@ -1,7 +1,7 @@
 <% layout('layout') -%>
-Login page
+<h1>Login page</h1>
 
-<form action="/login" method="post" role="form" class="col-xs-12 col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-2">
+<form action="/login" method="post" role="form">
   <div class="form-group" >
     <label>Email</label>
     <input type="text" name="email" class="form-control">
@@ -10,7 +10,5 @@ Login page
     <label>Password</label>
     <input type="password" name="password" class="form-control">
   </div>
-  <div class="form-group ">
-    <input type="submit" value="Log in" class="form-control">
-  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
 </form>

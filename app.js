@@ -17,6 +17,29 @@ var LocalStrategy = require('passport-local').Strategy;
 var User          = require('./app/models/user');
 
 /*
+ * Create application
+ * -----------------------------------------------------------------------------
+ */
+var app = express();
+var opt_str = JSON.stringify(opts, null, 2).replace(/\n/g, '\n              ');
+
+console.log(util.Banner);
+console.log("Options     : " + opt_str);
+console.log("");
+
+/*
+ * Set express settings
+ * -----------------------------------------------------------------------------
+ */
+require('./config/express')(app, opts, passport);
+
+/*
+ * Bootstrap routes
+ * -----------------------------------------------------------------------------
+ */
+require('./config/routes')(app, passport);
+
+/*
  * Connect to database
  * -----------------------------------------------------------------------------
  */
@@ -29,27 +52,14 @@ mongoose.connect('mongodb://' + opts.mongo.host + ':' + opts.mongo.port + '/' + 
 require('./config/passport')(passport, opts);
 
 /*
- * Create application
+ * Bootstrap models
  * -----------------------------------------------------------------------------
  */
-var app = express();
-var opt_str = JSON.stringify(opts, null, 2).replace(/\n/g, '\n              ');
+var models_path = __dirname + '/app/models';
+fs.readdirSync(models_path).forEach(function (file) {
+  if (~file.indexOf('.js')) require(models_path + '/' + file);
+});
 
-console.log(util.Banner);
-console.log("Options     : " + opt_str);
-console.log("");
-
-/*
- * Bootstrap routes
- * -----------------------------------------------------------------------------
- */
-require('./config/routes')(app, passport);
-
-/*
- * Set express settings
- * -----------------------------------------------------------------------------
- */
-require('./config/express')(app, opts, passport);
 
 /*
  * Register controllers

@@ -20,24 +20,23 @@ var UserSchema = mongoose.Schema({
   }
 });
 
-var User = mongoose.model('User', UserSchema);
-
 // Helper method for authenticated login.
 // Calls done(err, user). On success, err == NULL
-var login = function(email, password, done) {
+UserSchema.statics.isValidUserPassword = function(email, password, done) {
   console.log("Attempting login", email, password);
   if (email && password) {
-    hash = User.findOne({email: email}, function(err, userObject){
+    hash = this.findOne({email: email}, function(err, userObject){
       if (!userObject||err){
         console.log('Error: '+err);
         return done('Incorrect username or password.', false);
       }else{
         bcrypt.compare(password, userObject.password, function(err, doesMatch){
           console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
-          console.log(userObject);
           if(!doesMatch||err){
+            console.log('Does not match');
             return done('Incorrect username or password.', userObject);
           }else{
+            console.log('Does match');
             return done(null, userObject);
           }
         });
@@ -48,6 +47,5 @@ var login = function(email, password, done) {
   }
 };
 
+var User = mongoose.model('User', UserSchema);
 exports.User = User;
-exports.login = login;
-

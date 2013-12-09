@@ -1,6 +1,5 @@
 var mongoose      = require('mongoose');
 var LocalStrategy = require('passport-local').Strategy;
-var login         = require('../app/models/user').login;
 var User          = mongoose.model('User');
 
 module.exports = function (passport, config) {
@@ -31,6 +30,12 @@ module.exports = function (passport, config) {
     });
   });
 
-  passport.use(new LocalStrategy(
-    { usernameField: "email", passwordField: "password"}, login));
+  passport.use(new LocalStrategy({
+      usernameField: "email",
+      passwordField: "password"
+    },
+    function(email, password, done){
+      User.isValidUserPassword(email, password, done);
+    })
+  );
 };

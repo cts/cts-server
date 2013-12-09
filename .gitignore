@@ -1,3 +1,4 @@
 node_modules
 opts-local.js
 filestorage/*
+.DS_Store

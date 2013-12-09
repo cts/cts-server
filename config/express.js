@@ -5,9 +5,10 @@ var engine  = require('ejs-locals');
 
 module.exports = function(app, config, passport) {
   // JUST FOR DEBUG
-  if (process.env.DEBUG) {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  }
+  // if (process.env.DEBUG) {
+  //   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  // }
+  app.use(express.logger());
   console.log('configuring express');
 
 
@@ -16,8 +17,8 @@ module.exports = function(app, config, passport) {
   app.use(express.session({ secret: 'asldjfwiouworuoeruwioroiweru' }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(express.static(__dirname + '../static/'));
-  app.use(express.methodOverride());
+  app.use(express.static(__dirname + '/../static/'));
+  // app.use(express.methodOverride());
   app.use(app.router);
 
   // EJS. Cool, huh.
