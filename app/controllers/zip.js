@@ -41,7 +41,14 @@ ZipController.prototype.fetch = function(req, res) {
       } else {
         var filepathStub = FilenameUtil.filepathStub(filepath, self.opts.concerns.zipFactory.zipBaseDir);
         if (filepathStub) {
-          res.render("zip/save-result.ejs", {'filepath': filepathStub});
+          //res.render("zip/save-result.ejs", {'filepath': filepathStub});
+          var json = {
+            "downloadUrl": "/zip/download/" + filepathStub,
+            "viewUrl": "/zip/" + filepathStub
+          };
+          json = JSON.stringify(json);
+          console.log(json);
+          res.json(json);
         } else {
           res.status(400).send('Bad filepath: ' + filepath);
         }

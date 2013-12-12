@@ -12,7 +12,7 @@
  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 
 // Set this to either 'http' or 'none' or 'key'
-$AUTH_TYPE = "http";
+$AUTH_TYPE = "none";
 
 // If AUTH_TYPE is 'key', this is the secret key to 
 $MY_KEY = "changeme";
@@ -715,7 +715,6 @@ class simple_html_dom_node
 
 		$selectors = array();
 		$result = array();
-		//print_r($matches);
 
 		foreach ($matches as $m) {
 			$m[0] = trim($m[0]);
@@ -1803,7 +1802,7 @@ function authenticate($request) {
   global $PERMITTED_AUTH_TYPES;
   global $MY_KEY;
 
-  if (! in_array($AUTH_TYPE, $AUTH_TYPES)) {
+  if (! in_array($AUTH_TYPE, $PERMITTED_AUTH_TYPES)) {
     throw new Exception("Auth type '" . $AUTH_TYPE . "' not in permitted list.");
   }
 
@@ -1827,7 +1826,6 @@ function authenticate($request) {
   } else {
     throw new Exception("Missing implementation for auth type '" . $AUTH_TYPE . "'.");
   }
-}
 
   if ($authenticated) {
     return true;
@@ -1835,8 +1833,6 @@ function authenticate($request) {
     throw new Exception("Not authenticated");
   }
 }
-
-
 
 
 /* Returns a result of the form:
@@ -1955,6 +1951,8 @@ function replace_tree($file_path, $selector, $new_contents) {
 
   // For now we just replace the body.a
   $html = file_get_html($file_path);
+  echo "File path: $file_path \n";
+  echo "File: $html \n";
   $body = $html->find($selector, 0);
   $body->innertext = $new_contents;
   file_put_contents($file_path, $html);
@@ -2018,23 +2016,18 @@ function incorporate_changes($request) {
   
       switch($action) {
       case "save":
-        echo "SAVE";
         break;
       case "edit":
         $content = $operation['parameters']['content'];
         $selector = $operation['parameters']['selector'];
         replace_tree($localFile, $selector, $content);
-        echo "EDIT";
-        echo $content . "\n";
-        echo $selector . "\n";
         break;
       default:
         throw new Exception("Unknown action: " . $action);
       }
     }
   }
-
-  return "FOO";
+  return $request['operations'];
 }
 
 /* The main loop: handles incoming requests.
@@ -2042,7 +2035,6 @@ function incorporate_changes($request) {
 function handle_incoming() {
   try {
     $request = parse_request();
-    print_r($request);
     validate_request($request);
     authenticate($request);
     $result = incorporate_changes($request);
