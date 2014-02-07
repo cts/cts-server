@@ -1,7 +1,14 @@
+var path             = require('path');
 var express          = require('express');
+var secrets          = require('./secrets');
 var flash            = require('express-flash');
 var MongoStore       = require('connect-mongo')(express);
 var expressValidator = require('express-validator');
+
+var hour             = 3600000;
+var day              = (hour * 24);
+var week             = (day * 7);
+var month            = (day * 30);
 
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -59,4 +66,4 @@ var createApp = function(passport, mongoose, dirname) {
   return app;
 }
 
-exports = createApp;
+exports.createApp = createApp;

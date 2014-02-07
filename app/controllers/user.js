@@ -1,6 +1,6 @@
 var passport = require('passport');
 var _ = require('underscore');
-var User = require('../models/User');
+var User = require('../models/user');
 
 /**
  * GET /login

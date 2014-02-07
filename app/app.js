@@ -7,7 +7,6 @@ var mongoose         = require('mongoose');
 var passport         = require('passport');
 
 var fs               = require('fs');
-var path             = require('path');
 var opts             = require('./opts');
 var util             = require('./util');
 
@@ -27,7 +26,7 @@ console.log("");
  * -----------------------------------------------------------------------------
  */
 
-mongoose.connect(secrets.db);
+mongoose.connect(secrets.mongo.url, secrets.mongo.options);
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
@@ -45,7 +44,7 @@ var userController = require('./controllers/user');
  * -----------------------------------------------------------------------------
  */
 
-var app = require('./config/app')(passport, mongoose, __dirname);
+var app = require('./config/app').createApp(passport, mongoose, __dirname);
 
 /*
  * Application Routes
