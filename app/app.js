@@ -2,83 +2,81 @@
  * cts-server
  * Persists client-side cts-ui operations.
  */
-var express       = require('express');
-var passport      = require('passport');
-var fs            = require('fs');
-//var flash         = require('connect-flash');
-var path          = require('path');
-var opts          = require('./opts');
-var util          = require('./util');
+var path             = require('path');
+var mongoose         = require('mongoose');
+var passport         = require('passport');
+
+var fs               = require('fs');
+var path             = require('path');
+var opts             = require('./opts');
+var util             = require('./util');
+
+var secrets          = require('./config/secrets');
+var passportConf     = require('./config/passport');
+
+var hour             = 3600000;
+var day              = (hour * 24);
+var week             = (day * 7);
+var month            = (day * 30);
+
+console.log(util.Banner);
+console.log("");
 
 /*
  * Connect to database
  * -----------------------------------------------------------------------------
  */
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://' + opts.mongo.host + ':' + opts.mongo.port + '/' + opts.mongo.database);
+mongoose.connect(secrets.db);
+mongoose.connection.on('error', function() {
+  console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
+});
+
+/*
+ * Controllers
+ * -----------------------------------------------------------------------------
+ */
+
+var homeController = require('./controllers/home');
+var userController = require('./controllers/user');
 
 /*
  * Create application
  * -----------------------------------------------------------------------------
  */
 
-var app = express();
-var static_dir = path.normalize(path.join(__dirname, '..', 'static'));
-
-var opt_str = JSON.stringify(opts, null, 2)
-    .replace(/\n/g, '\n              ');
-
-console.log(util.Banner);
-console.log("Static dir  : " + static_dir);
-console.log("Options     : " + opt_str);
-console.log("");
-
-var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-}
-
-app.configure(function() {
-  // JUST FOR DEBUG
-  if (process.env.DEBUG) {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  }
-
-  // EJS. Cool, huh.
-  app.set('view engine', 'ejs');
-  app.set('views',__dirname + '/views');
-  app.set('view options', { layout:false, root: __dirname + '/templates' } );
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(allowCrossDomain);
-  app.use(express.session({secret: 'asldjfwiouworuoeruwioroiweru'}));
-  //app.use(passport.initialize());
-  //app.use(passport.session());
-  app.use(app.router);
-  app.use(express.static(static_dir));
-});
+var app = require('./config/app')(passport, mongoose, __dirname);
 
 /*
- * Register controllers
+ * Application Routes
  * -----------------------------------------------------------------------------
- *
- * TODO:
- *  - Integrate user logins and session management.
- *    Acct creation via web, all else via API via CTS-UI.
  */
 
-//var LocalStrategy  = require('passport-local').Strategy;
-//var UserController = require('./controllers/user').UserController;
-//var userController = new UserController({}, passport);
-//userController.connectToApp(app, '/user');
-//
-//var SessionController = require('./controllers/session').SessionController;
-//var sessionController = new SessionController({}, passport);
-//sessionController.connectToApp(app, '/session');
+/* -- Public Facing Stuff -- */
+
+app.get('/', homeController.index);
+
+/* -- Account Stuff -- */
+
+app.get('/login', userController.getLogin);
+app.post('/login', userController.postLogin);
+app.get('/logout', userController.logout);
+app.get('/signup', userController.getSignup);
+app.post('/signup', userController.postSignup);
+app.get('/account', passportConf.isAuthenticated, userController.getAccount);
+app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
+app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
+app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+app.get('/auth/github', passport.authenticate('github'));
+app.get('/auth/github/callback', passport.authenticate('github', { successRedirect: '/', failureRedirect: '/login' }));
+app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
+
+/* -- CTS Endpoints -- */
 
 var TreeController = require('./controllers/tree').TreeController;
 var treeController = new TreeController();
@@ -98,8 +96,8 @@ mockupController.connectToApp(app, '/mockups');
  * -----------------------------------------------------------------------------
  */
 
-app.listen(opts.server.port, function() {
-  console.log("Listening on port " + opts.server.port + "...");
+app.listen(app.get('port'), function() {
+  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
   if (process.env.CTSSERVERPROD) {
     // In case we were launched by a daemon in prod, set proper UID and GID
     process.setgid(opts.server.gid);
