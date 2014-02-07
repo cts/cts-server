@@ -1,175 +1,209 @@
-/*
- * User Controller
- * Handles user creation, login, auth.
+var passport = require('passport');
+var _ = require('underscore');
+var User = require('../models/User');
+
+/**
+ * GET /login
+ * Login page.
  */
 
-var Mongo          = require('mongodb');
-var db             = require('../db');
-var Connection     = Mongo.Connection;
-var Server         = Mongo.Server;
-var BSON           = Mongo.BSON;
-var ObjectID       = Mongo.ObjectID;
-var UserModel      = require('../models/user');
-var User           = UserModel.User;
-var LoginFn        = UserModel.login;
-var _              = require('underscore');
-var LocalStrategy  = require('passport-local').Strategy;
-var crypto         = require('crypto');
-
-require('date-utils');
-
-/* Constructor
- * ----------------------------------------------------------------------------- 
- * This is the object exported by this file.
- */
-
-var UserController = function(opts, passport) {
-  this.opts = opts;
-  this.passport = passport;
-};
-
-/* Methods 
- * ----------------------------------------------------------------------------- 
-*/
-
-UserController.prototype.create = function(req, res) {
-  var userdata = _.pick(req.body, 'email', 'password');
-  var self = this;
-  User.create(userdata, function(error, users) {
-    if (error) {
-      console.log(error);
-      res.status(400).send("Error while creating new user account: " + error);
-    } else {
-      var user = items[0];
-      res.send(user);
-    }
+exports.getLogin = function(req, res) {
+  if (req.user) return res.redirect('/');
+  res.render('account/login', {
+    title: 'Login'
   });
 };
 
+/**
+ * POST /login
+ * Sign in using email and password.
+ * @param email
+ * @param password
+ */
 
-UserController.prototype.forgot = function(req, res, next) {
-  var user = _.pick(req.body, 'email');
-  User.findOne({'email': user.email}, function(err, user) {
-    if (err)   { 
-      res.status(401).send("Error");
-    }
-    else if (!user) { 
-      res.status(401).send("Error");
-    }
-    else {
-        crypto.randomBytes(32, function(ex, buf) {
-        user.reset_password_token = buf.toString('hex');
-        user.reset_password_expire = Date.tomorrow();
-        user.save(function(err, user) {
-          if (err) {
-            res.status(400).send("Error - Could not update reset token.");
-          } else {
-            Tasker.enqueue("ForgotEmail", {
-              email: user.email,
-              token: user.reset_password_token
-            }).then(
-              function() {
-                res.send("Success");
-              },
-              function() {
-                res.status(400).send("Could'nt task recovery email.");
-              });
-          }
-        });
-      });
-    }
-  });
-};
+exports.postLogin = function(req, res, next) {
+  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('password', 'Password cannot be blank').notEmpty();
 
+  var errors = req.validationErrors();
 
-UserController.prototype.githubAuthorize = function(req, res, next) {
-  console.log(req);
-};
-
-UserController.prototype.isLoggedIn = function(req, res, next) {
-  if (req.isAuthenticated()) {
-    res.send("Yes");
-  } else {
-    res.send("No");
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/login');
   }
+
+  passport.authenticate('local', function(err, user, info) {
+    if (err) return next(err);
+
+    if (!user) {
+      req.flash('errors', { msg: info.message });
+      return res.redirect('/login');
+    }
+
+    req.logIn(user, function(err) {
+      if (err) return next(err);
+      return res.redirect('/');
+    });
+  })(req, res, next);
 };
 
-UserController.prototype.reset = function(req, res, next) {
-  var u = _.pick(req.body, 'token', 'password');
+/**
+ * GET /logout
+ * Log out.
+ */
 
-  User.findOne({'reset_password_token': u.token}, function(err, user) {
-    if (err)   { 
-      res.status(401).send("Error");
-    }
-    else if (!user) { 
-      res.status(401).send("Error");
-    }
-    else {
-      if (user.reset_password_expire > Date.today()) {
-        user.password = u.password;
-        user.save(function(err, user) {
-          if (err) {
-            res.status(400).send("Error - Could not update reset token.");
-          } else {
+exports.logout = function(req, res) {
+  req.logout();
+  res.redirect('/');
+};
 
+/**
+ * GET /signup
+ * Signup page.
+ */
 
+exports.getSignup = function(req, res) {
+  if (req.user) return res.redirect('/');
+  res.render('account/signup', {
+    title: 'Create Account'
+  });
+};
 
-            // TODO: Actually send email
-            res.send("Success");
-          }
-        });
+/**
+ * POST /signup
+ * Create a new local account.
+ * @param email
+ * @param password
+ */
+
+exports.postSignup = function(req, res, next) {
+  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/signup');
+  }
+
+  var user = new User({
+    email: req.body.email,
+    password: req.body.password
+  });
+
+  user.save(function(err) {
+    if (err) {
+      if (err.code === 11000) {
+        req.flash('errors', { msg: 'User with that email already exists.' });
       }
+      return res.redirect('/signup');
     }
+    req.logIn(user, function(err) {
+      if (err) return next(err);
+      res.redirect('/');
+    });
   });
 };
 
-UserController.prototype.connectToApp = function(app, prefix) {
-  // Manual Login
+/**
+ * GET /account
+ * Profile page.
+ */
 
-  this.passport.use(new LocalStrategy(
-    { usernameField: "email", passwordField: "password"}, LoginFn));
+exports.getAccount = function(req, res) {
+  res.render('account/profile', {
+    title: 'Account Management'
+  });
+};
 
-  // Token Login
-  //if (this.opts.allowTokens) {
-  //  this.passport.use(new BearerStrategy(
-  //    function(token, done) {
-  //      User.findOne({ oauthToken: token}, function(err, user) {
-  //        if (err)   { return done(err); }
-  //        if (!user) { return done(null, false); }
-  //        return done(null, user, { scope: 'read' });
-  //      });
-  //    }
-  //  ));
-  //}
+/**
+ * POST /account/profile
+ * Update profile information.
+ */
 
-  if (this.opts.allowSessions) {
-    console.log("Setting serialize user");
-    this.passport.serializeUser(function(user, done) {
-      console.log("serializeUser", user);
-      done(null, user.id);
+exports.postUpdateProfile = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+    user.email = req.body.email || '';
+    user.profile.name = req.body.name || '';
+    user.profile.gender = req.body.gender || '';
+    user.profile.location = req.body.location || '';
+    user.profile.website = req.body.website || '';
+
+    user.save(function(err) {
+      if (err) return next(err);
+      req.flash('success', { msg: 'Profile information updated.' });
+      res.redirect('/account');
     });
+  });
+};
 
-    console.log("Setting deserialize user");
-    this.passport.deserializeUser(function(id, done) {
-      console.log("DE-serializeUser");
-      User.findById(id, function (err, user) {
-        done(err, user);
-      });
-    });
+/**
+ * POST /account/password
+ * Update current password.
+ * @param password
+ */
+
+exports.postUpdatePassword = function(req, res, next) {
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/account');
   }
-  var self = this;
-  app.post(prefix,            self.create.bind(self));
-  app.post(prefix + '/login', self.login.bind(self));
-  app.get(prefix + '/logout', self.destroySession.bind(self));
-  app.get(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
-  app.post(prefix + '/token', self.token.bind(self));
-  app.post(prefix + '/forgot', self.forgot.bind(self));
+
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+
+    user.password = req.body.password;
+
+    user.save(function(err) {
+      if (err) return next(err);
+      req.flash('success', { msg: 'Password has been changed.' });
+      res.redirect('/account');
+    });
+  });
 };
 
-UserController.prototype.ensureAuthenticated = function(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login.html');
+/**
+ * POST /account/delete
+ * Delete user account.
+ * @param id - User ObjectId
+ */
+
+exports.postDeleteAccount = function(req, res, next) {
+  User.remove({ _id: req.user.id }, function(err) {
+    if (err) return next(err);
+    req.logout();
+    res.redirect('/');
+  });
 };
 
-exports.UserController = UserController;
+/**
+ * GET /account/unlink/:provider
+ * Unlink OAuth2 provider from the current user.
+ * @param provider
+ * @param id - User ObjectId
+ */
+
+exports.getOauthUnlink = function(req, res, next) {
+  var provider = req.params.provider;
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+
+    user[provider] = undefined;
+    user.tokens = _.reject(user.tokens, function(token) { return token.kind === provider; });
+
+    user.save(function(err) {
+      if (err) return next(err);
+      req.flash('info', { msg: provider + ' account has been unlinked.' });
+      res.redirect('/account');
+    });
+  });
+};
 
