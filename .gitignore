@@ -5,3 +5,4 @@ zipstorage/*
 *.pyc
 websitestorage/*
 app/config/secrets.js
+.DS_Store
