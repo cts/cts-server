@@ -4,3 +4,4 @@ filestorage/*
 zipstorage/*
 *.pyc
 websitestorage/*
+app/config/secrets.js

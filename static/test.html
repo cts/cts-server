@@ -1,0 +1,26 @@
+<html>
+<head>
+<script type="text/javascript" src="http://www.google.com/jsapi?autoload={modules:[{name:gdata,version:2.x,packages:[]}]}"></script>
+</head>
+
+<body>
+
+Test of 
+https://developers.google.com/gdata/docs/js#AuthenticationAuthSub
+
+
+<script>
+function logMeIn() {
+  scope = "https://www.google.com/calendar/feeds/";
+  var token = google.accounts.user.login(scope);
+}
+
+function setupMyService() {
+  var myService = new google.gdata.calendar.CalendarService('exampleCo-exampleApp-1');
+  logMeIn();
+  return myService;
+}
+
+</script>
+</body>
+</html>
