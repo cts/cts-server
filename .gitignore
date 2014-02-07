@@ -1,8 +1,8 @@
 node_modules
 opts-local.js
-filestorage/*
-zipstorage/*
+storage/filestorage/*
+storage/zipstorage/*
+storage/websitestorage/*
 *.pyc
-websitestorage/*
 app/config/secrets.js
 .DS_Store
