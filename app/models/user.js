@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt');
-var config   = require('../opts');
+var config   = require('../../config/opts');
 var Schema   = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
@@ -14,35 +14,38 @@ var UserSchema = mongoose.Schema({
   password: {
     type: String,
     set: function(password){
-      return bcrypt.hash(password, 5, function(err, bcryptedPassword){
-        return bcryptedPassword;
-      });
+      return bcrypt.hashSync(password, 5);
     },
     required: true
   }
 });
 
-var User = mongoose.model('User', UserSchema);
-
 // Helper method for authenticated login.
 // Calls done(err, user). On success, err == NULL
-var login = function(email, password, done) {
+UserSchema.statics.isValidUserPassword = function(email, password, done) {
   console.log("Attempting login", email, password);
   if (email && password) {
-    hash = User.where('email', email);
-    bcrypt.compare(password, hash, function(err, doesMatch){
-      console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
-      done(err, doesMatch);
-    };
-    User.where('email', email).where('password', encodePassword(password)).findOne(function(err, user) {
-      console.log("Login DB Result: ERR:", err, "USER:", user);
-      done(err, user);
+    hash = this.findOne({email: email}, function(err, userObject){
+      if (!userObject||err){
+        console.log('Error: '+err);
+        return done('Incorrect username or password.', false);
+      }else{
+        bcrypt.compare(password, userObject.password, function(err, doesMatch){
+          console.log("Login DB Result: ERR:", err, " doesMatch:", doesMatch);
+          if(!doesMatch||err){
+            console.log('Does not match');
+            return done('Incorrect username or password.', userObject);
+          }else{
+            console.log('Does match');
+            return done(null, userObject);
+          }
+        });
+      }
     });
   } else {
-    done('Need to provide email and password');
-  };
+    return done('Need to provide email and password', false);
+  }
 };
 
+var User = mongoose.model('User', UserSchema);
 exports.User = User;
-exports.login = login;
-

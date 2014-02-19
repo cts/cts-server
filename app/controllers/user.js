@@ -4,7 +4,6 @@
  */
 
 var Mongo          = require('mongodb');
-var db             = require('../db');
 var Connection     = Mongo.Connection;
 var Server         = Mongo.Server;
 var BSON           = Mongo.BSON;
@@ -19,7 +18,7 @@ var crypto         = require('crypto');
 require('date-utils');
 
 /* Constructor
- * ----------------------------------------------------------------------------- 
+ * -----------------------------------------------------------------------------
  * This is the object exported by this file.
  */
 
@@ -28,8 +27,20 @@ var UserController = function(opts, passport) {
   this.passport = passport;
 };
 
-/* Methods 
- * ----------------------------------------------------------------------------- 
+/* CORS Preflight
+ */
+UserController.prototype.preflight = function(req, res) {
+  // Add CORS Headers
+  console.log("CORS Preflight");
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(200).send();
+};
+
+/* Methods
+ * -----------------------------------------------------------------------------
 */
 
 UserController.prototype.create = function(req, res) {
@@ -50,10 +61,10 @@ UserController.prototype.create = function(req, res) {
 UserController.prototype.forgot = function(req, res, next) {
   var user = _.pick(req.body, 'email');
   User.findOne({'email': user.email}, function(err, user) {
-    if (err)   { 
+    if (err)   {
       res.status(401).send("Error");
     }
-    else if (!user) { 
+    else if (!user) {
       res.status(401).send("Error");
     }
     else {
@@ -98,10 +109,10 @@ UserController.prototype.reset = function(req, res, next) {
   var u = _.pick(req.body, 'token', 'password');
 
   User.findOne({'reset_password_token': u.token}, function(err, user) {
-    if (err)   { 
+    if (err)   {
       res.status(401).send("Error");
     }
-    else if (!user) { 
+    else if (!user) {
       res.status(401).send("Error");
     }
     else {
@@ -123,47 +134,113 @@ UserController.prototype.reset = function(req, res, next) {
   });
 };
 
-UserController.prototype.connectToApp = function(app, prefix) {
-  // Manual Login
-
-  this.passport.use(new LocalStrategy(
-    { usernameField: "email", passwordField: "password"}, LoginFn));
-
-  // Token Login
-  //if (this.opts.allowTokens) {
-  //  this.passport.use(new BearerStrategy(
-  //    function(token, done) {
-  //      User.findOne({ oauthToken: token}, function(err, user) {
-  //        if (err)   { return done(err); }
-  //        if (!user) { return done(null, false); }
-  //        return done(null, user, { scope: 'read' });
-  //      });
-  //    }
-  //  ));
-  //}
-
-  if (this.opts.allowSessions) {
-    console.log("Setting serialize user");
-    this.passport.serializeUser(function(user, done) {
-      console.log("serializeUser", user);
-      done(null, user.id);
+UserController.prototype.createWithToken = function(req, res) {
+  if (opts.allowTokens) {
+    // Passport responds with HTTP 401 Unauthorized if this fails.
+    this.passport.authenticate('bearer', {session: false}, function(req, res) {
+      res.send('Logged In');
     });
-
-    console.log("Setting deserialize user");
-    this.passport.deserializeUser(function(id, done) {
-      console.log("DE-serializeUser");
-      User.findById(id, function (err, user) {
-        done(err, user);
-      });
-    });
+  } else {
+    // 401 = Unauthorized
+    res.status(401).send('Token authentication not permitted.');
   }
+};
+
+UserController.prototype.isLoggedIn = function(req, res, next) {
+  console.log("CORS Preflight");
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  console.log("session*******************");
+  console.log(req.session);
+  console.log("XHR************************");
+  console.log(req.xhr);
+  console.log("isAuthenticated**************");
+  console.log(req.isAuthenticated());
+
+  if (req.isAuthenticated()) {
+    return res.send("Yes");
+  } else {
+    return res.send("No");
+  }
+};
+
+UserController.prototype.login = function(req, res, next) {
+  console.log("Setting CORS headers");
+  res.header('Access-Control-Allow-Origin', 'http://web.mit.edu');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  console.log("USER*******************");
+  console.log(req.user);
+  console.log("session*******************");
+  console.log(req.session);
+  console.log("XHR************************");
+  console.log(req.xhr);
+
+  console.log("Authenticating user");
+  this.passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      console.log("error "+ err);
+      return res.send(401, err);
+    }
+    if (!user) {
+      console.log("no such user");
+      return res.send(401, 'no such user');
+    }
+    req.logIn(user, function(err){
+      if (err) {
+        console.log("error "+ err);
+        return res.send(401, err);
+      }
+      console.log('It worked');
+      return res.send(200, 'log in successful');
+    });
+  })(req, res, next);
+};
+
+UserController.prototype.loginRedirect = function(req, res, next){
+  console.log('traditional login triggered');
+  this.passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      console.log('bad login');
+      return res.redirect('/no');
+    }else{
+      // create session, get the key and return it
+      console.log('good login');
+      return res.redirect('/');
+    }
+  })(req, res, next);
+};
+
+UserController.prototype.destroySession = function(req, res) {
+  req.logout();
+  res.redirect('/');
+};
+
+UserController.prototype.destroyToken = function(req, res) {
+  if (opts.allowTokens) {
+  } else {
+  }
+  // Clears the user's token
+};
+
+UserController.prototype.connectToApp = function(app, prefix) {
+  console.log('hooking up user routes');
   var self = this;
-  app.post(prefix,            self.create.bind(self));
-  app.post(prefix + '/login', self.login.bind(self));
-  app.get(prefix + '/logout', self.destroySession.bind(self));
-  app.get(prefix + '/isLoggedIn', self.isLoggedIn.bind(self));
+  app.post(prefix                     , self.create.bind(self));
+  app.post(prefix + '/login'          , self.login.bind(self));
+  app.get(prefix + '/logout'          , self.destroySession.bind(self));
   app.post(prefix + '/token', self.token.bind(self));
-  app.post(prefix + '/forgot', self.forgot.bind(self));
+  app.post(prefix + '/forgot'         , self.forgot.bind(self));
+  app.options(prefix + '/login'       , self.preflight.bind(self));
+  app.options(prefix + '/forgot'      , self.preflight.bind(self));
+  app.options(prefix + '/isLoggedIn'  , self.preflight.bind(self));
+  app.post(prefix + '/isLoggedIn'     , self.isLoggedIn.bind(self));
+  app.post(prefix + '/login-redirect' , self.loginRedirect.bind(self));
 };
 
 UserController.prototype.ensureAuthenticated = function(req, res, next) {
@@ -172,4 +249,3 @@ UserController.prototype.ensureAuthenticated = function(req, res, next) {
 };
 
 exports.UserController = UserController;
-
