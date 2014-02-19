@@ -2,7 +2,7 @@
  * Operator Factory
  */
 
-var opts = require('../opts')
+var opts = require('../../config/opts')
 var HtmlOperator = require('./html').HtmlOperator;
 
 var OperatorFactory = function() {

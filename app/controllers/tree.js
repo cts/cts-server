@@ -21,7 +21,7 @@
 var AdapterFactory = require('../tree-adapters/adapter-factory').AdapterFactory;
 var OperatorFactory = require('../tree-operators/operator-factory').OperatorFactory;
 var Operation = require('../models/operation').Operation;
-var Util = require('../util');
+var Util = require('../../config/util');
 
 /* Constructor
  * ----------------------------------------------------------------------------- 

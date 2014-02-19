@@ -8,7 +8,7 @@ var ZipFactory = require('../concerns/zip-factory').ZipFactory;
 var FilenameUtil = require('../concerns/filename-util').FilenameUtil;
 var fs = require('fs');
 var uri = require('uri-js');
-var Util = require('../util');
+var Util = require('../../config/util');
 
 /* Constructor
  * ----------------------------------------------------------------------------- 

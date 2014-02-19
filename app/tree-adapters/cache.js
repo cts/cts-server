@@ -6,8 +6,8 @@
  *
  */
 
-var globalOpts = require('../opts');
-var util = require('../util');
+var globalOpts = require('../../config/opts');
+var util = require('../../config/util');
 var MongoTree = require('../models/mongo-tree').MongoTree;
 
 /* Constructor
