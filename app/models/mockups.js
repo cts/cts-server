@@ -1,4 +1,4 @@
-var opts = require('../opts.js');
+var opts = require('../../config/opts.js');
 var path = require('path');
 var fs = require('fs');
 

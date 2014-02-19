@@ -228,13 +228,21 @@ UserController.prototype.destroyToken = function(req, res) {
   // Clears the user's token
 };
 
+UserController.prototype.token = function(req, res) {
+  // why?
+  if (opts.allowTokens) {
+  } else {
+  }
+};
+
+
 UserController.prototype.connectToApp = function(app, prefix) {
   console.log('hooking up user routes');
   var self = this;
   app.post(prefix                     , self.create.bind(self));
   app.post(prefix + '/login'          , self.login.bind(self));
   app.get(prefix + '/logout'          , self.destroySession.bind(self));
-  app.post(prefix + '/token', self.token.bind(self));
+  app.post(prefix + '/token'          , self.token.bind(self));
   app.post(prefix + '/forgot'         , self.forgot.bind(self));
   app.options(prefix + '/login'       , self.preflight.bind(self));
   app.options(prefix + '/forgot'      , self.preflight.bind(self));
