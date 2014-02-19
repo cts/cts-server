@@ -45,7 +45,6 @@
     "bcrypt": "*",
     "async": "*",
     "ssh2": "*",
-    "underscore": "*",
     "node-github": "*",
     "cheerio": "*",
     "uri-js": "*"

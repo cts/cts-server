@@ -4,3 +4,4 @@ filestorage/*
 zipstorage/*
 *.pyc
 websitestorage/*
+.DS_Store
