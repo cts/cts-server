@@ -51,7 +51,7 @@ Testing
 -------
 
 Tests are stored in the `test/` directory and written with
-[Mocha](http://visionmedia.github.io/mocha/). If you have never used Mocha
+[Mocha](http://mochajs.org/). If you have never used Mocha
 before, you should first run:
 
      ```
